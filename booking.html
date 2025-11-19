@@ -1,81 +1,121 @@
-
-
-<!-- ===================== booking.html (Seat Selection) ===================== -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>HRA Cinema Club - Booking</title>
+<title>HRA Cinema Club - Seat Selection</title>
 <style>
-  :root {
+  /* ============ CONFIGURATION ============ */
+  :root{
+    /* Seat images from Google Drive */
+    --img-regular: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w80");
+    --img-vip:     url("https://drive.google.com/thumbnail?id=1TSU5WQqDC5lrWYN8SSq9agRVLfSsFHUu&sz=w80");
+
+    /* Person icon (white) for selected seats */
+    --img-person: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
+  <circle cx='32' cy='20' r='10' fill='none' stroke='%23fff' stroke-width='4'/>\
+  <path d='M16 52c0-8.84 7.16-16 16-16s16 7.16 16 16' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/>\
+</svg>");
+    
     --bg:#05060a;
     --panel:#10131b;
     --line:#1e2430;
     --text:#f5f7fb;
     --muted:#8b96a8;
     --accent:#ff6b6b;
-    --accent-soft:rgba(255,107,107,0.12);
     --primary:#00C300;
     --primary-soft:rgba(0,195,0,0.12);
     --vip:#ffc93d;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
+
+  *{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:radial-gradient(circle at top,#1d2233 0%,#05060a 55%);
+    background: radial-gradient(circle at top,#1d2233 0%,#05060a 55%);
     color:var(--text);
     min-height:100vh;
     padding:16px;
     display:flex;
     justify-content:center;
   }
-  .shell{width:100%;max-width:540px;}
+
+  .shell{
+    width:100%;
+    max-width:560px;
+  }
+
   .header{
-    margin-bottom:12px;
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
-    gap:12px;
+    margin-bottom:12px;
+    gap:10px;
   }
-  .title-block h1{font-size:1.3rem;margin-bottom:4px;}
-  .title-block p{font-size:0.8rem;color:var(--muted);}
+
+  .title-block h1{
+    font-size:1.25rem;
+    margin-bottom:4px;
+  }
+
+  .title-block p{
+    font-size:0.8rem;
+    color:var(--muted);
+  }
+
   .user-chip{
-    background:rgba(0,0,0,0.3);
+    background:rgba(0,0,0,0.35);
     border-radius:999px;
     padding:6px 10px;
     font-size:0.75rem;
     border:1px solid var(--line);
-    max-width:55%;
     text-align:right;
+    max-width:55%;
   }
+
   .card{
     background:var(--panel);
-    border-radius:16px;
+    border-radius:18px;
     padding:14px 14px 16px;
-    box-shadow:0 18px 40px rgba(0,0,0,0.55);
-    border:1px solid rgba(255,255,255,0.03);
+    box-shadow:0 18px 40px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.04);
   }
+
   .movie-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:10px;
   }
-  .movie-title{font-size:0.95rem;font-weight:600;}
-  .movie-meta{font-size:0.75rem;color:var(--muted);}
+  .movie-title{
+    font-size:0.95rem;
+    font-weight:600;
+  }
+  .movie-meta{
+    font-size:0.75rem;
+    color:var(--muted);
+  }
   .tag{
     padding:2px 8px;
     border-radius:999px;
     font-size:0.7rem;
     border:1px solid var(--line);
   }
-  .tag-date{border-color:var(--primary);color:var(--primary);}
+  .tag-date{
+    border-color:var(--primary);
+    color:var(--primary);
+  }
+
   .screen{
     margin:10px 0 14px;
     height:22px;
     border-radius:999px 999px 6px 6px;
-    background:linear-gradient(to bottom,rgba(255,255,255,0.4),rgba(255,255,255,0.03));
+    background:linear-gradient(to bottom,rgba(255,255,255,0.4),rgba(255,255,255,0.04));
     box-shadow:0 10px 25px rgba(0,0,0,0.8);
     position:relative;
     overflow:hidden;
@@ -88,10 +128,11 @@
     align-items:center;
     justify-content:center;
     font-size:0.65rem;
-    letter-spacing:0.12em;
-    color:#11131a;
+    letter-spacing:0.16em;
+    color:#151721;
     opacity:0.8;
   }
+
   .legend{
     display:flex;
     justify-content:space-between;
@@ -103,39 +144,65 @@
     display:flex;
     align-items:center;
     gap:6px;
-    font-size:0.7rem;
+    font-size:0.72rem;
     color:var(--muted);
   }
   .legend-swatch{
-    width:16px;height:12px;border-radius:4px;border:1px solid var(--line);
+    width:16px;
+    height:12px;
+    border-radius:4px;
+    border:1px solid var(--line);
   }
-  .regular{background:rgba(255,255,255,0.06);}
-  .sweet{background:var(--accent-soft);}
-  .vip{background:rgba(255,201,61,0.16);} 
-  .mine{border:2px solid var(--primary);}
-  .booked{background:rgba(255,255,255,0.02);position:relative;}
-  .booked::after{
-    content:'X';
-    position:absolute;
-    inset:0;
+  .lg-regular{background:rgba(255,255,255,0.1);}
+  .lg-sweet{background:rgba(255,107,107,0.15);}
+  .lg-vip{background:rgba(255,201,61,0.18);}
+  .lg-mine{border-color:var(--primary);}
+
+  .hall-wrap{
     display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:0.7rem;
-    color:#ff8787;
+    gap:12px;
   }
+  .main-hall{
+    flex:3;
+  }
+  .mini-map{
+    flex:1.3;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:radial-gradient(circle at top,#232738 0%,#080a10 70%);
+    padding:8px 6px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .mini-title{
+    font-size:0.7rem;
+    color:var(--muted);
+    text-align:center;
+  }
+  .mini-grid{
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    gap:2px;
+    justify-items:center;
+  }
+  .mini-seat{
+    width:10px;
+    height:8px;
+    border-radius:2px;
+    background:rgba(255,255,255,0.15);
+  }
+  .mini-seat.sweet{background:rgba(255,107,107,0.5);}
+  .mini-seat.vip{background:rgba(255,201,61,0.8);}
+  .mini-seat.booked{background:rgba(255,255,255,0.35);}
+  .mini-seat.mine{outline:1px solid var(--primary);}
+
   .seats-wrap{
     max-height:380px;
     overflow-y:auto;
-    padding:6px 2px 4px;
-    margin-bottom:8px;
+    padding:4px 2px 4px;
   }
-  .row-label{
-    width:22px;
-    text-align:center;
-    font-size:0.75rem;
-    color:var(--muted);
-  }
+
   .seat-row{
     display:flex;
     align-items:center;
@@ -143,27 +210,77 @@
     gap:4px;
     margin-bottom:4px;
   }
+  .row-label{
+    width:22px;
+    text-align:center;
+    font-size:0.75rem;
+    color:var(--muted);
+  }
+
   .seat{
-    width:26px;height:22px;
-    border-radius:6px 6px 4px 4px;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.04);
+    width:28px;
+    height:26px;
+    border-radius:8px 8px 5px 5px;
+    border:1px solid rgba(255,255,255,0.18);
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    position:relative;
+    cursor:pointer;
+    transition:transform 0.13s, box-shadow 0.13s, border-color 0.13s, filter 0.13s;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:1px;
     font-size:0.7rem;
+    color:#fff;
+    text-shadow:0 0 4px rgba(0,0,0,0.9);
+  }
+  .seat.regular-seat{background-image:var(--img-regular);}
+  .seat.vip-seat{background-image:var(--img-vip);}
+  .seat.sweet-seat{background-image:var(--img-regular); filter:hue-rotate(-10deg) saturate(1.3);}
+  .seat span{
+    pointer-events:none;
+  }
+  .aisle{
+    width:14px;
+    height:20px;
+  }
+
+  .seat.selected{
+    box-shadow:0 0 0 2px rgba(0,195,0,0.7);
+    transform:translateY(-2px);
+  }
+  .seat.mine-seat{
+    box-shadow:0 0 0 2px rgba(0,195,0,1);
+    border-color:var(--primary);
+  }
+  .seat.disabled{
+    filter:grayscale(0.8) brightness(0.6);
+    cursor:not-allowed;
+  }
+
+  .seat.booked::after{
+    content:'';
+    position:absolute;
+    inset:4px;
+    border-radius:6px 6px 4px 4px;
+    background:rgba(0,0,0,0.55);
+  }
+  .seat.booked::before{
+    content:'X';
+    position:absolute;
+    inset:0;
     display:flex;
     align-items:center;
     justify-content:center;
-    cursor:pointer;
-    transition:transform 0.12s, box-shadow 0.12s, border-color 0.12s, background 0.12s;
+    font-size:0.7rem;
+    color:#ff8a80;
+    z-index:1;
   }
-  .seat.regular-seat{background:rgba(255,255,255,0.04);} 
-  .seat.sweet-seat{background:var(--accent-soft);} 
-  .seat.vip-seat{background:rgba(255,201,61,0.16);border-color:rgba(255,201,61,0.6);} 
-  .seat.selected{border-color:var(--primary);box-shadow:0 0 0 1px rgba(0,195,0,0.6);transform:translateY(-1px);} 
-  .seat.mine-seat{border-color:var(--primary);box-shadow:0 0 0 1px rgba(0,195,0,0.9);} 
-  .seat.disabled{opacity:0.45;cursor:not-allowed;} 
-  .aisle{width:14px;height:18px;}
+
   .footer{
-    margin-top:8px;
+    margin-top:10px;
     display:flex;
     flex-direction:column;
     gap:8px;
@@ -174,15 +291,17 @@
     font-size:0.78rem;
     color:var(--muted);
   }
-  .selection-info strong{color:var(--text);}
+  .selection-info strong{
+    color:var(--text);
+  }
   .btn-row{
     display:flex;
     gap:8px;
   }
   button.btn{
     flex:1;
-    padding:9px 10px;
-    border-radius:10px;
+    padding:9px 11px;
+    border-radius:11px;
     border:none;
     font-size:0.82rem;
     font-weight:600;
@@ -194,7 +313,7 @@
     color:#fff;
   }
   button.btn-secondary{
-    background:rgba(255,255,255,0.07);
+    background:rgba(255,255,255,0.08);
     color:var(--text);
     border:1px solid var(--line);
   }
@@ -203,8 +322,14 @@
     color:var(--muted);
     border:1px dashed var(--line);
   }
-  button.btn:disabled{opacity:0.4;cursor:not-allowed;}
-  button.btn:not(:disabled):active{transform:scale(0.97);} 
+  button.btn:disabled{
+    opacity:0.4;
+    cursor:not-allowed;
+  }
+  button.btn:not(:disabled):active{
+    transform:scale(0.97);
+  }
+
   .message{
     margin-top:6px;
     padding:8px 10px;
@@ -212,16 +337,36 @@
     font-size:0.75rem;
     display:none;
   }
-  .message.error{background:rgba(244,67,54,0.12);border:1px solid rgba(244,67,54,0.4);color:#ff8a80;}
-  .message.success{background:var(--primary-soft);border:1px solid rgba(0,195,0,0.5);color:#b9ffb9;}
+  .message.error{
+    background:rgba(244,67,54,0.12);
+    border:1px solid rgba(244,67,54,0.4);
+    color:#ff8a80;
+  }
+  .message.success{
+    background:var(--primary-soft);
+    border:1px solid rgba(0,195,0,0.5);
+    color:#b9ffb9;
+  }
+
   .stats{
-    margin-top:8px;
+    margin-top:6px;
     display:flex;
     justify-content:space-between;
     font-size:0.7rem;
     color:var(--muted);
   }
-  .stats span strong{color:var(--text);}
+  .stats span strong{
+    color:var(--text);
+  }
+
+  @media (max-width:480px){
+    .hall-wrap{
+      flex-direction:column;
+    }
+    .mini-map{
+      order:-1;
+    }
+  }
 </style>
 </head>
 <body>
@@ -233,6 +378,7 @@
       </div>
       <div class="user-chip" id="userChip">-</div>
     </div>
+
     <div class="card">
       <div class="movie-header">
         <div>
@@ -243,14 +389,41 @@
           <span class="tag tag-date" id="dateTag">EVENT</span>
         </div>
       </div>
+
       <div class="screen"></div>
+
       <div class="legend">
-        <div class="legend-item"><div class="legend-swatch regular"></div><span>Regular</span></div>
-        <div class="legend-item"><div class="legend-swatch sweet"></div><span>Sweet (คู่รัก)</span></div>
-        <div class="legend-item"><div class="legend-swatch vip"></div><span>VIP (โซฟา)</span></div>
-        <div class="legend-item"><div class="legend-swatch mine"></div><span>ที่นั่งของฉัน</span></div>
+        <div class="legend-item">
+          <div class="legend-swatch lg-regular"></div>
+          <span>Regular</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch lg-sweet"></div>
+          <span>Sweet (โซนคู่รัก)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch lg-vip"></div>
+          <span>VIP Lounge</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch lg-mine"></div>
+          <span>ที่นั่งของฉัน</span>
+        </div>
       </div>
-      <div class="seats-wrap" id="seatsWrap"></div>
+
+      <div class="hall-wrap">
+        <!-- Main Hall -->
+        <div class="main-hall">
+          <div class="seats-wrap" id="seatsWrap"></div>
+        </div>
+
+        <!-- Mini Map -->
+        <div class="mini-map">
+          <div class="mini-title">Zoom-out View</div>
+          <div class="mini-grid" id="miniGrid"></div>
+        </div>
+      </div>
+
       <div class="footer">
         <div class="selection-info">
           <div>เลือกที่นั่ง: <strong id="selectedSeatText">-</strong></div>
@@ -262,10 +435,12 @@
         </div>
         <div class="btn-row" style="margin-top:4px;">
           <button class="btn btn-outline" id="cancelBtn">ยกเลิกที่นั่งของฉัน</button>
-          <button class="btn btn-outline" id="backBtn" onclick="window.location.href='index.html'">กลับหน้าลงทะเบียน</button>
+          <button class="btn btn-outline" onclick="window.location.href='index.html'">กลับหน้าลงทะเบียน</button>
         </div>
+
         <div id="errorBox" class="message error"></div>
         <div id="successBox" class="message success"></div>
+
         <div class="stats" id="statsBox">
           <span>จองแล้วทั้งหมด: <strong id="statTotal">0</strong></span>
           <span>Regular: <strong id="statRegular">0</strong> • Sweet: <strong id="statSweet">0</strong> • VIP: <strong id="statVip">0</strong></span>
@@ -273,231 +448,312 @@
       </div>
     </div>
   </div>
-  <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
-    let currentUser = null;
-    let bookings = [];
-    let myBooking = null;
-    let selectedSeatId = null;
-    const seatLayout = [
-      { row: 'A', seats: ['A1','A2','A3','A4',null,'A5','A6','A7','A8'] },
-      { row: 'B', seats: ['B1','B2','B3','B4',null,'B5','B6','B7','B8'] },
-      { row: 'C', seats: ['C1','C2','C3','C4',null,'C5','C6','C7','C8'] },
-      { row: 'D', seats: ['D1','D2','D3','D4',null,'D5','D6','D7','D8'] },
-      { row: 'E', seats: ['E1','E2','E3','E4',null,'E5','E6','E7','E8'] },
-      { row: 'F', seats: ['F1','F2','F3','F4',null,'F5','F6','F7','F8'] },
-      { row: 'G', seats: ['G1','G2','G3','G4',null,'G5','G6','G7','G8'] },
-      { row: 'H', seats: ['H1','H2','H3','H4',null,'H5','H6','H7','H8'] },
-      { row: 'S', seats: ['S1','S2',null,'S3','S4'] },
-      { row: 'L', seats: ['L1','L2',null,'L3','L4'] }
-    ];
-    function apiCall(action, params = {}) {
-      const url = new URL(API_URL);
-      url.searchParams.append('action', action);
-      Object.entries(params).forEach(([k,v]) => {
-        if (v !== undefined && v !== null && v !== '') url.searchParams.append(k, v);
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+
+  let currentUser = null;
+  let bookings = [];
+  let myBooking = null;
+  let selectedSeatId = null;
+
+  // Layout: A–H = Regular, S = Sweet, L = VIP (ตรงกับ getBookingStats ใน app.gs)
+  const seatLayout = [
+    { row: 'A', seats: ['A1','A2','A3','A4',null,'A5','A6','A7','A8'] },
+    { row: 'B', seats: ['B1','B2','B3','B4',null,'B5','B6','B7','B8'] },
+    { row: 'C', seats: ['C1','C2','C3','C4',null,'C5','C6','C7','C8'] },
+    { row: 'D', seats: ['D1','D2','D3','D4',null,'D5','D6','D7','D8'] },
+    { row: 'E', seats: ['E1','E2','E3','E4',null,'E5','E6','E7','E8'] },
+    { row: 'F', seats: ['F1','F2','F3','F4',null,'F5','F6','F7','F8'] },
+    { row: 'G', seats: ['G1','G2','G3','G4',null,'G5','G6','G7','G8'] },
+    { row: 'H', seats: ['H1','H2','H3','H4',null,'H5','H6','H7','H8'] },
+    { row: 'S', seats: ['S1','S2',null,'S3','S4'] },
+    { row: 'L', seats: ['L1','L2',null,'L3','L4'] }
+  ];
+
+  function apiCall(action, params = {}) {
+    const url = new URL(API_URL);
+    url.searchParams.append('action', action);
+    Object.entries(params).forEach(([k,v])=>{
+      if(v !== undefined && v !== null && v !== '') url.searchParams.append(k,v);
+    });
+    return fetch(url.toString()).then(r=>r.json());
+  }
+
+  function showError(msg){
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.style.display = 'block';
+    document.getElementById('successBox').style.display = 'none';
+  }
+
+  function showSuccess(msg){
+    const box = document.getElementById('successBox');
+    box.textContent = msg;
+    box.style.display = 'block';
+    document.getElementById('errorBox').style.display = 'none';
+  }
+
+  function clearMessages(){
+    document.getElementById('errorBox').style.display = 'none';
+    document.getElementById('successBox').style.display = 'none';
+  }
+
+  function buildSeats(){
+    const wrap = document.getElementById('seatsWrap');
+    wrap.innerHTML = '';
+
+    const bookedMap = {};
+    bookings.forEach(b=>{
+      if(b.seatId) bookedMap[b.seatId] = b;
+    });
+
+    const mySeatId = myBooking ? myBooking.seatId : null;
+
+    seatLayout.forEach(row=>{
+      const rowEl = document.createElement('div');
+      rowEl.className = 'seat-row';
+
+      const label = document.createElement('div');
+      label.className = 'row-label';
+      label.textContent = row.row;
+      rowEl.appendChild(label);
+
+      row.seats.forEach(seatId=>{
+        if(seatId === null){
+          const spacer = document.createElement('div');
+          spacer.className = 'aisle';
+          rowEl.appendChild(spacer);
+          return;
+        }
+
+        const btn = document.createElement('div');
+        btn.className = 'seat';
+
+        if (seatId.startsWith('L')) btn.classList.add('vip-seat');
+        else if (seatId.startsWith('S')) btn.classList.add('sweet-seat');
+        else btn.classList.add('regular-seat');
+
+        btn.dataset.seatId = seatId;
+        btn.innerHTML = `<span>${seatId.replace(/^[A-Z]+/, '')}</span>`;
+
+        const isBooked = !!bookedMap[seatId];
+        const isMine = mySeatId === seatId;
+
+        if (isMine){
+          btn.classList.add('mine-seat');
+        }
+        if (isBooked && !isMine){
+          btn.classList.add('disabled','booked');
+        }
+
+        btn.addEventListener('click', ()=>onSeatClick(btn));
+        rowEl.appendChild(btn);
       });
-      return fetch(url.toString()).then(r => r.json());
-    }
-    function showError(msg){
-      const box = document.getElementById('errorBox');
-      box.textContent = msg;
-      box.style.display = 'block';
-      document.getElementById('successBox').style.display = 'none';
-    }
-    function showSuccess(msg){
-      const box = document.getElementById('successBox');
-      box.textContent = msg;
-      box.style.display = 'block';
-      document.getElementById('errorBox').style.display = 'none';
-    }
-    function clearMessages(){
-      document.getElementById('errorBox').style.display = 'none';
-      document.getElementById('successBox').style.display = 'none';
-    }
-    function buildSeats(){
-      const wrap = document.getElementById('seatsWrap');
-      wrap.innerHTML = '';
-      const bookedMap = {};
-      bookings.forEach(b => { if (b.seatId) bookedMap[b.seatId] = b; });
-      const mySeatId = myBooking ? myBooking.seatId : null;
-      seatLayout.forEach(row => {
-        const rowEl = document.createElement('div');
-        rowEl.className = 'seat-row';
-        const label = document.createElement('div');
-        label.className = 'row-label';
-        label.textContent = row.row;
-        rowEl.appendChild(label);
-        row.seats.forEach(seatId => {
-          if (seatId === null){
-            const spacer = document.createElement('div');
-            spacer.className = 'aisle';
-            rowEl.appendChild(spacer);
-            return;
-          }
-          const btn = document.createElement('div');
-          btn.className = 'seat';
-          if (seatId.startsWith('L')) btn.classList.add('vip-seat');
-          else if (seatId.startsWith('S')) btn.classList.add('sweet-seat');
-          else btn.classList.add('regular-seat');
-          btn.dataset.seatId = seatId;
-          btn.textContent = seatId.replace(/^[A-Z]+/, '');
-          const isBooked = !!bookedMap[seatId];
-          const isMine = mySeatId === seatId;
-          if (isMine){
-            btn.classList.add('mine-seat');
-          }
-          if (isBooked && !isMine){
-            btn.classList.add('disabled');
-            btn.classList.add('booked');
-          }
-          btn.addEventListener('click', () => onSeatClick(btn));
-          rowEl.appendChild(btn);
+
+      wrap.appendChild(rowEl);
+    });
+
+    buildMiniMap(bookedMap, mySeatId);
+    updateSelectionTexts();
+  }
+
+  function buildMiniMap(bookedMap, mySeatId){
+    const mini = document.getElementById('miniGrid');
+    mini.innerHTML = '';
+
+    // flatten A–H rows only (8 cols) สำหรับ mini map
+    const allSeatsForMini = [];
+    seatLayout.forEach(row=>{
+      if(['A','B','C','D','E','F','G','H'].includes(row.row)){
+        row.seats.forEach(s=>{
+          if(s !== null) allSeatsForMini.push(s);
         });
-        wrap.appendChild(rowEl);
+      }
+    });
+
+    allSeatsForMini.forEach(seatId=>{
+      const dot = document.createElement('div');
+      dot.className = 'mini-seat';
+
+      if (seatId.startsWith('S')) dot.classList.add('sweet');
+      if (seatId.startsWith('L')) dot.classList.add('vip');
+
+      if (bookedMap[seatId]) dot.classList.add('booked');
+      if (mySeatId === seatId) dot.classList.add('mine');
+
+      mini.appendChild(dot);
+    });
+  }
+
+  function onSeatClick(btn){
+    const seatId = btn.dataset.seatId;
+    if (btn.classList.contains('disabled')){
+      showError('ที่นั่งนี้มีผู้จองแล้ว');
+      return;
+    }
+
+    if (myBooking && myBooking.seatId && myBooking.seatId !== seatId){
+      showError('คุณได้จองที่นั่ง ' + myBooking.seatId + ' แล้ว หากต้องการเปลี่ยน กรุณายกเลิกที่นั่งเดิมก่อน');
+      return;
+    }
+
+    clearMessages();
+
+    if (selectedSeatId === seatId){
+      selectedSeatId = null;
+    }else{
+      selectedSeatId = seatId;
+    }
+
+    document.querySelectorAll('.seat').forEach(s=>s.classList.remove('selected'));
+    if (selectedSeatId){
+      const el = document.querySelector(`.seat[data-seat-id="${selectedSeatId}"]`);
+      if (el) el.classList.add('selected');
+    }
+    updateSelectionTexts();
+  }
+
+  function updateSelectionTexts(){
+    document.getElementById('selectedSeatText').textContent = selectedSeatId || '-';
+    document.getElementById('mySeatText').textContent = myBooking && myBooking.seatId ? myBooking.seatId : '-';
+    document.getElementById('bookBtn').disabled = !selectedSeatId || (myBooking && myBooking.seatId === selectedSeatId);
+  }
+
+  async function refreshAll(){
+    if (!currentUser) return;
+    clearMessages();
+    document.getElementById('refreshBtn').disabled = true;
+
+    try{
+      const [all, mine, stats] = await Promise.all([
+        apiCall('getAllBookings'),
+        apiCall('getMyBooking', { empNo: currentUser.empNo }),
+        apiCall('getBookingStats')
+      ]);
+
+      bookings = Array.isArray(all) ? all : [];
+      myBooking = mine && mine.seatId ? mine : null;
+      selectedSeatId = myBooking ? myBooking.seatId : null;
+
+      buildSeats();
+
+      if (stats){
+        document.getElementById('statTotal').textContent   = stats.total   || 0;
+        document.getElementById('statRegular').textContent = stats.regular || 0;
+        document.getElementById('statSweet').textContent   = stats.sweet   || 0;
+        document.getElementById('statVip').textContent     = stats.vip     || 0;
+      }
+    }catch(err){
+      console.error(err);
+      showError('โหลดข้อมูลไม่สำเร็จ');
+    }finally{
+      document.getElementById('refreshBtn').disabled = false;
+    }
+  }
+
+  async function bookSelected(){
+    if (!currentUser || !selectedSeatId) return;
+    clearMessages();
+    const btn = document.getElementById('bookBtn');
+    btn.disabled = true;
+    btn.textContent = 'กำลังจอง...';
+
+    try{
+      const res = await apiCall('bookSeat', {
+        empNo: currentUser.empNo,
+        name: currentUser.name,
+        factory: currentUser.factory,
+        seatId: selectedSeatId
       });
-      updateSelectionTexts();
+
+      if (res && res.success){
+        showSuccess(res.message || 'จองที่นั่งสำเร็จ');
+      }else{
+        showError(res && res.message ? res.message : 'ไม่สามารถจองที่นั่งได้');
+      }
+
+      await refreshAll();
+    }catch(err){
+      console.error(err);
+      showError('เกิดข้อผิดพลาดในการจอง');
+    }finally{
+      btn.textContent = 'ยืนยันการจอง';
+      btn.disabled = !selectedSeatId;
     }
-    function onSeatClick(btn){
-      const seatId = btn.dataset.seatId;
-      if (btn.classList.contains('disabled')){
-        showError('ที่นั่งนี้มีผู้จองแล้ว');
-        return;
-      }
-      if (myBooking && myBooking.seatId && myBooking.seatId !== seatId){
-        showError('คุณได้จองที่นั่ง '+ myBooking.seatId +' แล้ว หากต้องการเปลี่ยน กรุณายกเลิกก่อน');
-        return;
-      }
-      clearMessages();
-      if (selectedSeatId === seatId){
-        selectedSeatId = null;
-      } else {
-        selectedSeatId = seatId;
-      }
-      document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-      if (selectedSeatId){
-        const el = document.querySelector(`.seat[data-seat-id="${selectedSeatId}"]`);
-        if (el) el.classList.add('selected');
-      }
-      updateSelectionTexts();
+  }
+
+  async function cancelMySeat(){
+    if (!currentUser) return;
+    if (!myBooking || !myBooking.seatId){
+      showError('คุณยังไม่มีการจองที่นั่ง');
+      return;
     }
-    function updateSelectionTexts(){
-      document.getElementById('selectedSeatText').textContent = selectedSeatId || '-';
-      document.getElementById('mySeatText').textContent = myBooking && myBooking.seatId ? myBooking.seatId : '-';
-      document.getElementById('bookBtn').disabled = !selectedSeatId || (myBooking && myBooking.seatId === selectedSeatId);
+
+    const ok = confirm('ต้องการยกเลิกที่นั่ง ' + myBooking.seatId + ' ใช่หรือไม่?');
+    if (!ok) return;
+
+    clearMessages();
+
+    const btn = document.getElementById('cancelBtn');
+    btn.disabled = true;
+    btn.textContent = 'กำลังยกเลิก...';
+
+    try{
+      const res = await apiCall('cancelBooking', { empNo: currentUser.empNo });
+      if (res && res.success){
+        showSuccess(res.message || 'ยกเลิกการจองสำเร็จ');
+      }else{
+        showError(res && res.message ? res.message : 'ไม่สามารถยกเลิกการจองได้');
+      }
+      selectedSeatId = null;
+      await refreshAll();
+    }catch(err){
+      console.error(err);
+      showError('เกิดข้อผิดพลาดในการยกเลิก');
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'ยกเลิกที่นั่งของฉัน';
     }
-    async function refreshAll(){
-      if (!currentUser) return;
-      clearMessages();
-      document.getElementById('refreshBtn').disabled = true;
-      try{
-        const [all, mine, stats] = await Promise.all([
-          apiCall('getAllBookings'),
-          apiCall('getMyBooking', { empNo: currentUser.empNo }),
-          apiCall('getBookingStats')
-        ]);
-        bookings = Array.isArray(all) ? all : [];
-        myBooking = mine && mine.seatId ? mine : null;
-        selectedSeatId = myBooking ? myBooking.seatId : null;
-        buildSeats();
-        if (stats){
-          document.getElementById('statTotal').textContent = stats.total || 0;
-          document.getElementById('statRegular').textContent = stats.regular || 0;
-          document.getElementById('statSweet').textContent = stats.sweet || 0;
-          document.getElementById('statVip').textContent = stats.vip || 0;
-        }
-      }catch(err){
-        console.error(err);
-        showError('โหลดข้อมูลไม่สำเร็จ');
-      }finally{
-        document.getElementById('refreshBtn').disabled = false;
-      }
+  }
+
+  function initUser(){
+    const raw = sessionStorage.getItem('userData');
+    if (!raw){
+      alert('ไม่พบข้อมูลผู้ใช้ กรุณากลับไปหน้าลงทะเบียน');
+      window.location.href = 'index.html';
+      return false;
     }
-    async function bookSelected(){
-      if (!currentUser || !selectedSeatId) return;
-      clearMessages();
-      document.getElementById('bookBtn').disabled = true;
-      document.getElementById('bookBtn').textContent = 'กำลังจอง...';
-      try{
-        const res = await apiCall('bookSeat', {
-          empNo: currentUser.empNo,
-          name: currentUser.name,
-          factory: currentUser.factory,
-          seatId: selectedSeatId
-        });
-        if (res && res.success){
-          showSuccess(res.message || 'จองที่นั่งสำเร็จ');
-        }else{
-          showError(res && res.message ? res.message : 'ไม่สามารถจองที่นั่งได้');
-        }
-        await refreshAll();
-      }catch(err){
-        console.error(err);
-        showError('เกิดข้อผิดพลาดในการจอง');
-      }finally{
-        document.getElementById('bookBtn').textContent = 'ยืนยันการจอง';
-        document.getElementById('bookBtn').disabled = !selectedSeatId;
-      }
+    try{
+      const data = JSON.parse(raw);
+      if (!data.empNo) throw new Error('no empNo');
+      currentUser = data;
+      document.getElementById('userInfoText').textContent = `EmpNo: ${data.empNo} • ${data.name}`;
+      document.getElementById('userChip').textContent     = data.factory || '';
+      return true;
+    }catch(e){
+      console.error(e);
+      alert('ข้อมูลผู้ใช้ไม่ถูกต้อง กรุณากลับไปหน้าลงทะเบียน');
+      window.location.href = 'index.html';
+      return false;
     }
-    async function cancelMySeat(){
-      if (!currentUser){return;}
-      if (!myBooking || !myBooking.seatId){
-        showError('คุณยังไม่มีการจองที่นั่ง');
-        return;
-      }
-      clearMessages();
-      const ok = confirm('ต้องการยกเลิกที่นั่ง '+ myBooking.seatId +' ใช่หรือไม่?');
-      if (!ok) return;
-      document.getElementById('cancelBtn').disabled = true;
-      document.getElementById('cancelBtn').textContent = 'กำลังยกเลิก...';
-      try{
-        const res = await apiCall('cancelBooking', { empNo: currentUser.empNo });
-        if (res && res.success){
-          showSuccess(res.message || 'ยกเลิกการจองสำเร็จ');
-        }else{
-          showError(res && res.message ? res.message : 'ไม่สามารถยกเลิกการจองได้');
-        }
-        selectedSeatId = null;
-        await refreshAll();
-      }catch(err){
-        console.error(err);
-        showError('เกิดข้อผิดพลาดในการยกเลิก');
-      }finally{
-        document.getElementById('cancelBtn').disabled = false;
-        document.getElementById('cancelBtn').textContent = 'ยกเลิกที่นั่งของฉัน';
-      }
-    }
-    function initUser(){
-      const raw = sessionStorage.getItem('userData');
-      if (!raw){
-        alert('ไม่พบข้อมูลผู้ใช้ กรุณากลับไปหน้าลงทะเบียน');
-        window.location.href = 'index.html';
-        return false;
-      }
-      try{
-        const data = JSON.parse(raw);
-        if (!data.empNo){throw new Error('no empNo');}
-        currentUser = data;
-        document.getElementById('userInfoText').textContent = `EmpNo: ${data.empNo} • ${data.name}`;
-        document.getElementById('userChip').textContent = data.factory || '';
-        return true;
-      }catch(e){
-        console.error(e);
-        alert('ข้อมูลผู้ใช้ไม่ถูกต้อง กรุณากลับไปหน้าลงทะเบียน');
-        window.location.href = 'index.html';
-        return false;
-      }
-    }
-    document.getElementById('bookBtn').addEventListener('click', bookSelected);
-    document.getElementById('refreshBtn').addEventListener('click', refreshAll);
-    document.getElementById('cancelBtn').addEventListener('click', cancelMySeat);
-    (function(){
-      if (!initUser()) return;
-      const d = new Date();
-      const tag = document.getElementById('dateTag');
-      tag.textContent = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}`;
-      refreshAll();
-    })();
-  </script>
+  }
+
+  // Event bindings
+  document.getElementById('bookBtn').addEventListener('click', bookSelected);
+  document.getElementById('refreshBtn').addEventListener('click', refreshAll);
+  document.getElementById('cancelBtn').addEventListener('click', cancelMySeat);
+
+  // Init
+  (function(){
+    if (!initUser()) return;
+
+    const d = new Date();
+    const tag = document.getElementById('dateTag');
+    tag.textContent = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+
+    refreshAll();
+  })();
+</script>
 </body>
 </html>
