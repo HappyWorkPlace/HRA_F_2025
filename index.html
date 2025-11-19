@@ -1,3 +1,4 @@
+<!-- ===================== index.html (Registration + LIFF) ===================== -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -15,13 +16,7 @@
     --success:#4caf50;
     --primary:#00C300; /* LINE Green */
   }
-  
-  * { 
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: linear-gradient(135deg, #0a0c10 0%, #1a1d26 100%);
@@ -32,7 +27,6 @@
     justify-content: center;
     padding: 20px;
   }
-  
   .container {
     width: 100%;
     max-width: 400px;
@@ -41,19 +35,7 @@
     padding: 2rem;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   }
-  
-  .logo {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .logo img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-  }
-  
+  .logo { text-align: center; margin-bottom: 2rem; }
   .title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -63,141 +45,39 @@
     text-align: center;
     margin-bottom: 0.5rem;
   }
-  
-  .subtitle {
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-  }
-  
-  .profile-section {
-    display: none;
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
+  .subtitle { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .profile-section { display: none; text-align: center; margin-bottom: 2rem; }
   .profile-pic {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    border: 3px solid var(--primary);
+    width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid var(--primary);
   }
-  
-  .profile-name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text);
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-  
+  .profile-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-label { display: block; margin-bottom: 0.5rem; color: var(--text); font-size: 0.9rem; font-weight: 600; }
   .form-input {
-    width: 100%;
-    padding: 0.75rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 1rem;
-    transition: all 0.2s;
+    width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line); border-radius: 8px; color: var(--text); font-size: 1rem; transition: all 0.2s;
   }
-  
-  .form-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: rgba(255,255,255,0.08);
-  }
-  
-  .info-card {
-    background: rgba(255,255,255,0.03);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .info-item {
-    margin-bottom: 1rem;
-  }
-  
-  .info-item:last-child {
-    margin-bottom: 0;
-  }
-  
-  .info-label {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-bottom: 0.25rem;
-  }
-  
-  .info-value {
-    font-size: 1.1rem;
-    color: var(--text);
-    font-weight: 600;
-  }
-  
+  .form-input:focus { outline: none; border-color: var(--primary); background: rgba(255,255,255,0.08); }
+  .info-card { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .info-item { margin-bottom: 1rem; }
+  .info-item:last-child { margin-bottom: 0; }
+  .info-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; }
+  .info-value { font-size: 1.1rem; color: var(--text); font-weight: 600; }
   .btn {
-    width: 100%;
-    padding: 1rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 1rem;
+    width: 100%; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
   }
-  
-  .btn:last-child {
-    margin-bottom: 0;
-  }
-  
-  .btn-primary {
-    background: var(--primary);
-    color: white;
-  }
-  
+  .btn:last-child { margin-bottom: 0; }
+  .btn-primary { background: var(--primary); color: white; }
   .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,195,0,0.4);
   }
-  
-  .btn-secondary {
-    background: rgba(255,255,255,0.1);
-    color: var(--text);
-    border: 1px solid var(--line);
-  }
-  
-  .btn-secondary:hover:not(:disabled) {
-    background: rgba(255,255,255,0.15);
-  }
-  
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 2rem;
-  }
-  
-  .loading.active {
-    display: block;
-  }
-  
+  .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid var(--line); }
+  .btn-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.15); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .loading { display: none; text-align: center; padding: 2rem; }
+  .loading.active { display: block; }
   .spinner {
     border: 3px solid rgba(255,255,255,0.1);
     border-top-color: var(--primary);
@@ -207,11 +87,7 @@
     animation: spin 1s linear infinite;
     margin: 0 auto 1rem;
   }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
+  @keyframes spin { to { transform: rotate(360deg); } }
   .error-message {
     background: rgba(244,67,54,0.1);
     border: 1px solid rgba(244,67,54,0.3);
@@ -221,7 +97,6 @@
     margin-bottom: 1rem;
     display: none;
   }
-  
   .success-message {
     background: rgba(76,175,80,0.1);
     border: 1px solid rgba(76,175,80,0.3);
@@ -231,14 +106,8 @@
     margin-bottom: 1rem;
     display: none;
   }
-  
-  .page {
-    display: none;
-  }
-  
-  .page.active {
-    display: block;
-  }
+  .page { display: none; }
+  .page.active { display: block; }
 </style>
 </head>
 <body>
@@ -247,7 +116,6 @@
       <div class="title">HRA CINEMA CLUB</div>
       <div class="subtitle">ระบบลงทะเบียนและจองที่นั่ง</div>
     </div>
-    
     <!-- Loading Page -->
     <div id="loadingPage" class="page active">
       <div class="loading active">
@@ -255,32 +123,22 @@
         <p>กำลังเข้าสู่ระบบ LINE...</p>
       </div>
     </div>
-    
     <!-- Registration Page -->
     <div id="registerPage" class="page">
       <div class="profile-section" id="profileSection">
         <img id="profilePic" class="profile-pic" src="" alt="Profile">
         <div class="profile-name" id="profileName"></div>
       </div>
-      
       <div class="error-message" id="errorMessage"></div>
       <div class="success-message" id="successMessage"></div>
-      
       <!-- Step 1: Enter Employee ID -->
       <div id="step1" style="display:none;">
         <div class="form-group">
           <label class="form-label">รหัสพนักงาน</label>
-          <input type="text" 
-                 class="form-input" 
-                 id="empNoInput" 
-                 placeholder="เช่น A9473"
-                 autocomplete="off">
+          <input type="text" class="form-input" id="empNoInput" placeholder="เช่น A9473" autocomplete="off">
         </div>
-        <button class="btn btn-primary" onclick="checkEmployee()">
-          ตรวจสอบข้อมูล
-        </button>
+        <button class="btn btn-primary" onclick="checkEmployee()">ตรวจสอบข้อมูล</button>
       </div>
-      
       <!-- Step 2: Confirm Information -->
       <div id="step2" style="display:none;">
         <div class="info-card">
@@ -297,22 +155,13 @@
             <div class="info-value" id="confirmFactory">-</div>
           </div>
         </div>
-        
-        <button class="btn btn-primary" onclick="confirmRegistration()">
-          ยืนยันข้อมูลถูกต้อง
-        </button>
-        <button class="btn btn-secondary" onclick="backToStep1()">
-          แก้ไขข้อมูล
-        </button>
+        <button class="btn btn-primary" onclick="confirmRegistration(event)">ยืนยันข้อมูลถูกต้อง</button>
+        <button class="btn btn-secondary" onclick="backToStep1()">แก้ไขข้อมูล</button>
       </div>
     </div>
-    
     <!-- Already Registered Page -->
     <div id="registeredPage" class="page">
-      <div class="success-message" style="display:block;">
-        ✅ คุณลงทะเบียนเรียบร้อยแล้ว
-      </div>
-      
+      <div class="success-message" style="display:block;">✅ คุณลงทะเบียนเรียบร้อยแล้ว</div>
       <div class="info-card">
         <div class="info-item">
           <div class="info-label">รหัสพนักงาน</div>
@@ -327,49 +176,31 @@
           <div class="info-value" id="regFactory">-</div>
         </div>
       </div>
-      
-      <button class="btn btn-primary" onclick="goToBooking()">
-        เข้าสู่ระบบจองที่นั่ง
-      </button>
+      <button class="btn btn-primary" onclick="goToBooking()">เข้าสู่ระบบจองที่นั่ง</button>
     </div>
   </div>
-
   <!-- LINE LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  
   <script>
-    // Configuration
     const LIFF_ID = '2008529302-50MNLyDV';
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec'; // ใส่ URL จาก Google Apps Script
-    const BOOKING_URL = 'https://happyworkplace.github.io/HRA_F_2025/'; // URL หน้าจองที่นั่ง
-    
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+    const BOOKING_URL = 'booking.html'; // ใช้ไฟล์ booking.html ใน repo เดียวกัน
     let liffProfile = null;
     let currentEmployee = null;
-    
-    // Initialize LIFF
     window.onload = async function() {
       try {
         await liff.init({ liffId: LIFF_ID });
-        
         if (!liff.isLoggedIn()) {
           liff.login();
           return;
         }
-        
-        // Get LINE profile
         liffProfile = await liff.getProfile();
-        console.log('LINE Profile:', liffProfile);
-        
-        // Show profile info
         if (liffProfile.pictureUrl) {
           document.getElementById('profilePic').src = liffProfile.pictureUrl;
           document.getElementById('profileSection').style.display = 'block';
         }
         document.getElementById('profileName').textContent = liffProfile.displayName;
-        
-        // Check if already registered
         await checkRegistration();
-        
       } catch (error) {
         console.error('LIFF Error:', error);
         showError('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE');
@@ -377,55 +208,36 @@
         document.getElementById('step1').style.display = 'block';
       }
     };
-    
-    // API Call function
     async function apiCall(action, params = {}) {
       try {
         const url = new URL(API_URL);
         url.searchParams.append('action', action);
-        
         for (const [key, value] of Object.entries(params)) {
           if (value !== undefined && value !== null && value !== '') {
             url.searchParams.append(key, value);
           }
         }
-        
         const response = await fetch(url.toString());
         const data = await response.json();
         return data;
-        
       } catch (error) {
         console.error('API Error:', error);
         throw error;
       }
     }
-    
-    // Check if user is registered
     async function checkRegistration() {
       try {
-        const result = await apiCall('checkRegistration', {
-          lineUserId: liffProfile.userId
-        });
-        
+        const result = await apiCall('checkRegistration', { lineUserId: liffProfile.userId });
         if (result.registered) {
-          // Already registered - show info and redirect
           document.getElementById('regEmpNo').textContent = result.data.empNo;
           document.getElementById('regName').textContent = result.data.name;
           document.getElementById('regFactory').textContent = result.data.factory;
-          
           showPage('registeredPage');
-          
-          // Auto redirect after 3 seconds
-          setTimeout(() => {
-            goToBooking();
-          }, 3000);
-          
+          setTimeout(() => { goToBooking(); }, 3000);
         } else {
-          // Not registered - show registration form
           showPage('registerPage');
           document.getElementById('step1').style.display = 'block';
         }
-        
       } catch (error) {
         console.error('Check registration error:', error);
         showError('ไม่สามารถตรวจสอบข้อมูลได้');
@@ -433,63 +245,43 @@
         document.getElementById('step1').style.display = 'block';
       }
     }
-    
-    // Check employee info
     async function checkEmployee() {
       const empNo = document.getElementById('empNoInput').value.trim().toUpperCase();
-      
       if (!empNo) {
         showError('กรุณาใส่รหัสพนักงาน');
         return;
       }
-      
       hideMessages();
-      
       try {
-        const result = await apiCall('getEmployeeInfo', {
-          empNo: empNo
-        });
-        
+        const result = await apiCall('getEmployeeInfo', { empNo: empNo });
         if (result.success) {
           currentEmployee = result.data;
-          
-          // Check if already registered
           if (currentEmployee.uid) {
             showError('รหัสพนักงานนี้ลงทะเบียนแล้ว');
             return;
           }
-          
-          // Show confirmation
           document.getElementById('confirmEmpNo').textContent = currentEmployee.empNo;
           document.getElementById('confirmName').textContent = currentEmployee.name;
           document.getElementById('confirmFactory').textContent = currentEmployee.factory;
-          
           document.getElementById('step1').style.display = 'none';
           document.getElementById('step2').style.display = 'block';
-          
         } else {
           showError(result.message || 'ไม่พบข้อมูลพนักงาน');
         }
-        
       } catch (error) {
         console.error('Check employee error:', error);
         showError('เกิดข้อผิดพลาด');
       }
     }
-    
-    // Confirm registration
-    async function confirmRegistration() {
+    async function confirmRegistration(ev) {
       if (!currentEmployee || !liffProfile) {
         showError('ข้อมูลไม่ครบถ้วน');
         return;
       }
-      
       hideMessages();
-      
-      const btn = event.target;
+      const btn = ev.target;
       btn.disabled = true;
       btn.textContent = 'กำลังลงทะเบียน...';
-      
       try {
         const result = await apiCall('registerUser', {
           empNo: currentEmployee.empNo,
@@ -497,20 +289,14 @@
           lineDisplayName: liffProfile.displayName,
           linePictureUrl: liffProfile.pictureUrl || ''
         });
-        
         if (result.success) {
           showSuccess('ลงทะเบียนสำเร็จ! กำลังนำคุณไปหน้าจองที่นั่ง...');
-          
-          setTimeout(() => {
-            goToBooking();
-          }, 2000);
-          
+          setTimeout(() => { goToBooking(); }, 2000);
         } else {
           showError(result.message || 'ไม่สามารถลงทะเบียนได้');
           btn.disabled = false;
           btn.textContent = 'ยืนยันข้อมูลถูกต้อง';
         }
-        
       } catch (error) {
         console.error('Registration error:', error);
         showError('เกิดข้อผิดพลาด');
@@ -518,61 +304,41 @@
         btn.textContent = 'ยืนยันข้อมูลถูกต้อง';
       }
     }
-    
-    // Back to step 1
     function backToStep1() {
       document.getElementById('step2').style.display = 'none';
       document.getElementById('step1').style.display = 'block';
       currentEmployee = null;
     }
-    
-    // Go to booking page
     function goToBooking() {
-      // Pass user data via URL parameters or sessionStorage
       const userData = {
         empNo: currentEmployee ? currentEmployee.empNo : document.getElementById('regEmpNo').textContent,
         name: currentEmployee ? currentEmployee.name : document.getElementById('regName').textContent,
         factory: currentEmployee ? currentEmployee.factory : document.getElementById('regFactory').textContent,
-        lineUserId: liffProfile.userId,
-        lineDisplayName: liffProfile.displayName
+        lineUserId: liffProfile ? liffProfile.userId : '',
+        lineDisplayName: liffProfile ? liffProfile.displayName : ''
       };
-      
       sessionStorage.setItem('userData', JSON.stringify(userData));
-      
-      // Redirect to booking page
       window.location.href = BOOKING_URL;
     }
-    
-    // Utility functions
     function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-      });
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
     }
-    
     function showError(message) {
       const errorEl = document.getElementById('errorMessage');
       errorEl.textContent = message;
       errorEl.style.display = 'block';
-      
-      setTimeout(() => {
-        errorEl.style.display = 'none';
-      }, 5000);
+      setTimeout(() => { errorEl.style.display = 'none'; }, 5000);
     }
-    
     function showSuccess(message) {
       const successEl = document.getElementById('successMessage');
       successEl.textContent = message;
       successEl.style.display = 'block';
     }
-    
     function hideMessages() {
       document.getElementById('errorMessage').style.display = 'none';
       document.getElementById('successMessage').style.display = 'none';
     }
-    
-    // Prevent form submission on Enter
     document.getElementById('empNoInput').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         e.preventDefault();
