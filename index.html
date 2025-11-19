@@ -711,272 +711,439 @@
       </div>
     </div>
   </div>
+<script>
+// ⚠️ IMPORTANT: แก้ไข API_URL ให้ตรงกับ Google Apps Script Deployment URL
+const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
 
-  <script>
-    // ⚠️ IMPORTANT: แก้ไข API_URL ให้ตรงกับ Google Apps Script Deployment URL
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+// กำหนด layout ที่นั่ง
+const seatLayout = {
+  'A': { count: 14, type: 'regular', split: 7 },
+  'B': { count: 14, type: 'regular', split: 7 },
+  'C': { count: 14, type: 'regular', split: 7 },
+  'D': { count: 16, type: 'regular', split: 8 },
+  'E': { count: 16, type: 'regular', split: 8 },
+  'F': { count: 16, type: 'regular', split: 8 },
+  'S': { count: 14, type: 'sweet', split: 7 },
+  'L': { count: 14, type: 'vip', split: 7 }
+};
+
+let bookingsData = [];
+let selectedSeat = null;
+
+// เริ่มทำงานเมื่อโหลดหน้าเสร็จ
+window.onload = function() {
+  loadBookings();
+  // Auto refresh ทุก 30 วินาที (optional)
+  setInterval(loadBookings, 30000);
+};
+
+// ฟังก์ชันเรียก API แบบ GET เท่านั้น
+async function apiGet(action, params = {}) {
+  try {
+    const url = new URL(API_URL);
+    url.searchParams.append('action', action);
     
-    const seatLayout = {
-      'A': { count: 14, type: 'regular', split: 7 },
-      'B': { count: 14, type: 'regular', split: 7 },
-      'C': { count: 14, type: 'regular', split: 7 },
-      'D': { count: 16, type: 'regular', split: 8 },
-      'E': { count: 16, type: 'regular', split: 8 },
-      'F': { count: 16, type: 'regular', split: 8 },
-      'S': { count: 14, type: 'sweet', split: 7 },
-      'L': { count: 14, type: 'vip', split: 7 }
+    // เพิ่ม parameters ทั้งหมดใน URL
+    for (const [key, value] of Object.entries(params)) {
+      if (value !== undefined && value !== null && value !== '') {
+        url.searchParams.append(key, value);
+      }
+    }
+    
+    console.log('API Call:', url.toString());
+    
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache'
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('API Response:', data);
+    return data;
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
+  }
+}
+
+// โหลดข้อมูลการจองทั้งหมด
+async function loadBookings() {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('seatingMap').style.display = 'none';
+  
+  try {
+    const result = await apiGet('getAllBookings');
+    bookingsData = Array.isArray(result) ? result : [];
+    console.log('Bookings loaded:', bookingsData);
+    renderSeats();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('seatingMap').style.display = 'flex';
+    
+  } catch (error) {
+    console.error('Load Error:', error);
+    
+    // แสดงที่นั่งว่างถ้าโหลดไม่ได้
+    bookingsData = [];
+    renderSeats();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('seatingMap').style.display = 'flex';
+    
+    // แจ้งเตือนแบบไม่รบกวนมาก
+    console.warn('ไม่สามารถโหลดข้อมูลการจองได้');
+  }
+}
+
+// สร้างแผนผังที่นั่ง
+function renderSeats() {
+  const wrapper = document.getElementById('seatingWrapper');
+  wrapper.innerHTML = '';
+  
+  const rows = Object.keys(seatLayout);
+  
+  rows.forEach((rowId) => {
+    const rowData = seatLayout[rowId];
+    
+    // เพิ่มเส้นแบ่ง section
+    if (rowId === 'D' || rowId === 'S' || rowId === 'L') {
+      const divider = document.createElement('div');
+      divider.className = 'section-divider';
+      wrapper.appendChild(divider);
+    }
+    
+    const row = document.createElement('div');
+    row.className = 'row';
+    
+    // Label ซ้าย
+    const labelLeft = document.createElement('span');
+    labelLeft.className = 'row-label';
+    if (rowData.type === 'vip') labelLeft.classList.add('vvip');
+    if (rowData.type === 'sweet') labelLeft.classList.add('sweet');
+    labelLeft.textContent = rowId === 'L' ? 'VIP' : rowId;
+    row.appendChild(labelLeft);
+    
+    // ที่นั่งฝั่งซ้าย
+    const blockLeft = document.createElement('div');
+    blockLeft.className = 'seat-block';
+    for (let i = 1; i <= rowData.split; i++) {
+      const seatId = rowId + i;
+      blockLeft.appendChild(createSeat(seatId, rowData.type));
+    }
+    row.appendChild(blockLeft);
+    
+    // ทางเดินตรงกลาง
+    const aisle = document.createElement('div');
+    aisle.className = 'center-aisle';
+    row.appendChild(aisle);
+    
+    // ที่นั่งฝั่งขวา
+    const blockRight = document.createElement('div');
+    blockRight.className = 'seat-block';
+    for (let i = rowData.split + 1; i <= rowData.count; i++) {
+      const seatId = rowId + i;
+      blockRight.appendChild(createSeat(seatId, rowData.type));
+    }
+    row.appendChild(blockRight);
+    
+    // Label ขวา
+    const labelRight = document.createElement('span');
+    labelRight.className = 'row-label';
+    if (rowData.type === 'vip') labelRight.classList.add('vvip');
+    if (rowData.type === 'sweet') labelRight.classList.add('sweet');
+    labelRight.textContent = rowId === 'L' ? 'VIP' : rowId;
+    row.appendChild(labelRight);
+    
+    wrapper.appendChild(row);
+  });
+}
+
+// สร้างที่นั่งแต่ละตัว
+function createSeat(seatId, type) {
+  const seat = document.createElement('div');
+  seat.className = 'seat ' + type;
+  seat.setAttribute('data-seat-id', seatId);
+  seat.setAttribute('title', 'ที่นั่ง ' + seatId);
+  
+  const booking = bookingsData.find(b => b.seatId === seatId);
+  if (booking) {
+    seat.classList.add('booked');
+    seat.setAttribute('title', `จองแล้ว: ${booking.name}`);
+    seat.onclick = () => viewBooking(booking);
+  } else {
+    seat.onclick = () => openBookModal(seatId);
+  }
+  
+  const seatInner = document.createElement('div');
+  seatInner.className = 'seat-inner';
+  seat.appendChild(seatInner);
+  
+  return seat;
+}
+
+// เปิดหน้าต่างจองที่นั่ง
+function openBookModal(seatId) {
+  selectedSeat = seatId;
+  document.getElementById('bookSeatPreview').textContent = seatId;
+  document.getElementById('bookModal').classList.add('active');
+  document.getElementById('bookForm').reset();
+  
+  // Focus ที่ input แรก
+  setTimeout(() => {
+    document.getElementById('empNo').focus();
+  }, 100);
+}
+
+// ส่งข้อมูลจองที่นั่ง (ใช้ GET)
+async function submitBooking(event) {
+  event.preventDefault();
+  
+  const empNo = document.getElementById('empNo').value.trim().toUpperCase();
+  const name = document.getElementById('name').value.trim().toUpperCase();
+  const factory = document.getElementById('factory').value;
+  
+  if (!empNo || !name || !factory || !selectedSeat) {
+    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+    return;
+  }
+  
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'กำลังจอง...';
+  submitBtn.disabled = true;
+  
+  try {
+    // ใช้ GET request พร้อมส่ง parameters
+    const result = await apiGet('bookSeat', {
+      empNo: empNo,
+      name: name,
+      factory: factory,
+      seatId: selectedSeat
+    });
+    
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+    
+    if (result.success) {
+      alert('✅ ' + result.message);
+      closeModal('bookModal');
+      await loadBookings(); // รีโหลดข้อมูลใหม่
+    } else {
+      alert('❌ ' + (result.message || 'เกิดข้อผิดพลาด'));
+    }
+  } catch (error) {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+    alert('❌ เกิดข้อผิดพลาด: ' + error.message);
+  }
+}
+
+// แสดงข้อมูลการจอง
+function viewBooking(booking) {
+  document.getElementById('viewSeatPreview').textContent = booking.seatId;
+  document.getElementById('viewEmpNo').textContent = booking.empNo;
+  document.getElementById('viewName').textContent = booking.name;
+  document.getElementById('viewFactory').textContent = booking.factory;
+  
+  // แปลงวันที่
+  if (booking.bookingTime) {
+    const bookingTime = new Date(booking.bookingTime);
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
     };
+    document.getElementById('viewTime').textContent = bookingTime.toLocaleString('th-TH', options);
+  } else {
+    document.getElementById('viewTime').textContent = '-';
+  }
+  
+  // เพิ่มปุ่มยกเลิกถ้าต้องการ (optional)
+  const modalActions = document.querySelector('#viewModal .modal-actions');
+  const existingCancelBtn = modalActions.querySelector('.btn-danger');
+  
+  if (!existingCancelBtn) {
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn btn-danger';
+    cancelBtn.textContent = 'ยกเลิกการจอง';
+    cancelBtn.onclick = () => cancelBookingConfirm(booking.empNo);
+    modalActions.insertBefore(cancelBtn, modalActions.firstChild);
+  }
+  
+  document.getElementById('viewModal').classList.add('active');
+}
+
+// ยืนยันการยกเลิกการจอง
+async function cancelBookingConfirm(empNo) {
+  if (!confirm('⚠️ ต้องการยกเลิกการจองใช่หรือไม่?\n\nคุณจะสามารถจองที่นั่งใหม่ได้')) {
+    return;
+  }
+  
+  try {
+    const result = await apiGet('cancelBooking', { empNo: empNo });
     
-    let bookingsData = [];
-    let selectedSeat = null;
-    
-    window.onload = function() {
-      loadBookings();
-    };
-    
-    // เรียก API - GET Request
-    async function apiGet(action, params = {}) {
-      try {
-        const url = new URL(API_URL);
-        url.searchParams.append('action', action);
-        
-        for (const [key, value] of Object.entries(params)) {
-          url.searchParams.append(key, value);
-        }
-        
-        const response = await fetch(url.toString());
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error('API GET Error:', error);
-        throw error;
-      }
+    if (result.success) {
+      alert('✅ ' + result.message);
+      closeModal('viewModal');
+      await loadBookings();
+    } else {
+      alert('❌ ' + (result.message || 'ไม่สามารถยกเลิกได้'));
     }
+  } catch (error) {
+    alert('❌ เกิดข้อผิดพลาด: ' + error.message);
+  }
+}
+
+// แสดงสถิติการจอง
+async function showStats() {
+  try {
+    const stats = await apiGet('getBookingStats');
+    const grid = document.getElementById('statsGrid');
+    grid.innerHTML = '';
     
-    // เรียก API - POST Request
-    async function apiPost(data) {
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify(data)
-        });
-        const result = await response.json();
-        return result;
-      } catch (error) {
-        console.error('API POST Error:', error);
-        throw error;
-      }
-    }
+    // สถิติหลัก
+    grid.innerHTML += `
+      <div class="stat-card">
+        <div class="stat-value">${stats.total || 0}</div>
+        <div class="stat-label">จองแล้วทั้งหมด</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${104 - (stats.total || 0)}</div>
+        <div class="stat-label">ที่นั่งว่าง</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${stats.regular || 0}</div>
+        <div class="stat-label">Regular</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${stats.sweet || 0}</div>
+        <div class="stat-label">Sweet</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${stats.vip || 0}</div>
+        <div class="stat-label">VIP</div>
+      </div>
+    `;
     
-    // โหลดข้อมูลการจอง
-    async function loadBookings() {
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('seatingMap').style.display = 'none';
+    // สถิติตามโรงงาน
+    if (stats.factories) {
+      const factoryHeader = document.createElement('div');
+      factoryHeader.style.width = '100%';
+      factoryHeader.style.textAlign = 'center';
+      factoryHeader.style.marginTop = '1rem';
+      factoryHeader.innerHTML = '<h4 style="color: var(--muted);">แยกตามโรงงาน</h4>';
+      grid.appendChild(factoryHeader);
       
-      try {
-        const bookings = await apiGet('getAllBookings');
-        bookingsData = Array.isArray(bookings) ? bookings : [];
-        renderSeats();
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('seatingMap').style.display = 'flex';
-      } catch (error) {
-        alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
-        document.getElementById('loading').style.display = 'none';
-      }
-    }
-    
-    // สร้างแผนผังที่นั่ง
-    function renderSeats() {
-      const wrapper = document.getElementById('seatingWrapper');
-      wrapper.innerHTML = '';
-      
-      const rows = Object.keys(seatLayout);
-      
-      rows.forEach((rowId) => {
-        const rowData = seatLayout[rowId];
-        
-        if (rowId === 'D' || rowId === 'S' || rowId === 'L') {
-          const divider = document.createElement('div');
-          divider.className = 'section-divider';
-          wrapper.appendChild(divider);
-        }
-        
-        const row = document.createElement('div');
-        row.className = 'row';
-        
-        const labelLeft = document.createElement('span');
-        labelLeft.className = 'row-label';
-        if (rowData.type === 'vip') labelLeft.classList.add('vvip');
-        if (rowData.type === 'sweet') labelLeft.classList.add('sweet');
-        labelLeft.textContent = rowId === 'L' ? 'VIP' : rowId;
-        row.appendChild(labelLeft);
-        
-        const blockLeft = document.createElement('div');
-        blockLeft.className = 'seat-block';
-        for (let i = 1; i <= rowData.split; i++) {
-          const seatId = rowId + i;
-          blockLeft.appendChild(createSeat(seatId, rowData.type));
-        }
-        row.appendChild(blockLeft);
-        
-        const aisle = document.createElement('div');
-        aisle.className = 'center-aisle';
-        row.appendChild(aisle);
-        
-        const blockRight = document.createElement('div');
-        blockRight.className = 'seat-block';
-        for (let i = rowData.split + 1; i <= rowData.count; i++) {
-          const seatId = rowId + i;
-          blockRight.appendChild(createSeat(seatId, rowData.type));
-        }
-        row.appendChild(blockRight);
-        
-        const labelRight = document.createElement('span');
-        labelRight.className = 'row-label';
-        if (rowData.type === 'vip') labelRight.classList.add('vvip');
-        if (rowData.type === 'sweet') labelRight.classList.add('sweet');
-        labelRight.textContent = rowId === 'L' ? 'VIP' : rowId;
-        row.appendChild(labelRight);
-        
-        wrapper.appendChild(row);
-      });
-    }
-    
-    function createSeat(seatId, type) {
-      const seat = document.createElement('div');
-      seat.className = 'seat ' + type;
-      seat.setAttribute('data-seat-id', seatId);
-      
-      const booking = bookingsData.find(b => b.seatId === seatId);
-      if (booking) {
-        seat.classList.add('booked');
-        seat.onclick = () => viewBooking(booking);
-      } else {
-        seat.onclick = () => openBookModal(seatId);
-      }
-      
-      const seatInner = document.createElement('div');
-      seatInner.className = 'seat-inner';
-      seat.appendChild(seatInner);
-      
-      return seat;
-    }
-    
-    function openBookModal(seatId) {
-      selectedSeat = seatId;
-      document.getElementById('bookSeatPreview').textContent = seatId;
-      document.getElementById('bookModal').classList.add('active');
-      document.getElementById('bookForm').reset();
-    }
-    
-    async function submitBooking(event) {
-      event.preventDefault();
-      
-      const empNo = document.getElementById('empNo').value.trim().toUpperCase();
-      const name = document.getElementById('name').value.trim().toUpperCase();
-      const factory = document.getElementById('factory').value;
-      
-      if (!empNo || !name || !factory || !selectedSeat) {
-        alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-        return;
-      }
-      
-      const submitBtn = event.target.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'กำลังจอง...';
-      submitBtn.disabled = true;
-      
-      try {
-        const result = await apiPost({
-          action: 'bookSeat',
-          empNo: empNo,
-          name: name,
-          factory: factory,
-          seatId: selectedSeat
-        });
-        
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-        
-        if (result.success) {
-          alert('จองที่นั่ง ' + selectedSeat + ' สำเร็จ!');
-          closeModal('bookModal');
-          loadBookings();
-        } else {
-          alert(result.message || 'เกิดข้อผิดพลาด');
-        }
-      } catch (error) {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-        alert('เกิดข้อผิดพลาด: ' + error.message);
-      }
-    }
-    
-    function viewBooking(booking) {
-      document.getElementById('viewSeatPreview').textContent = booking.seatId;
-      document.getElementById('viewEmpNo').textContent = booking.empNo;
-      document.getElementById('viewName').textContent = booking.name;
-      document.getElementById('viewFactory').textContent = booking.factory;
-      
-      const bookingTime = new Date(booking.bookingTime);
-      document.getElementById('viewTime').textContent = bookingTime.toLocaleString('th-TH');
-      
-      document.getElementById('viewModal').classList.add('active');
-    }
-    
-    async function showStats() {
-      try {
-        const stats = await apiGet('getBookingStats');
-        const grid = document.getElementById('statsGrid');
-        grid.innerHTML = '';
-        
+      Object.keys(stats.factories).forEach(factory => {
         grid.innerHTML += `
           <div class="stat-card">
-            <div class="stat-value">${stats.total || 0}</div>
-            <div class="stat-label">ทั้งหมด</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.regular || 0}</div>
-            <div class="stat-label">Regular</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.sweet || 0}</div>
-            <div class="stat-label">Sweet</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${stats.vip || 0}</div>
-            <div class="stat-label">VIP</div>
+            <div class="stat-value">${stats.factories[factory]}</div>
+            <div class="stat-label">${factory}</div>
           </div>
         `;
-        
-        if (stats.factories) {
-          Object.keys(stats.factories).forEach(factory => {
-            grid.innerHTML += `
-              <div class="stat-card">
-                <div class="stat-value">${stats.factories[factory]}</div>
-                <div class="stat-label">${factory}</div>
-              </div>
-            `;
-          });
-        }
-        
-        document.getElementById('statsModal').classList.add('active');
-      } catch (error) {
-        alert('ไม่สามารถโหลดสถิติได้: ' + error.message);
+      });
+    }
+    
+    document.getElementById('statsModal').classList.add('active');
+  } catch (error) {
+    alert('ไม่สามารถโหลดสถิติได้: ' + error.message);
+  }
+}
+
+// ปิด Modal
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.remove('active');
+  
+  // Clear selected seat ถ้าปิด book modal
+  if (modalId === 'bookModal') {
+    selectedSeat = null;
+  }
+}
+
+// ปิด Modal เมื่อคลิกพื้นหลัง
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      if (this.id === 'bookModal') {
+        selectedSeat = null;
       }
     }
-    
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('active');
-    }
-    
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('click', function(e) {
-        if (e.target === this) {
-          this.classList.remove('active');
-        }
-      });
+  });
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  // ESC to close modal
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal.active').forEach(modal => {
+      modal.classList.remove('active');
     });
-  </script>
+    selectedSeat = null;
+  }
+  
+  // F5 or Ctrl+R to refresh
+  if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+    e.preventDefault();
+    loadBookings();
+  }
+});
+
+// ตรวจสอบการจองของตัวเอง (optional)
+async function checkMyBooking() {
+  const empNo = prompt('กรุณาใส่รหัสพนักงานเพื่อตรวจสอบการจอง:');
+  if (!empNo) return;
+  
+  try {
+    const booking = await apiGet('getMyBooking', { empNo: empNo.toUpperCase() });
+    
+    if (booking) {
+      alert(`✅ คุณจองที่นั่ง: ${booking.seatId}\nชื่อ: ${booking.name}\nโรงงาน: ${booking.factory}`);
+    } else {
+      alert('❌ ไม่พบการจองของคุณ');
+    }
+  } catch (error) {
+    alert('เกิดข้อผิดพลาด: ' + error.message);
+  }
+}
+
+// Style สำหรับปุ่มยกเลิก (เพิ่มใน CSS หรือ inline)
+const style = document.createElement('style');
+style.textContent = `
+  .btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+  }
+  .btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+  }
+`;
+document.head.appendChild(style);
+
+// Debug function (สำหรับ development)
+function debugInfo() {
+  console.log('Current Bookings:', bookingsData);
+  console.log('Total Seats:', 104);
+  console.log('Booked Seats:', bookingsData.length);
+  console.log('Available Seats:', 104 - bookingsData.length);
+}
+
+// Export for debugging (optional)
+window.cinemaDebug = {
+  bookings: () => bookingsData,
+  refresh: () => loadBookings(),
+  stats: () => showStats(),
+  checkMy: () => checkMyBooking(),
+  info: () => debugInfo()
+};
+</script>
 </body>
 </html>
