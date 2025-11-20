@@ -907,6 +907,10 @@
       document.getElementById('seatingMap').style.display = 'none';
       
       try {
+        // Clear old data first
+        bookingsData = [];
+        myBooking = null;
+        
         // Use UID to get booking
         const [allBookings, myBookingData, stats] = await Promise.all([
           apiGet('getAllBookings'),
@@ -915,7 +919,11 @@
         ]);
         
         bookingsData = Array.isArray(allBookings) ? allBookings : [];
-        myBooking = myBookingData;
+        // Handle null or empty response
+        myBooking = (myBookingData && myBookingData.seatId) ? myBookingData : null;
+        
+        console.log('Loaded bookings:', bookingsData.length);
+        console.log('My booking:', myBooking);
         
         renderSeats();
         updateStats(stats);
