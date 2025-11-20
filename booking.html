@@ -3,237 +3,538 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>HRA Cinema Club - Booking</title>
+<title>HRA Cinema Club - Seat Selection</title>
 <style>
-  :root {
+  /* ============ CONFIGURATION ============ */
+  :root{
+    /* Seat images from Google Drive */
+    --img-regular: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w80");
+    --img-vip:     url("https://drive.google.com/thumbnail?id=1TSU5WQqDC5lrWYN8SSq9agRVLfSsFHUu&sz=w80");
+    --img-sweet: url("https://drive.google.com/thumbnail?id=1Du01KILJxPZZQf0vZnABSilXcMfqNX32&sz=w80");
+
+    /* Person icon (white) for selected seats */
+    --img-person: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
+  <circle cx='32' cy='20' r='10' fill='none' stroke='%23fff' stroke-width='4'/>\
+  <path d='M16 52c0-8.84 7.16-16 16-16s16 7.16 16 16' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/>\
+</svg>");
+
+    /* Dark theme colors */
     --bg:#0a0c10; 
     --panel:#12151c; 
     --line:#1f2530; 
     --text:#f0f2f5; 
     --muted:#8892a0;
     --accent:#ff6b6b;
+    --vip:#ffc93d;
+    --sweet:#ff69b4;
     --success:#4caf50;
     --primary:#00C300; /* LINE Green */
   }
-  
+
   * { 
     box-sizing: border-box;
     margin: 0;
     padding: 0;
   }
   
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+  
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: linear-gradient(135deg, #0a0c10 0%, #1a1d26 100%);
     color: var(--text);
-    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
   }
   
   .container {
     width: 100%;
-    max-width: 400px;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
     background: var(--panel);
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ===== USER HEADER ===== */
+  .user-header {
+    background: linear-gradient(135deg, #1f2530 0%, var(--panel) 100%);
+    padding: 1vh 2vw;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
   }
   
-  .logo {
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+  }
+  
+  .user-avatar {
+    width: clamp(35px, 5vw, 45px);
+    height: clamp(35px, 5vw, 45px);
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,195,0,0.3);
+  }
+  
+  .user-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+    font-weight: 600;
+    color: var(--text);
+  }
+  
+  .user-badge {
+    font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+    color: var(--muted);
+  }
+  
+  .user-badge span {
+    color: var(--primary);
+    font-weight: 600;
+  }
+  
+  .user-actions {
+    display: flex;
+    gap: 0.5vw;
+  }
+  
+  .btn-header {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 0.5vh 1vw;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  
+  .btn-header:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: var(--muted);
+  }
+  
+  .btn-header.logout {
+    background: rgba(244,67,54,0.15);
+    border-color: rgba(244,67,54,0.3);
+    color: #ff5252;
+  }
+  
+  .btn-header.logout:hover {
+    background: rgba(244,67,54,0.25);
+  }
+
+  /* ===== EVENT HEADER ===== */
+  .event-header {
+    background: linear-gradient(135deg, #1f2530 0%, var(--panel) 100%);
+    padding: 0.8vh 2vw;
     text-align: center;
-    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
   }
   
-  .title {
-    font-size: 1.4rem;
+  .event-title {
+    font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--vip);
+    text-transform: uppercase;
+    margin-bottom: 0.2vh;
+    opacity: 0.9;
+  }
+  
+  .event-name {
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
     font-weight: 700;
     background: linear-gradient(135deg, #ff6b6b, #ffc93d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2vh;
   }
   
-  .subtitle {
-    text-align: center;
+  .event-status {
+    font-size: clamp(0.5rem, 1vw, 0.7rem);
     color: var(--muted);
-    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== SCREEN ===== */
+  .screen-container {
+    padding: 0.8vh 2vw 0.5vh;
+    position: relative;
+    flex-shrink: 0;
+  }
+  
+  .screen {
+    height: 0.3vh;
+    min-height: 2px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255,193,61,0.3) 20%, 
+      rgba(255,193,61,0.8) 50%, 
+      rgba(255,193,61,0.3) 80%, 
+      transparent 100%
+    );
+    border-radius: 50%;
+    margin-bottom: 0.3vh;
+    box-shadow: 0 0 20px rgba(255,193,61,0.4);
+  }
+  
+  .screen-label {
+    text-align: center;
+    font-size: clamp(0.5rem, 1vw, 0.65rem);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+
+  /* ===== SEATING MAP ===== */
+  .seating-map {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1vh 1vw;
+    overflow: auto;
+  }
+  
+  .seating-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2px, 0.3vw, 4px);
+    margin-bottom: clamp(2px, 0.5vh, 6px);
+    position: relative;
+    width: 100%;
+  }
+  
+  .section-divider {
+    height: clamp(4px, 1vh, 12px);
+    width: 100%;
+    position: relative;
+  }
+  
+  .section-divider::before {
+    content: "";
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      var(--line) 20%, 
+      var(--line) 80%, 
+      transparent
+    );
+    opacity: 0.5;
+  }
+  
+  .row-label {
+    width: clamp(14px, 2vw, 20px);
+    height: clamp(14px, 2vw, 20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: clamp(0.5rem, 1vw, 0.7rem);
+    color: var(--muted);
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    margin: 0 clamp(2px, 0.3vw, 4px);
+    flex-shrink: 0;
+  }
+  
+  .row-label.vvip {
+    color: var(--vip);
+    background: rgba(255,193,61,0.1);
+  }
+  
+  .row-label.sweet {
+    color: var(--sweet);
+    background: rgba(255,105,180,0.1);
+  }
+  
+  .seat-block {
+    display: flex;
+    gap: clamp(2px, 0.3vw, 4px);
+  }
+  
+  .center-aisle {
+    width: clamp(8px, 1.5vw, 16px);
+  }
+  
+  .seat {
+    position: relative;
+    width: clamp(16px, 2.5vw, 28px);
+    height: clamp(16px, 2.5vw, 28px);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  
+  .seat-inner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: clamp(2px, 0.4vw, 6px);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  .seat.regular .seat-inner {
+    background-image: var(--img-regular);
+  }
+  
+  .seat.vip .seat-inner {
+    background-image: var(--img-vip);
+  }
+  
+  .seat.sweet .seat-inner {
+    background-image: var(--img-sweet);
+  }
+  
+  .seat:not(.booked):not(.mine):hover .seat-inner {
+    transform: scale(1.15);
+    filter: brightness(1.2);
+  }
+  
+  .seat:not(.booked):not(.mine):active .seat-inner {
+    transform: scale(0.95);
+  }
+  
+  .seat.booked {
+    cursor: pointer;
+  }
+  
+  .seat.booked .seat-inner {
+    opacity: 0.5;
+  }
+  
+  .seat.booked .seat-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--img-person) center/65% no-repeat;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
+  }
+  
+  .seat.mine .seat-inner {
+    opacity: 1;
+    box-shadow: 0 0 0 2px var(--primary), 0 0 12px rgba(0,195,0,0.6);
+    animation: pulse 2s infinite;
+  }
+  
+  .seat.mine .seat-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--img-person) center/65% no-repeat;
+    filter: drop-shadow(0 1px 3px rgba(0,195,0,0.8));
+  }
+  
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--primary), 0 0 12px rgba(0,195,0,0.6); }
+    50% { box-shadow: 0 0 0 2px var(--primary), 0 0 20px rgba(0,195,0,0.8); }
+  }
+
+  /* ===== MODAL ===== */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .modal.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 90vw;
+    width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s;
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.5rem;
   }
   
-  .info-card {
-    background: rgba(255,255,255,0.03);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
+  .modal-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--vip);
+  }
+  
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  .modal-close:hover {
+    color: var(--text);
+    transform: rotate(90deg);
+  }
+  
+  .seat-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+  }
+  
+  .seat-preview-icon {
+    font-size: 4rem;
+  }
+  
+  .seat-preview-id {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--vip));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-left: 1rem;
   }
   
   .info-item {
-    margin-bottom: 0.5rem;
-    font-size: 0.85rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
   }
   
-  .info-item:last-child {
+  .info-item:last-of-type {
     margin-bottom: 0;
   }
   
   .info-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--muted);
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
   .info-value {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     color: var(--text);
     font-weight: 600;
   }
   
-  .seat-section-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .seat-legend {
-    display:flex;
-    flex-wrap:wrap;
-    gap:0.5rem;
-    margin-bottom:0.75rem;
-    font-size:0.75rem;
-  }
-  .seat-legend-item {
-    display:flex;
-    align-items:center;
-    gap:0.3rem;
-    color: var(--muted);
-  }
-  .seat-dot {
-    width:12px;
-    height:12px;
-    border-radius:4px;
-    border:1px solid var(--line);
-  }
-  .dot-regular { background: rgba(255,255,255,0.08); }
-  .dot-sweet   { background: rgba(255,107,107,0.18); }
-  .dot-vip     { background: rgba(255,201,61,0.2); }
-  .dot-mine    { border-color: var(--primary); }
-
-  .seat-grid-wrapper{
-    max-height:220px;
-    overflow-y:auto;
-    margin-bottom:0.75rem;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.03);
-    padding:0.5rem;
-    background:rgba(0,0,0,0.15);
-  }
-
-  .seat-row {
-    display:flex;
-    align-items:center;
-    margin-bottom:0.35rem;
-  }
-  .row-label {
-    width:22px;
-    text-align:center;
-    font-size:0.75rem;
-    color:var(--muted);
-    margin-right:0.25rem;
-  }
-  .seat-row-buttons {
-    display:flex;
-    gap:0.25rem;
-    flex-wrap:wrap;
-  }
-
-  .seat-btn {
-    min-width:30px;
-    height:26px;
-    border-radius:8px;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.04);
-    font-size:0.75rem;
-    color:var(--text);
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:all 0.15s;
-  }
-  .seat-btn.regular { }
-  .seat-btn.sweet   { background:rgba(255,107,107,0.18); }
-  .seat-btn.vip     { background:rgba(255,201,61,0.2); }
-  .seat-btn:hover:not(.disabled) {
-    transform:translateY(-1px);
-    box-shadow:0 4px 10px rgba(0,0,0,0.35);
-  }
-  .seat-btn.selected {
-    border-color: var(--primary);
-    box-shadow:0 0 0 1px rgba(0,195,0,0.7);
-  }
-  .seat-btn.mine {
-    border-color: var(--primary);
-    box-shadow:0 0 0 1px rgba(0,195,0,1);
-  }
-  .seat-btn.disabled {
-    opacity:0.4;
-    cursor:not-allowed;
-  }
-  .seat-btn.disabled::after {
-    content:'X';
-    font-size:0.7rem;
-    color:#ff8a80;
-    margin-left:2px;
-  }
-
-  .selection-summary {
-    font-size:0.8rem;
-    color:var(--muted);
-    margin-bottom:0.5rem;
-  }
-  .selection-summary span {
-    color:var(--text);
-    font-weight:600;
-  }
-
-  .btn {
-    width: 100%;
-    padding: 0.85rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 0.75rem;
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
   }
   
-  .btn:last-child {
-    margin-bottom: 0;
+  .modal-actions .btn {
+    flex: 1;
+  }
+  
+  .btn {
+    padding: 0.85rem 1.25rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
   }
   
   .btn-primary {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--accent), var(--vip));
     color: white;
+    box-shadow: 0 4px 12px rgba(255,107,107,0.3);
   }
   
   .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,195,0,0.4);
+    box-shadow: 0 6px 16px rgba(255,107,107,0.4);
   }
   
   .btn-secondary {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.08);
     color: var(--text);
     border: 1px solid var(--line);
   }
   
   .btn-secondary:hover:not(:disabled) {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.12);
+  }
+  
+  .btn-danger {
+    background: rgba(244,67,54,0.15);
+    color: #ff5252;
+    border: 1px solid rgba(244,67,54,0.3);
+  }
+  
+  .btn-danger:hover:not(:disabled) {
+    background: rgba(244,67,54,0.25);
   }
   
   .btn:disabled {
@@ -241,389 +542,632 @@
     cursor: not-allowed;
   }
 
-  .btn-row {
-    display:flex;
-    gap:0.5rem;
-  }
-
-  .error-message {
-    background: rgba(244,67,54,0.1);
-    border: 1px solid rgba(244,67,54,0.3);
-    color: #f44336;
-    padding: 0.75rem;
-    border-radius: 8px;
-    margin-top: 0.5rem;
-    margin-bottom: 0.25rem;
-    display: none;
-    font-size:0.8rem;
+  /* ===== LEGEND ===== */
+  .legend {
+    padding: 0.8vh 2vw;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: clamp(8px, 1.5vw, 15px);
+    flex-shrink: 0;
   }
   
-  .success-message {
-    background: rgba(76,175,80,0.1);
-    border: 1px solid rgba(76,175,80,0.3);
-    color: #4caf50;
-    padding: 0.75rem;
-    border-radius: 8px;
-    margin-top: 0.5rem;
-    margin-bottom: 0.25rem;
-    display: none;
-    font-size:0.8rem;
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 0.6vw, 8px);
+    font-size: clamp(0.55rem, 1.1vw, 0.7rem);
+    color: var(--muted);
+  }
+  
+  .legend-dot {
+    width: clamp(12px, 1.8vw, 16px);
+    height: clamp(10px, 1.5vw, 14px);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  
+  .legend-dot.regular {
+    background: rgba(255,255,255,0.15);
+  }
+  
+  .legend-dot.vip {
+    background: var(--vip);
+  }
+  
+  .legend-dot.sweet {
+    background: var(--sweet);
+  }
+  
+  .legend-dot.available {
+    background: rgba(76,175,80,0.6);
+  }
+  
+  .legend-dot.booked {
+    background: rgba(255,255,255,0.3);
+  }
+  
+  .legend-dot.mine {
+    background: var(--primary);
+    box-shadow: 0 0 8px rgba(0,195,0,0.6);
+  }
+  
+  /* ===== STATS BAR ===== */
+  .stats-bar {
+    padding: 0.6vh 2vw;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(10px, 2vw, 20px);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  
+  .stat-item {
+    font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+    color: var(--muted);
+  }
+  
+  .stat-item strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+  
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+  }
+  
+  .loading-spinner {
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: var(--vip);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
-  .stats {
-    font-size:0.75rem;
-    color:var(--muted);
-    margin-top:0.4rem;
+  @media (max-width: 600px) {
+    .modal-content {
+      padding: 1.5rem;
+      width: 95vw;
+    }
+    
+    .user-header {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .user-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
   }
 </style>
 </head>
 <body>
   <div class="container">
-    <div class="logo">
-      <div class="title">HRA CINEMA CLUB</div>
-      <div class="subtitle">เลือกที่นั่งสำหรับการชมภาพยนตร์</div>
-    </div>
-
-    <!-- User Info -->
-    <div class="info-card">
-      <div class="info-item">
-        <div class="info-label">รหัสพนักงาน</div>
-        <div class="info-value" id="empNoText">-</div>
+    <!-- User Header -->
+    <div class="user-header">
+      <div class="user-info">
+        <img id="userAvatar" class="user-avatar" src="" alt="User">
+        <div class="user-details">
+          <div class="user-name" id="userName">-</div>
+          <div class="user-badge"><span id="userEmpNo">-</span> • <span id="userFactory">-</span></div>
+        </div>
       </div>
-      <div class="info-item">
-        <div class="info-label">ชื่อ-สกุล</div>
-        <div class="info-value" id="nameText">-</div>
-      </div>
-      <div class="info-item">
-        <div class="info-label">โรงงาน</div>
-        <div class="info-value" id="factoryText">-</div>
+      <div class="user-actions">
+        <button class="btn-header" onclick="refreshBookings()">🔄 รีเฟรช</button>
+        <button class="btn-header logout" onclick="logout()">🚪 ออกจากระบบ</button>
       </div>
     </div>
-
-    <!-- Seat Section -->
-    <div class="info-card">
-      <div class="seat-section-title">เลือกที่นั่ง</div>
-
-      <div class="seat-legend">
-        <div class="seat-legend-item">
-          <div class="seat-dot dot-regular"></div><span>Regular</span>
-        </div>
-        <div class="seat-legend-item">
-          <div class="seat-dot dot-sweet"></div><span>Sweet (โซนคู่รัก)</span>
-        </div>
-        <div class="seat-legend-item">
-          <div class="seat-dot dot-vip"></div><span>VIP Lounge</span>
-        </div>
-        <div class="seat-legend-item">
-          <div class="seat-dot dot-mine"></div><span>ที่นั่งของฉัน</span>
-        </div>
+    
+    <!-- Event Header -->
+    <div class="event-header">
+      <div class="event-title">HRA Function 2025</div>
+      <div class="event-name">CINEMA CLUB</div>
+      <div class="event-status">A Night to Remember • Live Booking</div>
+    </div>
+    
+    <!-- Screen -->
+    <div class="screen-container">
+      <div class="screen"></div>
+      <div class="screen-label">Screen</div>
+    </div>
+    
+    <!-- Loading -->
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      <p>กำลังโหลดข้อมูล...</p>
+    </div>
+    
+    <!-- Seating Map -->
+    <main class="seating-map" id="seatingMap" style="display:none;">
+      <div class="seating-wrapper" id="seatingWrapper"></div>
+    </main>
+    
+    <!-- Legend -->
+    <footer class="legend">
+      <div class="legend-item">
+        <span class="legend-dot regular"></span>
+        <span>Regular</span>
       </div>
-
-      <div class="seat-grid-wrapper">
-        <div id="seatGrid"></div>
+      <div class="legend-item">
+        <span class="legend-dot sweet"></span>
+        <span>Sweet</span>
       </div>
-
-      <div class="selection-summary">
-        เลือกที่นั่ง: <span id="selectedSeatText">-</span><br>
-        ที่นั่งของฉันตอนนี้: <span id="mySeatText">-</span>
+      <div class="legend-item">
+        <span class="legend-dot vip"></span>
+        <span>VIP</span>
       </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="bookBtn" disabled>ยืนยันการจอง</button>
-        <button class="btn btn-secondary" id="refreshBtn">รีเฟรช</button>
+      <div class="legend-item">
+        <span class="legend-dot available"></span>
+        <span>ว่าง</span>
       </div>
-      <div class="btn-row">
-        <button class="btn btn-secondary" id="cancelBtn">ยกเลิกที่นั่งของฉัน</button>
-        <button class="btn btn-secondary" onclick="window.location.href='index.html'">กลับหน้าลงทะเบียน</button>
+      <div class="legend-item">
+        <span class="legend-dot booked"></span>
+        <span>จองแล้ว</span>
       </div>
-
-      <div class="error-message" id="errorBox"></div>
-      <div class="success-message" id="successBox"></div>
-      <div class="stats" id="statsBox">
-        จองแล้วทั้งหมด: <span id="statTotal">0</span> | Regular: <span id="statRegular">0</span> • Sweet: <span id="statSweet">0</span> • VIP: <span id="statVip">0</span>
+      <div class="legend-item">
+        <span class="legend-dot mine"></span>
+        <span>ที่ของฉัน</span>
+      </div>
+    </footer>
+    
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        ทั้งหมด: <strong><span id="statTotal">0</span>/106</strong>
+      </div>
+      <div class="stat-item">
+        Regular: <strong id="statRegular">0</strong>
+      </div>
+      <div class="stat-item">
+        Sweet: <strong id="statSweet">0</strong>
+      </div>
+      <div class="stat-item">
+        VIP: <strong id="statVip">0</strong>
       </div>
     </div>
   </div>
 
-<script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+  <!-- Book Modal -->
+  <div id="bookModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">จองที่นั่ง</h3>
+        <button class="modal-close" onclick="closeModal('bookModal')">&times;</button>
+      </div>
+      
+      <div class="seat-preview">
+        <div class="seat-preview-icon">🎬</div>
+        <div class="seat-preview-id" id="bookSeatId">-</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">รหัสพนักงาน</div>
+        <div class="info-value" id="bookEmpNo">-</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">ชื่อ-สกุล</div>
+        <div class="info-value" id="bookName">-</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">โรงงาน</div>
+        <div class="info-value" id="bookFactory">-</div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('bookModal')">ยกเลิก</button>
+        <button type="button" class="btn btn-primary" onclick="confirmBooking()">ยืนยันการจอง</button>
+      </div>
+    </div>
+  </div>
 
-  let currentUser = null;
-  let bookings = [];
-  let myBooking = null;
-  let selectedSeatId = null;
+  <!-- View Modal -->
+  <div id="viewModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">ข้อมูลการจอง</h3>
+        <button class="modal-close" onclick="closeModal('viewModal')">&times;</button>
+      </div>
+      
+      <div class="seat-preview">
+        <div class="seat-preview-icon">🎫</div>
+        <div class="seat-preview-id" id="viewSeatId">-</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">รหัสพนักงาน</div>
+        <div class="info-value" id="viewEmpNo">-</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">ชื่อ-สกุล</div>
+        <div class="info-value" id="viewName">-</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">โรงงาน</div>
+        <div class="info-value" id="viewFactory">-</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">เวลาจอง</div>
+        <div class="info-value" id="viewTime">-</div>
+      </div>
+      
+      <div class="modal-actions" id="viewActions">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('viewModal')">ปิด</button>
+      </div>
+    </div>
+  </div>
 
-  // Layout: A–H = Regular, S = Sweet, L = VIP
-  const seatLayout = [
-    { row: 'A', seats: ['A1','A2','A3','A4',null,'A5','A6','A7','A8'] },
-    { row: 'B', seats: ['B1','B2','B3','B4',null,'B5','B6','B7','B8'] },
-    { row: 'C', seats: ['C1','C2','C3','C4',null,'C5','C6','C7','C8'] },
-    { row: 'D', seats: ['D1','D2','D3','D4',null,'D5','D6','D7','D8'] },
-    { row: 'E', seats: ['E1','E2','E3','E4',null,'E5','E6','E7','E8'] },
-    { row: 'F', seats: ['F1','F2','F3','F4',null,'F5','F6','F7','F8'] },
-    { row: 'G', seats: ['G1','G2','G3','G4',null,'G5','G6','G7','G8'] },
-    { row: 'H', seats: ['H1','H2','H3','H4',null,'H5','H6','H7','H8'] },
-    { row: 'S', seats: ['S1','S2',null,'S3','S4'] },
-    { row: 'L', seats: ['L1','L2',null,'L3','L4'] }
-  ];
-
-  function apiCall(action, params = {}) {
-    const url = new URL(API_URL);
-    url.searchParams.append('action', action);
-    Object.entries(params).forEach(([k,v])=>{
-      if (v !== undefined && v !== null && v !== '') url.searchParams.append(k,v);
-    });
-    return fetch(url.toString()).then(r=>r.json());
-  }
-
-  function showError(msg){
-    const box = document.getElementById('errorBox');
-    box.textContent = msg;
-    box.style.display = 'block';
-    document.getElementById('successBox').style.display = 'none';
-  }
-
-  function showSuccess(msg){
-    const box = document.getElementById('successBox');
-    box.textContent = msg;
-    box.style.display = 'block';
-    document.getElementById('errorBox').style.display = 'none';
-  }
-
-  function clearMessages(){
-    document.getElementById('errorBox').style.display = 'none';
-    document.getElementById('successBox').style.display = 'none';
-  }
-
-  function buildSeats(){
-    const grid = document.getElementById('seatGrid');
-    grid.innerHTML = '';
-
-    const bookedMap = {};
-    bookings.forEach(b=>{
-      if (b.seatId) bookedMap[b.seatId] = b;
-    });
-
-    const mySeatId = myBooking ? myBooking.seatId : null;
-
-    seatLayout.forEach(row=>{
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'seat-row';
-
-      const label = document.createElement('div');
-      label.className = 'row-label';
-      label.textContent = row.row;
-      rowDiv.appendChild(label);
-
-      const btnWrap = document.createElement('div');
-      btnWrap.className = 'seat-row-buttons';
-
-      row.seats.forEach(seatId=>{
-        if (seatId === null) {
-          const spacer = document.createElement('div');
-          spacer.style.width = '12px';
-          spacer.style.height = '1px';
-          btnWrap.appendChild(spacer);
-          return;
+  <script>
+    // ==================== CONFIGURATION ====================
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+    
+    const seatLayout = {
+      'A': { count: 14, type: 'regular', split: 7 },
+      'B': { count: 14, type: 'regular', split: 7 },
+      'C': { count: 14, type: 'regular', split: 7 },
+      'D': { count: 16, type: 'regular', split: 8 },
+      'E': { count: 16, type: 'regular', split: 8 },
+      'F': { count: 16, type: 'regular', split: 8 },
+      'S': { count: 14, type: 'sweet', split: 7 },
+      'L': { count: 14, type: 'vip', split: 7 }
+    };
+    
+    let currentUser = null;
+    let bookingsData = [];
+    let myBooking = null;
+    let selectedSeat = null;
+    
+    // ==================== INITIALIZATION ====================
+    window.onload = function() {
+      if (!initUser()) return;
+      loadBookings();
+    };
+    
+    function initUser() {
+      const raw = sessionStorage.getItem('userData');
+      if (!raw) {
+        alert('ไม่พบข้อมูลผู้ใช้ กรุณากลับไปหน้าลงทะเบียน');
+        window.location.href = 'index.html';
+        return false;
+      }
+      
+      try {
+        const data = JSON.parse(raw);
+        if (!data.empNo || !data.lineUserId) {
+          throw new Error('Invalid user data');
         }
-
-        const btn = document.createElement('button');
-        btn.className = 'seat-btn';
-
-        if (seatId.startsWith('L')) btn.classList.add('vip');
-        else if (seatId.startsWith('S')) btn.classList.add('sweet');
-        else btn.classList.add('regular');
-
-        btn.dataset.seatId = seatId;
-        btn.textContent = seatId.replace(/^[A-Z]+/, '');
-
-        const isBooked = !!bookedMap[seatId];
-        const isMine   = mySeatId === seatId;
-
-        if (isMine) {
-          btn.classList.add('mine');
+        
+        currentUser = data;
+        
+        // Display user info
+        document.getElementById('userName').textContent = data.name || '-';
+        document.getElementById('userEmpNo').textContent = data.empNo || '-';
+        document.getElementById('userFactory').textContent = data.factory || '-';
+        
+        if (data.linePictureUrl) {
+          document.getElementById('userAvatar').src = data.linePictureUrl;
+        } else {
+          document.getElementById('userAvatar').src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23ddd"/><text x="50" y="60" text-anchor="middle" font-size="40" fill="%23666">👤</text></svg>';
         }
-        if (isBooked && !isMine) {
-          btn.classList.add('disabled');
+        
+        return true;
+        
+      } catch (e) {
+        console.error('User data error:', e);
+        alert('ข้อมูลผู้ใช้ไม่ถูกต้อง กรุณากลับไปหน้าลงทะเบียน');
+        window.location.href = 'index.html';
+        return false;
+      }
+    }
+    
+    // ==================== API CALLS ====================
+    async function apiGet(action, params = {}) {
+      try {
+        const url = new URL(API_URL);
+        url.searchParams.append('action', action);
+        
+        for (const [key, value] of Object.entries(params)) {
+          if (value !== undefined && value !== null && value !== '') {
+            url.searchParams.append(key, value);
+          }
         }
-
-        btn.addEventListener('click', ()=>onSeatClick(btn));
-        btnWrap.appendChild(btn);
+        
+        const response = await fetch(url.toString());
+        const data = await response.json();
+        return data;
+        
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+    
+    // ==================== DATA LOADING ====================
+    async function loadBookings() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('seatingMap').style.display = 'none';
+      
+      try {
+        // Use UID to get booking
+        const [allBookings, myBookingData, stats] = await Promise.all([
+          apiGet('getAllBookings'),
+          apiGet('getMyBookingByUID', { lineUserId: currentUser.lineUserId }),
+          apiGet('getBookingStats')
+        ]);
+        
+        bookingsData = Array.isArray(allBookings) ? allBookings : [];
+        myBooking = myBookingData;
+        
+        renderSeats();
+        updateStats(stats);
+        
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('seatingMap').style.display = 'flex';
+        
+      } catch (error) {
+        console.error('Load error:', error);
+        alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+    
+    function refreshBookings() {
+      loadBookings();
+    }
+    
+    // ==================== RENDERING ====================
+    function renderSeats() {
+      const wrapper = document.getElementById('seatingWrapper');
+      wrapper.innerHTML = '';
+      
+      const rows = Object.keys(seatLayout);
+      const mySeatId = myBooking ? myBooking.seatId : null;
+      
+      rows.forEach((rowId) => {
+        const rowData = seatLayout[rowId];
+        
+        // Add dividers
+        if (rowId === 'D' || rowId === 'S' || rowId === 'L') {
+          const divider = document.createElement('div');
+          divider.className = 'section-divider';
+          wrapper.appendChild(divider);
+        }
+        
+        const row = document.createElement('div');
+        row.className = 'row';
+        
+        // Left label
+        const labelLeft = document.createElement('span');
+        labelLeft.className = 'row-label';
+        if (rowData.type === 'vip') labelLeft.classList.add('vvip');
+        if (rowData.type === 'sweet') labelLeft.classList.add('sweet');
+        labelLeft.textContent = rowId === 'L' ? 'VIP' : rowId;
+        row.appendChild(labelLeft);
+        
+        // Left block
+        const blockLeft = document.createElement('div');
+        blockLeft.className = 'seat-block';
+        for (let i = 1; i <= rowData.split; i++) {
+          const seatId = rowId + i;
+          blockLeft.appendChild(createSeat(seatId, rowData.type, mySeatId));
+        }
+        row.appendChild(blockLeft);
+        
+        // Center aisle
+        const aisle = document.createElement('div');
+        aisle.className = 'center-aisle';
+        row.appendChild(aisle);
+        
+        // Right block
+        const blockRight = document.createElement('div');
+        blockRight.className = 'seat-block';
+        for (let i = rowData.split + 1; i <= rowData.count; i++) {
+          const seatId = rowId + i;
+          blockRight.appendChild(createSeat(seatId, rowData.type, mySeatId));
+        }
+        row.appendChild(blockRight);
+        
+        // Right label
+        const labelRight = document.createElement('span');
+        labelRight.className = 'row-label';
+        if (rowData.type === 'vip') labelRight.classList.add('vvip');
+        if (rowData.type === 'sweet') labelRight.classList.add('sweet');
+        labelRight.textContent = rowId === 'L' ? 'VIP' : rowId;
+        row.appendChild(labelRight);
+        
+        wrapper.appendChild(row);
       });
-
-      rowDiv.appendChild(btnWrap);
-      grid.appendChild(rowDiv);
-    });
-
-    updateSelectionTexts();
-  }
-
-  function onSeatClick(btn){
-    const seatId = btn.dataset.seatId;
-
-    if (btn.classList.contains('disabled')) {
-      showError('ที่นั่งนี้มีผู้จองแล้ว');
-      return;
     }
-
-    if (myBooking && myBooking.seatId && myBooking.seatId !== seatId) {
-      showError('คุณได้จองที่นั่ง ' + myBooking.seatId + ' แล้ว หากต้องการเปลี่ยน กรุณายกเลิกที่นั่งเดิมก่อน');
-      return;
-    }
-
-    clearMessages();
-
-    if (selectedSeatId === seatId){
-      selectedSeatId = null;
-    }else{
-      selectedSeatId = seatId;
-    }
-
-    document.querySelectorAll('.seat-btn').forEach(s=>s.classList.remove('selected'));
-    if (selectedSeatId){
-      const el = document.querySelector(`.seat-btn[data-seat-id="${selectedSeatId}"]`);
-      if (el) el.classList.add('selected');
-    }
-
-    updateSelectionTexts();
-  }
-
-  function updateSelectionTexts(){
-    document.getElementById('selectedSeatText').textContent = selectedSeatId || '-';
-    document.getElementById('mySeatText').textContent       = myBooking && myBooking.seatId ? myBooking.seatId : '-';
-    document.getElementById('bookBtn').disabled             = !selectedSeatId || (myBooking && myBooking.seatId === selectedSeatId);
-  }
-
-  async function refreshAll(){
-    if (!currentUser) return;
-    clearMessages();
-    document.getElementById('refreshBtn').disabled = true;
-
-    try{
-      const [all, mine, stats] = await Promise.all([
-        apiCall('getAllBookings'),
-        apiCall('getMyBooking', { empNo: currentUser.empNo }),
-        apiCall('getBookingStats')
-      ]);
-
-      bookings   = Array.isArray(all) ? all : [];
-      myBooking  = mine && mine.seatId ? mine : null;
-      selectedSeatId = myBooking ? myBooking.seatId : null;
-
-      buildSeats();
-
-      if (stats){
-        document.getElementById('statTotal').textContent   = stats.total   || 0;
-        document.getElementById('statRegular').textContent = stats.regular || 0;
-        document.getElementById('statSweet').textContent   = stats.sweet   || 0;
-        document.getElementById('statVip').textContent     = stats.vip     || 0;
+    
+    function createSeat(seatId, type, mySeatId) {
+      const seat = document.createElement('div');
+      seat.className = 'seat ' + type;
+      seat.setAttribute('data-seat-id', seatId);
+      
+      const booking = bookingsData.find(b => b.seatId === seatId);
+      const isMine = (seatId === mySeatId);
+      
+      if (isMine) {
+        seat.classList.add('mine');
+        seat.onclick = () => viewMyBooking();
+      } else if (booking) {
+        seat.classList.add('booked');
+        seat.onclick = () => viewBooking(booking);
+      } else {
+        seat.onclick = () => openBookModal(seatId);
       }
-    }catch(err){
-      console.error(err);
-      showError('โหลดข้อมูลไม่สำเร็จ');
-    }finally{
-      document.getElementById('refreshBtn').disabled = false;
+      
+      const seatInner = document.createElement('div');
+      seatInner.className = 'seat-inner';
+      seat.appendChild(seatInner);
+      
+      return seat;
     }
-  }
-
-  async function bookSelected(){
-    if (!currentUser || !selectedSeatId) return;
-    clearMessages();
-
-    const btn = document.getElementById('bookBtn');
-    btn.disabled = true;
-    btn.textContent = 'กำลังจอง...';
-
-    try{
-      const res = await apiCall('bookSeat', {
-        empNo: currentUser.empNo,
-        name: currentUser.name,
-        factory: currentUser.factory,
-        seatId: selectedSeatId
+    
+    function updateStats(stats) {
+      if (!stats) return;
+      
+      document.getElementById('statTotal').textContent = stats.total || 0;
+      document.getElementById('statRegular').textContent = stats.regular || 0;
+      document.getElementById('statSweet').textContent = stats.sweet || 0;
+      document.getElementById('statVip').textContent = stats.vip || 0;
+    }
+    
+    // ==================== BOOKING FLOW ====================
+    function openBookModal(seatId) {
+      // Check if already booked
+      if (myBooking) {
+        alert('คุณจองที่นั่ง ' + myBooking.seatId + ' ไว้แล้ว\nหากต้องการเปลี่ยน กรุณายกเลิกที่นั่งเดิมก่อน');
+        return;
+      }
+      
+      selectedSeat = seatId;
+      
+      document.getElementById('bookSeatId').textContent = seatId;
+      document.getElementById('bookEmpNo').textContent = currentUser.empNo;
+      document.getElementById('bookName').textContent = currentUser.name;
+      document.getElementById('bookFactory').textContent = currentUser.factory;
+      
+      document.getElementById('bookModal').classList.add('active');
+    }
+    
+    async function confirmBooking() {
+      if (!selectedSeat) return;
+      
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'กำลังจอง...';
+      
+      try {
+        const result = await apiGet('bookSeat', {
+          empNo: currentUser.empNo,
+          name: currentUser.name,
+          factory: currentUser.factory,
+          seatId: selectedSeat,
+          lineUserId: currentUser.lineUserId
+        });
+        
+        if (result.success) {
+          alert('จองที่นั่ง ' + selectedSeat + ' สำเร็จ! 🎉');
+          closeModal('bookModal');
+          await loadBookings();
+        } else {
+          alert('ไม่สามารถจองได้: ' + (result.message || 'เกิดข้อผิดพลาด'));
+        }
+        
+      } catch (error) {
+        console.error('Booking error:', error);
+        alert('เกิดข้อผิดพลาด: ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'ยืนยันการจอง';
+      }
+    }
+    
+    function viewBooking(booking) {
+      document.getElementById('viewSeatId').textContent = booking.seatId;
+      document.getElementById('viewEmpNo').textContent = booking.empNo;
+      document.getElementById('viewName').textContent = booking.name;
+      document.getElementById('viewFactory').textContent = booking.factory;
+      
+      const bookingTime = new Date(booking.bookingTime);
+      document.getElementById('viewTime').textContent = bookingTime.toLocaleString('th-TH');
+      
+      // Remove cancel button if exists
+      const actions = document.getElementById('viewActions');
+      actions.innerHTML = '<button type="button" class="btn btn-secondary" onclick="closeModal(\'viewModal\')">ปิด</button>';
+      
+      document.getElementById('viewModal').classList.add('active');
+    }
+    
+    function viewMyBooking() {
+      if (!myBooking) return;
+      
+      document.getElementById('viewSeatId').textContent = myBooking.seatId;
+      document.getElementById('viewEmpNo').textContent = myBooking.empNo;
+      document.getElementById('viewName').textContent = myBooking.name;
+      document.getElementById('viewFactory').textContent = myBooking.factory;
+      
+      const bookingTime = new Date(myBooking.bookingTime);
+      document.getElementById('viewTime').textContent = bookingTime.toLocaleString('th-TH');
+      
+      // Add cancel button
+      const actions = document.getElementById('viewActions');
+      actions.innerHTML = `
+        <button type="button" class="btn btn-secondary" onclick="closeModal('viewModal')">ปิด</button>
+        <button type="button" class="btn btn-danger" onclick="cancelMyBooking()">ยกเลิกการจอง</button>
+      `;
+      
+      document.getElementById('viewModal').classList.add('active');
+    }
+    
+    async function cancelMyBooking() {
+      if (!myBooking) return;
+      
+      const confirmed = confirm('ต้องการยกเลิกการจองที่นั่ง ' + myBooking.seatId + ' ใช่หรือไม่?');
+      if (!confirmed) return;
+      
+      try {
+        const result = await apiGet('cancelBooking', {
+          empNo: currentUser.empNo,
+          lineUserId: currentUser.lineUserId
+        });
+        
+        if (result.success) {
+          alert('ยกเลิกการจองสำเร็จ');
+          closeModal('viewModal');
+          await loadBookings();
+        } else {
+          alert('ไม่สามารถยกเลิกได้: ' + (result.message || 'เกิดข้อผิดพลาด'));
+        }
+        
+      } catch (error) {
+        console.error('Cancel error:', error);
+        alert('เกิดข้อผิดพลาด: ' + error.message);
+      }
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+      selectedSeat = null;
+    }
+    
+    function logout() {
+      const confirmed = confirm('ต้องการออกจากระบบใช่หรือไม่?');
+      if (confirmed) {
+        sessionStorage.removeItem('userData');
+        window.location.href = 'index.html';
+      }
+    }
+    
+    // Close modal on background click
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+          selectedSeat = null;
+        }
       });
-
-      if (res && res.success){
-        showSuccess(res.message || 'จองที่นั่งสำเร็จ');
-      }else{
-        showError(res && res.message ? res.message : 'ไม่สามารถจองที่นั่งได้');
-      }
-
-      await refreshAll();
-    }catch(err){
-      console.error(err);
-      showError('เกิดข้อผิดพลาดในการจอง');
-    }finally{
-      btn.textContent = 'ยืนยันการจอง';
-      btn.disabled    = !selectedSeatId;
-    }
-  }
-
-  async function cancelMySeat(){
-    if (!currentUser) return;
-
-    if (!myBooking || !myBooking.seatId){
-      showError('คุณยังไม่มีการจองที่นั่ง');
-      return;
-    }
-
-    const ok = confirm('ต้องการยกเลิกที่นั่ง ' + myBooking.seatId + ' ใช่หรือไม่?');
-    if (!ok) return;
-
-    clearMessages();
-
-    const btn = document.getElementById('cancelBtn');
-    btn.disabled = true;
-    btn.textContent = 'กำลังยกเลิก...';
-
-    try{
-      const res = await apiCall('cancelBooking', { empNo: currentUser.empNo });
-      if (res && res.success){
-        showSuccess(res.message || 'ยกเลิกการจองสำเร็จ');
-      }else{
-        showError(res && res.message ? res.message : 'ไม่สามารถยกเลิกการจองได้');
-      }
-      selectedSeatId = null;
-      await refreshAll();
-    }catch(err){
-      console.error(err);
-      showError('เกิดข้อผิดพลาดในการยกเลิก');
-    }finally{
-      btn.disabled = false;
-      btn.textContent = 'ยกเลิกที่นั่งของฉัน';
-    }
-  }
-
-  function initUser(){
-    const raw = sessionStorage.getItem('userData');
-    if (!raw){
-      alert('ไม่พบข้อมูลผู้ใช้ กรุณากลับไปหน้าลงทะเบียน');
-      window.location.href = 'index.html';
-      return false;
-    }
-    try{
-      const data = JSON.parse(raw);
-      if (!data.empNo) throw new Error('no empNo');
-      currentUser = data;
-      document.getElementById('empNoText').textContent = data.empNo;
-      document.getElementById('nameText').textContent  = data.name;
-      document.getElementById('factoryText').textContent = data.factory || '-';
-      return true;
-    }catch(e){
-      console.error(e);
-      alert('ข้อมูลผู้ใช้ไม่ถูกต้อง กรุณากลับไปหน้าลงทะเบียน');
-      window.location.href = 'index.html';
-      return false;
-    }
-  }
-
-  document.getElementById('bookBtn').addEventListener('click', bookSelected);
-  document.getElementById('refreshBtn').addEventListener('click', refreshAll);
-  document.getElementById('cancelBtn').addEventListener('click', cancelMySeat);
-
-  (function(){
-    if (!initUser()) return;
-    refreshAll();
-  })();
-</script>
+    });
+  </script>
 </body>
 </html>
