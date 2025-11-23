@@ -3,243 +3,957 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>HRA Cinema Club - Welcome</title>
+<title>HRA Cinema Club - Registration</title>
 <style>
+  /* ============ MOBILE-FIRST DESIGN ============ */
   :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --text: #f1f5f9;
-    --muted: #64748b;
-    --primary: #3b82f6; /* Modern Blue */
-    --accent: #f43f5e;
-    --success: #22c55e;
+    /* Dark theme colors */
+    --bg: #0a0c10; 
+    --panel: #12151c; 
+    --line: #1f2530; 
+    --text: #f0f2f5; 
+    --muted: #8892a0;
+    --accent: #ff6b6b;
+    --vip: #ffc93d;
+    --sweet: #ff69b4;
+    --success: #4caf50;
+    --primary: #00C300; /* LINE Green */
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  * { 
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
   
   body {
-    background-color: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #0a0c10 0%, #1a1d26 100%);
     color: var(--text);
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-image: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
+    padding: 16px;
   }
-
+  
   .container {
     width: 100%;
     max-width: 400px;
+    margin: 0 auto;
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 
+      0 20px 40px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    animation: containerFadeIn 0.6s ease-out;
+  }
+  
+  @keyframes containerFadeIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  .container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--vip));
+    border-radius: 20px 20px 0 0;
+  }
+  
+  /* ===== HEADER ===== */
+  .header {
     text-align: center;
-  }
-
-  /* Logo & Header */
-  .logo { font-size: 3rem; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-  
-  h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; background: linear-gradient(to right, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  p.subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 30px; }
-
-  /* Card */
-  .card {
-    background: var(--card);
-    padding: 30px;
-    border-radius: 24px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255,255,255,0.05);
-    transition: all 0.3s ease;
-  }
-
-  /* Form Elements */
-  .form-group { margin-bottom: 20px; text-align: left; }
-  label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
-  
-  input {
-    width: 100%;
-    padding: 14px;
-    background: #0f172a;
-    border: 2px solid #334155;
-    border-radius: 12px;
-    color: white;
-    font-size: 1rem;
-    transition: 0.2s;
-    outline: none;
+    margin-bottom: 32px;
   }
   
-  input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-
-  /* Buttons */
-  .btn {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
+  .cinema-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+  
+  .title {
+    font-size: 24px;
     font-weight: 700;
-    cursor: pointer;
-    transition: 0.2s;
+    background: linear-gradient(135deg, #ff6b6b, #ffc93d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .event-badge {
+    display: inline-block;
+    background: rgba(255,193,61,0.15);
+    border: 1px solid rgba(255,193,61,0.3);
+    color: var(--vip);
+    padding: 6px 16px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  /* ===== STEP INDICATOR ===== */
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 12px;
+  }
+  
+  .step {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(255,255,255,0.1);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .step.active {
+    background: linear-gradient(135deg, var(--accent), var(--vip));
+    border-color: transparent;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+  }
+  
+  .step.completed {
+    background: linear-gradient(135deg, rgba(76,175,80,0.2), rgba(76,175,80,0.3));
+    border-color: var(--success);
+    color: var(--success);
+  }
+  
+  .step.completed::after {
+    content: "✓";
+    position: absolute;
+    font-size: 16px;
+    font-weight: 900;
+  }
+  
+  .step-line {
+    width: 32px;
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .step-line::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--success), #4caf50);
+    transition: width 0.4s;
+  }
+  
+  .step-line.completed::before {
+    width: 100%;
+  }
+  
+  /* ===== PROFILE SECTION ===== */
+  .profile-section {
+    display: none;
+    text-align: center;
+    margin-bottom: 24px;
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .profile-pic-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  
+  .profile-pic-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), #00e600);
+    animation: gradientRotate 3s ease infinite;
+    z-index: -1;
+    filter: blur(6px);
+    opacity: 0.6;
+  }
+  
+  @keyframes gradientRotate {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  .profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--panel);
+    box-shadow: 0 4px 16px rgba(0,195,0,0.25);
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .line-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: linear-gradient(135deg, var(--primary), #00e600);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    border: 2px solid var(--panel);
+    box-shadow: 0 2px 8px rgba(0,195,0,0.5);
+  }
+  
+  .profile-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  
+  .profile-label {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .profile-label::before {
+    content: "✓";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: rgba(0,195,0,0.15);
+    border-radius: 50%;
+    color: var(--primary);
+    font-size: 10px;
+    line-height: 16px;
+  }
+  
+  /* ===== FORM ===== */
+  .form-section {
+    margin-bottom: 16px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-label {
+    display: flex;
+    align-items: center;
     gap: 8px;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255,255,255,0.06);
+    box-shadow: 0 0 0 3px rgba(0,195,0,0.08);
+  }
+  
+  .form-input::placeholder {
+    color: var(--muted);
+    opacity: 0.5;
+  }
+  
+  /* ===== INFO CARD ===== */
+  .info-card {
+    background: linear-gradient(135deg, 
+      rgba(255,255,255,0.05) 0%, 
+      rgba(255,255,255,0.02) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .info-item {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  
+  .info-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  
+  .info-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  
+  .info-value {
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 700;
+  }
+  
+  /* ===== BUTTONS ===== */
+  .btn {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn:last-child {
+    margin-bottom: 0;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #00e600 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(0,195,0,0.3);
+  }
+  
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,195,0,0.4);
+  }
+  
+  .btn-secondary {
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+  
+  .btn-secondary:hover:not(:disabled) {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+  }
+  
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  
+  /* ===== MESSAGES ===== */
+  .message {
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: none;
+    font-size: 14px;
+    line-height: 1.5;
+    animation: messageSlide 0.4s ease-out;
+  }
+  
+  @keyframes messageSlide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .error-message {
+    background: linear-gradient(135deg, 
+      rgba(244,67,54,0.15) 0%, 
+      rgba(244,67,54,0.1) 100%);
+    border: 1px solid rgba(244,67,54,0.4);
+    color: #ff6b6b;
+    font-weight: 500;
+  }
+  
+  .error-message::before {
+    content: "⚠ ";
+    font-weight: 700;
+  }
+  
+  .success-message {
+    background: linear-gradient(135deg, 
+      rgba(76,175,80,0.15) 0%, 
+      rgba(76,175,80,0.1) 100%);
+    border: 1px solid rgba(76,175,80,0.4);
+    color: #4caf50;
+    font-weight: 500;
+  }
+  
+  .success-message::before {
+    content: "✓ ";
+    font-weight: 700;
+  }
+  
+  /* ===== LOADING ===== */
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 40px 16px;
+  }
+  
+  .loading.active {
+    display: block;
+  }
+  
+  .spinner {
+    border: 3px solid rgba(255,255,255,0.08);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+    filter: drop-shadow(0 0 8px rgba(0,195,0,0.4));
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .loading-text {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  
+  /* ===== PAGE SYSTEM ===== */
+  .page {
+    display: none;
+  }
+  
+  .page.active {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+  
+  /* ===== SUCCESS PAGE ===== */
+  .success-icon {
+    font-size: 64px;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    filter: drop-shadow(0 4px 16px rgba(76,175,80,0.3));
+  }
+  
+  @keyframes successPop {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    50% { transform: scale(1.1) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  
+  .countdown {
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: rgba(0,195,0,0.05);
+    border: 1px solid rgba(0,195,0,0.15);
+    border-radius: 12px;
+  }
+  
+  .countdown strong {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 1.1em;
   }
 
-  .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* Loading */
-  .loading-overlay {
-    position: fixed; inset: 0; background: var(--bg); z-index: 99;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: opacity 0.5s;
+  /* ===== MOBILE OPTIMIZATIONS ===== */
+  @media (max-height: 600px) {
+    .container {
+      padding: 16px;
+    }
+    
+    .header {
+      margin-bottom: 20px;
+    }
+    
+    .cinema-icon {
+      font-size: 36px;
+    }
+    
+    .title {
+      font-size: 20px;
+    }
   }
-  .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* User Profile Preview */
-  .profile-mini { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 50px; display: none; }
-  .profile-mini img { width: 30px; height: 30px; border-radius: 50%; }
-  .profile-mini span { font-size: 0.9rem; font-weight: 600; }
-
-  .hidden { display: none !important; }
-  .fade-out { opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
-
-  <!-- Loading Screen -->
-  <div id="loadingPage" class="loading-overlay">
-    <div class="spinner"></div>
-    <div style="color: var(--muted); font-size: 0.9rem;">กำลังโหลดข้อมูล...</div>
-  </div>
-
   <div class="container">
-    <div class="logo">🍿</div>
-    <h1>HRA CINEMA</h1>
-    <p class="subtitle">ระบบจองที่นั่งชมภาพยนตร์</p>
-
-    <!-- Registration Form -->
-    <div id="registerCard" class="card hidden">
-      <div id="lineProfile" class="profile-mini">
-        <img id="profileImg" src="" alt="">
-        <span id="profileName">User</span>
+    <!-- Header -->
+    <div class="header">
+      <div class="cinema-icon">🎬</div>
+      <div class="title">HRA CINEMA CLUB</div>
+      <div class="subtitle">ระบบลงทะเบียนและจองที่นั่ง</div>
+      <div class="event-badge">HRA Function 2025</div>
+    </div>
+    
+    <!-- Loading Page -->
+    <div id="loadingPage" class="page active">
+      <div class="loading active">
+        <div class="spinner"></div>
+        <div class="loading-text">กำลังเชื่อมต่อ LINE...</div>
       </div>
-
-      <div class="form-group">
-        <label>รหัสพนักงาน</label>
-        <input type="text" id="empNoInput" placeholder="กรอกรหัสพนักงาน (เช่น A1234)" autocomplete="off" onkeyup="this.value = this.value.toUpperCase()">
+    </div>
+    
+    <!-- Registration Page -->
+    <div id="registerPage" class="page">
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step" id="step1Indicator">1</div>
+        <div class="step-line" id="line1"></div>
+        <div class="step" id="step2Indicator">2</div>
       </div>
-
-      <button id="checkBtn" class="btn btn-primary" onclick="checkEmployee()">
-        ตรวจสอบข้อมูล
+      
+      <!-- LINE Profile -->
+      <div class="profile-section" id="profileSection">
+        <div class="profile-pic-wrapper">
+          <img id="profilePic" class="profile-pic" src="" alt="Profile">
+          <div class="line-badge">LINE</div>
+        </div>
+        <div class="profile-name" id="profileName"></div>
+        <div class="profile-label">เชื่อมต่อจาก LINE</div>
+      </div>
+      
+      <!-- Messages -->
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage"></div>
+      
+      <!-- Step 1: Enter Employee ID -->
+      <div id="step1" class="form-section" style="display:none;">
+        <div class="form-group">
+          <label class="form-label">🎫 รหัสพนักงาน</label>
+          <input type="text" 
+                 class="form-input" 
+                 id="empNoInput" 
+                 placeholder="กรอกรหัสพนักงาน เช่น A9473"
+                 autocomplete="off"
+                 autofocus>
+        </div>
+        <button class="btn btn-primary" onclick="checkEmployee()">
+          ตรวจสอบข้อมูล →
+        </button>
+      </div>
+      
+      <!-- Step 2: Confirm Information -->
+      <div id="step2" class="form-section" style="display:none;">
+        <div class="info-card">
+          <div class="info-item">
+            <div class="info-label">รหัสพนักงาน</div>
+            <div class="info-value" id="confirmEmpNo">-</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">ชื่อ-สกุล</div>
+            <div class="info-value" id="confirmName">-</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">โรงงาน</div>
+            <div class="info-value" id="confirmFactory">-</div>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="confirmRegistration(event)">
+          ✓ ยืนยันข้อมูลถูกต้อง
+        </button>
+        <button class="btn btn-secondary" onclick="backToStep1()">
+          ← แก้ไขข้อมูล
+        </button>
+      </div>
+    </div>
+    
+    <!-- Already Registered Page -->
+    <div id="registeredPage" class="page">
+      <div class="success-icon">✅</div>
+      
+      <div class="success-message" style="display:block; text-align:center;">
+        คุณลงทะเบียนเรียบร้อยแล้ว!
+      </div>
+      
+      <div class="info-card">
+        <div class="info-item">
+          <div class="info-label">รหัสพนักงาน</div>
+          <div class="info-value" id="regEmpNo">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">ชื่อ-สกุล</div>
+          <div class="info-value" id="regName">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">โรงงาน</div>
+          <div class="info-value" id="regFactory">-</div>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" onclick="goToBooking()">
+        🎬 เข้าสู่ระบบจองที่นั่ง
       </button>
-      <div id="msg" style="margin-top: 15px; font-size: 0.9rem; min-height: 20px;"></div>
+      
+      <div class="countdown">
+        กำลังนำคุณไปหน้าจองที่นั่งใน <strong id="countdownTimer">3</strong> วินาที...
+      </div>
     </div>
   </div>
 
-  <!-- LIFF SDK -->
+  <!-- LINE LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
-    const LIFF_ID = '2008529302-50MNLyDV'; // ใช้ LIFF ID เดิมของคุณ
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec'; // API เดิม
+    // ==================== CONFIGURATION ====================
+    const LIFF_ID = '2008529302-50MNLyDV';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+    const BOOKING_URL = 'booking.html';
 
     let liffProfile = null;
+    let currentEmployee = null;
+    let countdownInterval = null;
 
-    window.onload = async () => {
+    // ==================== INITIALIZATION ====================
+    window.onload = async function() {
       try {
         await liff.init({ liffId: LIFF_ID });
-        if (!liff.isLoggedIn()) { liff.login(); return; }
         
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
+        
+        // Get LINE Profile
         liffProfile = await liff.getProfile();
         
-        // Show basic profile
-        document.getElementById('profileImg').src = liffProfile.pictureUrl || 'https://via.placeholder.com/30';
-        document.getElementById('profileName').textContent = liffProfile.displayName;
-        document.getElementById('lineProfile').style.display = 'flex';
-
-        // Check if already registered
-        const result = await fetch(`${API_URL}?action=checkRegistration&lineUserId=${liffProfile.userId}`).then(r => r.json());
-
-        if (result.registered) {
-          // Auto login
-          saveSession(result.data, liffProfile);
-          window.location.href = 'booking.html';
-        } else {
-          // Show Register Form
-          document.getElementById('loadingPage').classList.add('fade-out');
-          document.getElementById('registerCard').classList.remove('hidden');
+        // Display profile
+        if (liffProfile.pictureUrl) {
+          document.getElementById('profilePic').src = liffProfile.pictureUrl;
+          document.getElementById('profileSection').style.display = 'block';
         }
-
-      } catch (err) {
-        alert('Error: ' + err.message);
+        document.getElementById('profileName').textContent = liffProfile.displayName;
+        
+        // Check registration
+        await checkRegistration();
+        
+      } catch (error) {
+        console.error('LIFF Error:', error);
+        showError('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE: ' + error.message);
+        showPage('registerPage');
+        showStep(1);
       }
     };
 
-    async function checkEmployee() {
-      const empNo = document.getElementById('empNoInput').value.trim();
-      if (!empNo) return showMsg('กรุณากรอกรหัสพนักงาน', 'red');
-
-      setLoading(true);
-      
+    // ==================== API CALLS ====================
+    async function apiCall(action, params = {}) {
       try {
-        // 1. Get Employee Info
-        const info = await fetch(`${API_URL}?action=getEmployeeInfo&empNo=${empNo}`).then(r => r.json());
+        const url = new URL(API_URL);
+        url.searchParams.append('action', action);
         
-        if (!info.success) {
-          setLoading(false);
-          return showMsg(info.message, '#f43f5e');
+        for (const [key, value] of Object.entries(params)) {
+          if (value !== undefined && value !== null && value !== '') {
+            url.searchParams.append(key, value);
+          }
         }
-
-        if (info.data.uid) {
-           setLoading(false);
-           return showMsg('รหัสพนักงานนี้ถูกลงทะเบียนไปแล้ว', '#f43f5e');
-        }
-
-        // 2. Register
-        if (confirm(`ยืนยันตัวตน?\nคุณคือ: ${info.data.name}\nสังกัด: ${info.data.factory}`)) {
-             const reg = await fetch(`${API_URL}?action=registerUser&empNo=${empNo}&lineUserId=${liffProfile.userId}&lineDisplayName=${liffProfile.displayName}&linePictureUrl=${liffProfile.pictureUrl}`).then(r => r.json());
-             
-             if (reg.success) {
-               saveSession(reg.data, liffProfile);
-               window.location.href = 'booking.html';
-             } else {
-               showMsg(reg.message, '#f43f5e');
-               setLoading(false);
-             }
-        } else {
-          setLoading(false);
-        }
-
-      } catch (err) {
-        showMsg('เกิดข้อผิดพลาดในการเชื่อมต่อ', '#f43f5e');
-        setLoading(false);
+        
+        const response = await fetch(url.toString());
+        const data = await response.json();
+        return data;
+        
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
       }
     }
 
-    function saveSession(userParams, lineProfile) {
+    // ==================== REGISTRATION FLOW ====================
+    async function checkRegistration() {
+      try {
+        const result = await apiCall('checkRegistration', {
+          lineUserId: liffProfile.userId
+        });
+        
+        if (result.registered) {
+          // Already registered - show registered page
+          document.getElementById('regEmpNo').textContent = result.data.empNo;
+          document.getElementById('regName').textContent = result.data.name;
+          document.getElementById('regFactory').textContent = result.data.factory;
+          
+          showPage('registeredPage');
+          startCountdown();
+          
+        } else {
+          // Not registered - show registration form
+          showPage('registerPage');
+          showStep(1);
+        }
+        
+      } catch (error) {
+        console.error('Check registration error:', error);
+        showError('ไม่สามารถตรวจสอบข้อมูลได้');
+        showPage('registerPage');
+        showStep(1);
+      }
+    }
+
+    async function checkEmployee() {
+      const empNo = document.getElementById('empNoInput').value.trim().toUpperCase();
+      
+      if (!empNo) {
+        showError('กรุณาใส่รหัสพนักงาน');
+        return;
+      }
+      
+      hideMessages();
+      
+      // Disable button
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'กำลังตรวจสอบ...';
+      
+      try {
+        const result = await apiCall('getEmployeeInfo', { empNo });
+        
+        if (result.success) {
+          currentEmployee = result.data;
+          
+          if (currentEmployee.uid) {
+            showError('รหัสพนักงานนี้ลงทะเบียนแล้ว');
+            btn.disabled = false;
+            btn.textContent = 'ตรวจสอบข้อมูล →';
+            return;
+          }
+          
+          // Show confirmation
+          document.getElementById('confirmEmpNo').textContent = currentEmployee.empNo;
+          document.getElementById('confirmName').textContent = currentEmployee.name;
+          document.getElementById('confirmFactory').textContent = currentEmployee.factory;
+          
+          showStep(2);
+          
+        } else {
+          showError(result.message || 'ไม่พบข้อมูลพนักงาน');
+          btn.disabled = false;
+          btn.textContent = 'ตรวจสอบข้อมูล →';
+        }
+        
+      } catch (error) {
+        console.error('Check employee error:', error);
+        showError('เกิดข้อผิดพลาด: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = 'ตรวจสอบข้อมูล →';
+      }
+    }
+
+    async function confirmRegistration(ev) {
+      if (!currentEmployee || !liffProfile) {
+        showError('ข้อมูลไม่ครบถ้วน');
+        return;
+      }
+      
+      hideMessages();
+      
+      const btn = ev.target;
+      btn.disabled = true;
+      btn.textContent = 'กำลังลงทะเบียน...';
+      
+      try {
+        const result = await apiCall('registerUser', {
+          empNo: currentEmployee.empNo,
+          lineUserId: liffProfile.userId,
+          lineDisplayName: liffProfile.displayName,
+          linePictureUrl: liffProfile.pictureUrl || ''
+        });
+        
+        if (result.success) {
+          showSuccess('ลงทะเบียนสำเร็จ! 🎉');
+          
+          setTimeout(() => {
+            goToBooking();
+          }, 1500);
+          
+        } else {
+          showError(result.message || 'ไม่สามารถลงทะเบียนได้');
+          btn.disabled = false;
+          btn.textContent = '✓ ยืนยันข้อมูลถูกต้อง';
+        }
+        
+      } catch (error) {
+        console.error('Registration error:', error);
+        showError('เกิดข้อผิดพลาด: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = '✓ ยืนยันข้อมูลถูกต้อง';
+      }
+    }
+
+    function backToStep1() {
+      showStep(1);
+      currentEmployee = null;
+      document.getElementById('empNoInput').value = '';
+      document.getElementById('empNoInput').focus();
+    }
+
+    function goToBooking() {
       const userData = {
-        empNo: userParams.empNo,
-        name: userParams.name,
-        factory: userParams.factory,
-        lineUserId: lineProfile.userId,
-        linePictureUrl: lineProfile.pictureUrl
+        empNo: currentEmployee ? currentEmployee.empNo : document.getElementById('regEmpNo').textContent,
+        name: currentEmployee ? currentEmployee.name : document.getElementById('regName').textContent,
+        factory: currentEmployee ? currentEmployee.factory : document.getElementById('regFactory').textContent,
+        lineUserId: liffProfile ? liffProfile.userId : '',
+        lineDisplayName: liffProfile ? liffProfile.displayName : '',
+        linePictureUrl: liffProfile ? (liffProfile.pictureUrl || '') : ''
       };
+      
       sessionStorage.setItem('userData', JSON.stringify(userData));
+      window.location.href = BOOKING_URL;
     }
 
-    function setLoading(isLoading) {
-      const btn = document.getElementById('checkBtn');
-      btn.disabled = isLoading;
-      btn.textContent = isLoading ? 'กำลังตรวจสอบ...' : 'ตรวจสอบข้อมูล';
+    // ==================== UI HELPERS ====================
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
     }
 
-    function showMsg(text, color) {
-      const el = document.getElementById('msg');
-      el.textContent = text;
-      el.style.color = color;
+    function showStep(stepNumber) {
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const step1Ind = document.getElementById('step1Indicator');
+      const step2Ind = document.getElementById('step2Indicator');
+      const line1 = document.getElementById('line1');
+      
+      if (stepNumber === 1) {
+        step1.style.display = 'block';
+        step2.style.display = 'none';
+        
+        step1Ind.classList.add('active');
+        step1Ind.classList.remove('completed');
+        step2Ind.classList.remove('active');
+        step2Ind.classList.remove('completed');
+        line1.classList.remove('completed');
+        
+      } else if (stepNumber === 2) {
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+        
+        step1Ind.classList.remove('active');
+        step1Ind.classList.add('completed');
+        step2Ind.classList.add('active');
+        step2Ind.classList.remove('completed');
+        line1.classList.add('completed');
+      }
     }
+
+    function showError(message) {
+      const errorEl = document.getElementById('errorMessage');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+      
+      setTimeout(() => {
+        errorEl.style.display = 'none';
+      }, 5000);
+    }
+
+    function showSuccess(message) {
+      const successEl = document.getElementById('successMessage');
+      successEl.textContent = message;
+      successEl.style.display = 'block';
+    }
+
+    function hideMessages() {
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function startCountdown() {
+      let seconds = 3;
+      const timerEl = document.getElementById('countdownTimer');
+      
+      countdownInterval = setInterval(() => {
+        seconds--;
+        timerEl.textContent = seconds;
+        
+        if (seconds <= 0) {
+          clearInterval(countdownInterval);
+          goToBooking();
+        }
+      }, 1000);
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    document.addEventListener('DOMContentLoaded', function() {
+      const empNoInput = document.getElementById('empNoInput');
+      
+      if (empNoInput) {
+        empNoInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            checkEmployee();
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
