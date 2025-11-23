@@ -3,1109 +3,243 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>HRA Cinema Club - Registration</title>
+<title>HRA Cinema Club - Welcome</title>
 <style>
-  /* ============ CONFIGURATION ============ */
   :root {
-    /* Seat images from Google Drive */
-    --img-regular: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w80");
-    --img-vip:     url("https://drive.google.com/thumbnail?id=1TSU5WQqDC5lrWYN8SSq9agRVLfSsFHUu&sz=w80");
-    --img-sweet: url("https://drive.google.com/thumbnail?id=1Du01KILJxPZZQf0vZnABSilXcMfqNX32&sz=w80");
-
-    /* Dark theme colors */
-    --bg:#0a0c10; 
-    --panel:#12151c; 
-    --line:#1f2530; 
-    --text:#f0f2f5; 
-    --muted:#8892a0;
-    --accent:#ff6b6b;
-    --vip:#ffc93d;
-    --sweet:#ff69b4;
-    --success:#4caf50;
-    --primary:#00C300; /* LINE Green */
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --primary: #3b82f6; /* Modern Blue */
+    --accent: #f43f5e;
+    --success: #22c55e;
   }
 
-  * { 
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, #0a0c10 0%, #1a1d26 100%);
+    background-color: var(--bg);
     color: var(--text);
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    background-image: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
   }
-  
+
   .container {
     width: 100%;
-    max-width: 450px;
-    background: var(--panel);
+    max-width: 400px;
+    text-align: center;
+  }
+
+  /* Logo & Header */
+  .logo { font-size: 3rem; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  
+  h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; background: linear-gradient(to right, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  p.subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 30px; }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    padding: 30px;
     border-radius: 24px;
-    padding: 2.5rem;
-    box-shadow: 
-      0 24px 64px rgba(0,0,0,0.6),
-      0 8px 24px rgba(0,0,0,0.4),
-      inset 0 1px 0 rgba(255,255,255,0.05);
-    position: relative;
-    overflow: hidden;
-    animation: containerFadeIn 0.6s ease-out;
-  }
-  
-  @keyframes containerFadeIn {
-    from { opacity: 0; transform: translateY(20px) scale(0.96); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  
-  .container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, 
-      var(--accent) 0%, 
-      var(--vip) 50%, 
-      var(--sweet) 100%);
-    opacity: 0.9;
-  }
-  
-  .container::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-      circle at center,
-      rgba(0,195,0,0.03) 0%,
-      transparent 70%
-    );
-    animation: glowPulse 8s ease-in-out infinite;
-    pointer-events: none;
-  }
-  
-  @keyframes glowPulse {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.05); }
-  }
-  
-  /* ===== HEADER ===== */
-  .header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .cinema-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    display: inline-block;
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  .title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #ff6b6b, #ffc93d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
-  }
-  
-  .subtitle {
-    color: var(--muted);
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .event-badge {
-    display: inline-block;
-    background: rgba(255,193,61,0.15);
-    border: 1px solid rgba(255,193,61,0.3);
-    color: var(--vip);
-    padding: 0.35rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-  
-  /* ===== STEP INDICATOR ===== */
-  .step-indicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2.5rem;
-    gap: 0.75rem;
-  }
-  
-  .step {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    border: 2px solid rgba(255,255,255,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--muted);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    backdrop-filter: blur(10px);
-  }
-  
-  .step::before {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--vip));
-    opacity: 0;
-    transition: opacity 0.4s;
-    z-index: -1;
-    filter: blur(8px);
-  }
-  
-  .step.active {
-    background: linear-gradient(135deg, var(--accent), var(--vip));
-    border-color: transparent;
-    color: white;
-    transform: scale(1.15);
-    box-shadow: 
-      0 8px 24px rgba(255,107,107,0.3),
-      0 0 0 4px rgba(255,107,107,0.1);
-  }
-  
-  .step.active::before {
-    opacity: 1;
-  }
-  
-  .step.completed {
-    background: linear-gradient(135deg, rgba(76,175,80,0.2), rgba(76,175,80,0.3));
-    border-color: var(--success);
-    color: var(--success);
-    box-shadow: 0 4px 16px rgba(76,175,80,0.2);
-  }
-  
-  .step.completed::after {
-    content: "✓";
-    position: absolute;
-    font-size: 1.1rem;
-    font-weight: 900;
-  }
-  
-  .step-line {
-    width: 50px;
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-    transition: all 0.4s;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .step-line::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0;
-    background: linear-gradient(90deg, var(--success), #4caf50);
-    transition: width 0.4s;
-  }
-  
-  .step-line.completed::before {
-    width: 100%;
-  }
-  
-  /* ===== PROFILE SECTION ===== */
-  .profile-section {
-    display: none;
-    text-align: center;
-    margin-bottom: 2.5rem;
-    animation: fadeIn 0.6s ease-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .profile-pic-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 1.25rem;
-  }
-  
-  .profile-pic-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), #00e600, var(--primary));
-    background-size: 200% 200%;
-    animation: gradientRotate 3s ease infinite;
-    z-index: -1;
-    filter: blur(8px);
-    opacity: 0.6;
-  }
-  
-  @keyframes gradientRotate {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  
-  .profile-pic {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    border: 5px solid var(--panel);
-    box-shadow: 
-      0 8px 32px rgba(0,195,0,0.25),
-      inset 0 0 0 1px rgba(255,255,255,0.1);
-    object-fit: cover;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .line-badge {
-    position: absolute;
-    bottom: 0;
-    right: -5px;
-    background: linear-gradient(135deg, var(--primary), #00e600);
-    color: white;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    border: 4px solid var(--panel);
-    box-shadow: 0 4px 16px rgba(0,195,0,0.5);
-    z-index: 2;
-  }
-  
-  .profile-name {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    color: var(--text);
-    letter-spacing: -0.3px;
-  }
-  
-  .profile-label {
-    font-size: 0.9rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-  
-  .profile-label::before {
-    content: "✓";
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background: rgba(0,195,0,0.15);
-    border-radius: 50%;
-    color: var(--primary);
-    font-size: 0.7rem;
-    line-height: 18px;
-  }
-  
-  /* ===== FORM ===== */
-  .form-section {
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.85rem;
-    color: var(--text);
-    font-size: 0.95rem;
-    font-weight: 600;
-  }
-  
-  .form-input {
-    width: 100%;
-    padding: 1.1rem 1.25rem;
-    background: rgba(255,255,255,0.03);
-    border: 2px solid var(--line);
-    border-radius: 14px;
-    color: var(--text);
-    font-size: 1.05rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255,255,255,0.05);
     transition: all 0.3s ease;
-    position: relative;
   }
+
+  /* Form Elements */
+  .form-group { margin-bottom: 20px; text-align: left; }
+  label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
   
-  .form-input:focus {
+  input {
+    width: 100%;
+    padding: 14px;
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    transition: 0.2s;
     outline: none;
-    border-color: var(--primary);
-    background: rgba(255,255,255,0.06);
-    box-shadow: 
-      0 0 0 4px rgba(0,195,0,0.08),
-      0 4px 20px rgba(0,195,0,0.15);
-    transform: translateY(-1px);
   }
   
-  .form-input::placeholder {
-    color: var(--muted);
-    opacity: 0.5;
-    font-weight: 400;
-  }
-  
-  /* ===== INFO CARD ===== */
-  .info-card {
-    background: linear-gradient(135deg, 
-      rgba(255,255,255,0.05) 0%, 
-      rgba(255,255,255,0.02) 100%);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 18px;
-    padding: 1.75rem;
-    margin-bottom: 1.75rem;
-    animation: slideUp 0.4s ease-out;
-    backdrop-filter: blur(10px);
-    box-shadow: 
-      0 8px 32px rgba(0,0,0,0.2),
-      inset 0 1px 0 rgba(255,255,255,0.05);
-  }
-  
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(25px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .info-item {
-    margin-bottom: 1.25rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    transition: all 0.2s;
-  }
-  
-  .info-item:hover {
-    padding-left: 0.5rem;
-    border-bottom-color: rgba(255,255,255,0.12);
-  }
-  
-  .info-item:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-  }
-  
-  .info-label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-bottom: 0.45rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-  }
-  
-  .info-value {
-    font-size: 1.2rem;
-    color: var(--text);
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    line-height: 1.4;
-  }
-  
-  /* ===== BUTTONS ===== */
+  input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+
+  /* Buttons */
   .btn {
     width: 100%;
-    padding: 1.15rem 1.5rem;
+    padding: 14px;
     border: none;
-    border-radius: 14px;
-    font-size: 1.05rem;
+    border-radius: 12px;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 1rem;
-    position: relative;
-    overflow: hidden;
-    letter-spacing: 0.3px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
-  
-  .btn:last-child {
-    margin-bottom: 0;
+
+  .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Loading */
+  .loading-overlay {
+    position: fixed; inset: 0; background: var(--bg); z-index: 99;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.5s;
   }
-  
-  .btn::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
-  
-  .btn:active::before {
-    width: 400px;
-    height: 400px;
-  }
-  
-  .btn::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-      45deg,
-      transparent,
-      rgba(255,255,255,0.1),
-      transparent
-    );
-    transform: rotate(45deg);
-    transition: all 0.6s;
-  }
-  
-  .btn:hover::after {
-    left: 100%;
-  }
-  
-  .btn-primary {
-    background: linear-gradient(135deg, var(--primary) 0%, #00e600 100%);
-    color: white;
-    box-shadow: 
-      0 8px 24px rgba(0,195,0,0.3),
-      0 2px 8px rgba(0,195,0,0.2),
-      inset 0 1px 0 rgba(255,255,255,0.2);
-  }
-  
-  .btn-primary:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 
-      0 12px 32px rgba(0,195,0,0.4),
-      0 4px 12px rgba(0,195,0,0.3),
-      inset 0 1px 0 rgba(255,255,255,0.3);
-  }
-  
-  .btn-primary:active:not(:disabled) {
-    transform: translateY(-1px);
-  }
-  
-  .btn-secondary {
-    background: rgba(255,255,255,0.06);
-    color: var(--text);
-    border: 2px solid rgba(255,255,255,0.1);
-    box-shadow: 
-      0 4px 16px rgba(0,0,0,0.1),
-      inset 0 1px 0 rgba(255,255,255,0.05);
-  }
-  
-  .btn-secondary:hover:not(:disabled) {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-  }
-  
-  .btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-  }
-  
-  /* ===== MESSAGES ===== */
-  .message {
-    padding: 1.15rem 1.5rem;
-    border-radius: 14px;
-    margin-bottom: 1.75rem;
-    display: none;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    animation: messageSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-  }
-  
-  @keyframes messageSlide {
-    from { opacity: 0; transform: translateY(-15px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  
-  .error-message {
-    background: linear-gradient(135deg, 
-      rgba(244,67,54,0.15) 0%, 
-      rgba(244,67,54,0.1) 100%);
-    border: 1px solid rgba(244,67,54,0.4);
-    color: #ff6b6b;
-    font-weight: 500;
-  }
-  
-  .error-message::before {
-    content: "⚠ ";
-    font-weight: 700;
-  }
-  
-  .success-message {
-    background: linear-gradient(135deg, 
-      rgba(76,175,80,0.15) 0%, 
-      rgba(76,175,80,0.1) 100%);
-    border: 1px solid rgba(76,175,80,0.4);
-    color: #4caf50;
-    font-weight: 500;
-  }
-  
-  .success-message::before {
-    content: "✓ ";
-    font-weight: 700;
-  }
-  
-  /* ===== LOADING ===== */
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 3.5rem 1rem;
-  }
-  
-  .loading.active {
-    display: block;
-  }
-  
-  .spinner {
-    border: 4px solid rgba(255,255,255,0.08);
-    border-top-color: var(--primary);
-    border-right-color: transparent;
-    border-radius: 50%;
-    width: 56px;
-    height: 56px;
-    animation: spinGlow 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    margin: 0 auto 1.75rem;
-    filter: drop-shadow(0 0 12px rgba(0,195,0,0.4));
-    position: relative;
-  }
-  
-  .spinner::after {
-    content: "";
-    position: absolute;
-    inset: 8px;
-    border: 3px solid transparent;
-    border-top-color: var(--vip);
-    border-radius: 50%;
-    animation: spinGlow 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse;
-  }
-  
-  @keyframes spinGlow {
-    0% { transform: rotate(0deg); filter: drop-shadow(0 0 8px rgba(0,195,0,0.4)); }
-    50% { filter: drop-shadow(0 0 16px rgba(0,195,0,0.6)); }
-    100% { transform: rotate(360deg); filter: drop-shadow(0 0 8px rgba(0,195,0,0.4)); }
-  }
-  
-  .loading-text {
-    font-size: 1.05rem;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  
-  /* ===== PAGE SYSTEM ===== */
-  .page {
-    display: none;
-  }
-  
-  .page.active {
-    display: block;
-    animation: fadeIn 0.3s;
-  }
-  
-  /* ===== SUCCESS PAGE ===== */
-  .success-icon {
-    font-size: 5rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    filter: drop-shadow(0 8px 24px rgba(76,175,80,0.3));
-  }
-  
-  @keyframes successPop {
-    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-    50% { transform: scale(1.2) rotate(10deg); }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  }
-  
-  .countdown {
-    font-size: 0.95rem;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 1.5rem;
-    padding: 1rem 1.5rem;
-    background: rgba(0,195,0,0.05);
-    border: 1px solid rgba(0,195,0,0.15);
-    border-radius: 12px;
-  }
-  
-  .countdown strong {
-    color: var(--primary);
-    font-weight: 800;
-    font-size: 1.1em;
-  }
-  
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 480px) {
-    .container {
-      padding: 2rem 1.5rem;
-      max-width: 100%;
-      border-radius: 16px;
-    }
-    
-    .title {
-      font-size: 1.5rem;
-    }
-    
-    .cinema-icon {
-      font-size: 2.5rem;
-    }
-    
-    .profile-pic {
-      width: 80px;
-      height: 80px;
-    }
-  }
+  .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* User Profile Preview */
+  .profile-mini { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 50px; display: none; }
+  .profile-mini img { width: 30px; height: 30px; border-radius: 50%; }
+  .profile-mini span { font-size: 0.9rem; font-weight: 600; }
+
+  .hidden { display: none !important; }
+  .fade-out { opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
+
+  <!-- Loading Screen -->
+  <div id="loadingPage" class="loading-overlay">
+    <div class="spinner"></div>
+    <div style="color: var(--muted); font-size: 0.9rem;">กำลังโหลดข้อมูล...</div>
+  </div>
+
   <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="cinema-icon">🎬</div>
-      <div class="title">HRA CINEMA CLUB</div>
-      <div class="subtitle">ระบบลงทะเบียนและจองที่นั่ง</div>
-      <div class="event-badge">HRA Function 2025</div>
-    </div>
-    
-    <!-- Loading Page -->
-    <div id="loadingPage" class="page active">
-      <div class="loading active">
-        <div class="spinner"></div>
-        <div class="loading-text">กำลังเชื่อมต่อ LINE...</div>
+    <div class="logo">🍿</div>
+    <h1>HRA CINEMA</h1>
+    <p class="subtitle">ระบบจองที่นั่งชมภาพยนตร์</p>
+
+    <!-- Registration Form -->
+    <div id="registerCard" class="card hidden">
+      <div id="lineProfile" class="profile-mini">
+        <img id="profileImg" src="" alt="">
+        <span id="profileName">User</span>
       </div>
-    </div>
-    
-    <!-- Registration Page -->
-    <div id="registerPage" class="page">
-      <!-- Step Indicator -->
-      <div class="step-indicator">
-        <div class="step" id="step1Indicator">1</div>
-        <div class="step-line" id="line1"></div>
-        <div class="step" id="step2Indicator">2</div>
+
+      <div class="form-group">
+        <label>รหัสพนักงาน</label>
+        <input type="text" id="empNoInput" placeholder="กรอกรหัสพนักงาน (เช่น A1234)" autocomplete="off" onkeyup="this.value = this.value.toUpperCase()">
       </div>
-      
-      <!-- LINE Profile -->
-      <div class="profile-section" id="profileSection">
-        <div class="profile-pic-wrapper">
-          <img id="profilePic" class="profile-pic" src="" alt="Profile">
-          <div class="line-badge">LINE</div>
-        </div>
-        <div class="profile-name" id="profileName"></div>
-        <div class="profile-label">เชื่อมต่อจาก LINE</div>
-      </div>
-      
-      <!-- Messages -->
-      <div class="error-message" id="errorMessage"></div>
-      <div class="success-message" id="successMessage"></div>
-      
-      <!-- Step 1: Enter Employee ID -->
-      <div id="step1" class="form-section" style="display:none;">
-        <div class="form-group">
-          <label class="form-label">🎫 รหัสพนักงาน</label>
-          <input type="text" 
-                 class="form-input" 
-                 id="empNoInput" 
-                 placeholder="กรอกรหัสพนักงาน เช่น A9473"
-                 autocomplete="off"
-                 autofocus>
-        </div>
-        <button class="btn btn-primary" onclick="checkEmployee()">
-          ตรวจสอบข้อมูล →
-        </button>
-      </div>
-      
-      <!-- Step 2: Confirm Information -->
-      <div id="step2" class="form-section" style="display:none;">
-        <div class="info-card">
-          <div class="info-item">
-            <div class="info-label">รหัสพนักงาน</div>
-            <div class="info-value" id="confirmEmpNo">-</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">ชื่อ-สกุล</div>
-            <div class="info-value" id="confirmName">-</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">โรงงาน</div>
-            <div class="info-value" id="confirmFactory">-</div>
-          </div>
-        </div>
-        
-        <button class="btn btn-primary" onclick="confirmRegistration(event)">
-          ✓ ยืนยันข้อมูลถูกต้อง
-        </button>
-        <button class="btn btn-secondary" onclick="backToStep1()">
-          ← แก้ไขข้อมูล
-        </button>
-      </div>
-    </div>
-    
-    <!-- Already Registered Page -->
-    <div id="registeredPage" class="page">
-      <div class="success-icon">✅</div>
-      
-      <div class="success-message" style="display:block; text-align:center;">
-        คุณลงทะเบียนเรียบร้อยแล้ว!
-      </div>
-      
-      <div class="info-card">
-        <div class="info-item">
-          <div class="info-label">รหัสพนักงาน</div>
-          <div class="info-value" id="regEmpNo">-</div>
-        </div>
-        <div class="info-item">
-          <div class="info-label">ชื่อ-สกุล</div>
-          <div class="info-value" id="regName">-</div>
-        </div>
-        <div class="info-item">
-          <div class="info-label">โรงงาน</div>
-          <div class="info-value" id="regFactory">-</div>
-        </div>
-      </div>
-      
-      <button class="btn btn-primary" onclick="goToBooking()">
-        🎬 เข้าสู่ระบบจองที่นั่ง
+
+      <button id="checkBtn" class="btn btn-primary" onclick="checkEmployee()">
+        ตรวจสอบข้อมูล
       </button>
-      
-      <div class="countdown">
-        กำลังนำคุณไปหน้าจองที่นั่งใน <strong id="countdownTimer">3</strong> วินาที...
-      </div>
+      <div id="msg" style="margin-top: 15px; font-size: 0.9rem; min-height: 20px;"></div>
     </div>
   </div>
 
-  <!-- LINE LIFF SDK -->
+  <!-- LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
-    // ==================== CONFIGURATION ====================
-    const LIFF_ID = '2008529302-50MNLyDV';
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
-    const BOOKING_URL = 'booking.html';
+    const LIFF_ID = '2008529302-50MNLyDV'; // ใช้ LIFF ID เดิมของคุณ
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec'; // API เดิม
 
     let liffProfile = null;
-    let currentEmployee = null;
-    let countdownInterval = null;
 
-    // ==================== INITIALIZATION ====================
-    window.onload = async function() {
+    window.onload = async () => {
       try {
         await liff.init({ liffId: LIFF_ID });
+        if (!liff.isLoggedIn()) { liff.login(); return; }
         
-        if (!liff.isLoggedIn()) {
-          liff.login();
-          return;
-        }
-        
-        // Get LINE Profile
         liffProfile = await liff.getProfile();
         
-        // Display profile
-        if (liffProfile.pictureUrl) {
-          document.getElementById('profilePic').src = liffProfile.pictureUrl;
-          document.getElementById('profileSection').style.display = 'block';
-        }
+        // Show basic profile
+        document.getElementById('profileImg').src = liffProfile.pictureUrl || 'https://via.placeholder.com/30';
         document.getElementById('profileName').textContent = liffProfile.displayName;
-        
-        // Check registration
-        await checkRegistration();
-        
-      } catch (error) {
-        console.error('LIFF Error:', error);
-        showError('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE: ' + error.message);
-        showPage('registerPage');
-        showStep(1);
+        document.getElementById('lineProfile').style.display = 'flex';
+
+        // Check if already registered
+        const result = await fetch(`${API_URL}?action=checkRegistration&lineUserId=${liffProfile.userId}`).then(r => r.json());
+
+        if (result.registered) {
+          // Auto login
+          saveSession(result.data, liffProfile);
+          window.location.href = 'booking.html';
+        } else {
+          // Show Register Form
+          document.getElementById('loadingPage').classList.add('fade-out');
+          document.getElementById('registerCard').classList.remove('hidden');
+        }
+
+      } catch (err) {
+        alert('Error: ' + err.message);
       }
     };
 
-    // ==================== API CALLS ====================
-    async function apiCall(action, params = {}) {
-      try {
-        const url = new URL(API_URL);
-        url.searchParams.append('action', action);
-        
-        for (const [key, value] of Object.entries(params)) {
-          if (value !== undefined && value !== null && value !== '') {
-            url.searchParams.append(key, value);
-          }
-        }
-        
-        const response = await fetch(url.toString());
-        const data = await response.json();
-        return data;
-        
-      } catch (error) {
-        console.error('API Error:', error);
-        throw error;
-      }
-    }
-
-    // ==================== REGISTRATION FLOW ====================
-    async function checkRegistration() {
-      try {
-        const result = await apiCall('checkRegistration', {
-          lineUserId: liffProfile.userId
-        });
-        
-        if (result.registered) {
-          // Already registered - show registered page
-          document.getElementById('regEmpNo').textContent = result.data.empNo;
-          document.getElementById('regName').textContent = result.data.name;
-          document.getElementById('regFactory').textContent = result.data.factory;
-          
-          showPage('registeredPage');
-          startCountdown();
-          
-        } else {
-          // Not registered - show registration form
-          showPage('registerPage');
-          showStep(1);
-        }
-        
-      } catch (error) {
-        console.error('Check registration error:', error);
-        showError('ไม่สามารถตรวจสอบข้อมูลได้');
-        showPage('registerPage');
-        showStep(1);
-      }
-    }
-
     async function checkEmployee() {
-      const empNo = document.getElementById('empNoInput').value.trim().toUpperCase();
-      
-      if (!empNo) {
-        showError('กรุณาใส่รหัสพนักงาน');
-        return;
-      }
-      
-      hideMessages();
-      
-      // Disable button
-      const btn = event.target;
-      btn.disabled = true;
-      btn.textContent = 'กำลังตรวจสอบ...';
+      const empNo = document.getElementById('empNoInput').value.trim();
+      if (!empNo) return showMsg('กรุณากรอกรหัสพนักงาน', 'red');
+
+      setLoading(true);
       
       try {
-        const result = await apiCall('getEmployeeInfo', { empNo });
+        // 1. Get Employee Info
+        const info = await fetch(`${API_URL}?action=getEmployeeInfo&empNo=${empNo}`).then(r => r.json());
         
-        if (result.success) {
-          currentEmployee = result.data;
-          
-          if (currentEmployee.uid) {
-            showError('รหัสพนักงานนี้ลงทะเบียนแล้ว');
-            btn.disabled = false;
-            btn.textContent = 'ตรวจสอบข้อมูล →';
-            return;
-          }
-          
-          // Show confirmation
-          document.getElementById('confirmEmpNo').textContent = currentEmployee.empNo;
-          document.getElementById('confirmName').textContent = currentEmployee.name;
-          document.getElementById('confirmFactory').textContent = currentEmployee.factory;
-          
-          showStep(2);
-          
-        } else {
-          showError(result.message || 'ไม่พบข้อมูลพนักงาน');
-          btn.disabled = false;
-          btn.textContent = 'ตรวจสอบข้อมูล →';
+        if (!info.success) {
+          setLoading(false);
+          return showMsg(info.message, '#f43f5e');
         }
-        
-      } catch (error) {
-        console.error('Check employee error:', error);
-        showError('เกิดข้อผิดพลาด: ' + error.message);
-        btn.disabled = false;
-        btn.textContent = 'ตรวจสอบข้อมูล →';
-      }
-    }
 
-    async function confirmRegistration(ev) {
-      if (!currentEmployee || !liffProfile) {
-        showError('ข้อมูลไม่ครบถ้วน');
-        return;
-      }
-      
-      hideMessages();
-      
-      const btn = ev.target;
-      btn.disabled = true;
-      btn.textContent = 'กำลังลงทะเบียน...';
-      
-      try {
-        const result = await apiCall('registerUser', {
-          empNo: currentEmployee.empNo,
-          lineUserId: liffProfile.userId,
-          lineDisplayName: liffProfile.displayName,
-          linePictureUrl: liffProfile.pictureUrl || ''
-        });
-        
-        if (result.success) {
-          showSuccess('ลงทะเบียนสำเร็จ! 🎉');
-          
-          setTimeout(() => {
-            goToBooking();
-          }, 1500);
-          
-        } else {
-          showError(result.message || 'ไม่สามารถลงทะเบียนได้');
-          btn.disabled = false;
-          btn.textContent = '✓ ยืนยันข้อมูลถูกต้อง';
+        if (info.data.uid) {
+           setLoading(false);
+           return showMsg('รหัสพนักงานนี้ถูกลงทะเบียนไปแล้ว', '#f43f5e');
         }
-        
-      } catch (error) {
-        console.error('Registration error:', error);
-        showError('เกิดข้อผิดพลาด: ' + error.message);
-        btn.disabled = false;
-        btn.textContent = '✓ ยืนยันข้อมูลถูกต้อง';
+
+        // 2. Register
+        if (confirm(`ยืนยันตัวตน?\nคุณคือ: ${info.data.name}\nสังกัด: ${info.data.factory}`)) {
+             const reg = await fetch(`${API_URL}?action=registerUser&empNo=${empNo}&lineUserId=${liffProfile.userId}&lineDisplayName=${liffProfile.displayName}&linePictureUrl=${liffProfile.pictureUrl}`).then(r => r.json());
+             
+             if (reg.success) {
+               saveSession(reg.data, liffProfile);
+               window.location.href = 'booking.html';
+             } else {
+               showMsg(reg.message, '#f43f5e');
+               setLoading(false);
+             }
+        } else {
+          setLoading(false);
+        }
+
+      } catch (err) {
+        showMsg('เกิดข้อผิดพลาดในการเชื่อมต่อ', '#f43f5e');
+        setLoading(false);
       }
     }
 
-    function backToStep1() {
-      showStep(1);
-      currentEmployee = null;
-      document.getElementById('empNoInput').value = '';
-      document.getElementById('empNoInput').focus();
-    }
-
-    function goToBooking() {
+    function saveSession(userParams, lineProfile) {
       const userData = {
-        empNo: currentEmployee ? currentEmployee.empNo : document.getElementById('regEmpNo').textContent,
-        name: currentEmployee ? currentEmployee.name : document.getElementById('regName').textContent,
-        factory: currentEmployee ? currentEmployee.factory : document.getElementById('regFactory').textContent,
-        lineUserId: liffProfile ? liffProfile.userId : '',
-        lineDisplayName: liffProfile ? liffProfile.displayName : '',
-        linePictureUrl: liffProfile ? (liffProfile.pictureUrl || '') : ''
+        empNo: userParams.empNo,
+        name: userParams.name,
+        factory: userParams.factory,
+        lineUserId: lineProfile.userId,
+        linePictureUrl: lineProfile.pictureUrl
       };
-      
       sessionStorage.setItem('userData', JSON.stringify(userData));
-      window.location.href = BOOKING_URL;
     }
 
-    // ==================== UI HELPERS ====================
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
+    function setLoading(isLoading) {
+      const btn = document.getElementById('checkBtn');
+      btn.disabled = isLoading;
+      btn.textContent = isLoading ? 'กำลังตรวจสอบ...' : 'ตรวจสอบข้อมูล';
     }
 
-    function showStep(stepNumber) {
-      const step1 = document.getElementById('step1');
-      const step2 = document.getElementById('step2');
-      const step1Ind = document.getElementById('step1Indicator');
-      const step2Ind = document.getElementById('step2Indicator');
-      const line1 = document.getElementById('line1');
-      
-      if (stepNumber === 1) {
-        step1.style.display = 'block';
-        step2.style.display = 'none';
-        
-        step1Ind.classList.add('active');
-        step1Ind.classList.remove('completed');
-        step2Ind.classList.remove('active');
-        step2Ind.classList.remove('completed');
-        line1.classList.remove('completed');
-        
-      } else if (stepNumber === 2) {
-        step1.style.display = 'none';
-        step2.style.display = 'block';
-        
-        step1Ind.classList.remove('active');
-        step1Ind.classList.add('completed');
-        step2Ind.classList.add('active');
-        step2Ind.classList.remove('completed');
-        line1.classList.add('completed');
-      }
+    function showMsg(text, color) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.style.color = color;
     }
-
-    function showError(message) {
-      const errorEl = document.getElementById('errorMessage');
-      errorEl.textContent = message;
-      errorEl.style.display = 'block';
-      
-      setTimeout(() => {
-        errorEl.style.display = 'none';
-      }, 5000);
-    }
-
-    function showSuccess(message) {
-      const successEl = document.getElementById('successMessage');
-      successEl.textContent = message;
-      successEl.style.display = 'block';
-    }
-
-    function hideMessages() {
-      document.getElementById('errorMessage').style.display = 'none';
-      document.getElementById('successMessage').style.display = 'none';
-    }
-
-    function startCountdown() {
-      let seconds = 3;
-      const timerEl = document.getElementById('countdownTimer');
-      
-      countdownInterval = setInterval(() => {
-        seconds--;
-        timerEl.textContent = seconds;
-        
-        if (seconds <= 0) {
-          clearInterval(countdownInterval);
-          goToBooking();
-        }
-      }, 1000);
-    }
-
-    // ==================== EVENT LISTENERS ====================
-    document.addEventListener('DOMContentLoaded', function() {
-      const empNoInput = document.getElementById('empNoInput');
-      
-      if (empNoInput) {
-        empNoInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            checkEmployee();
-          }
-        });
-      }
-    });
   </script>
 </body>
 </html>
