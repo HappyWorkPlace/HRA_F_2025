@@ -5,31 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>HRA Cinema Club - Seat Selection</title>
 <style>
-  /* ============ CONFIGURATION ============ */
+  /* ============ MOBILE-FIRST CONFIGURATION ============ */
   :root{
     /* Seat images from Google Drive */
     --img-regular: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w80");
     --img-vip:     url("https://drive.google.com/thumbnail?id=1TSU5WQqDC5lrWYN8SSq9agRVLfSsFHUu&sz=w80");
     --img-sweet: url("https://drive.google.com/thumbnail?id=1Du01KILJxPZZQf0vZnABSilXcMfqNX32&sz=w80");
 
-    /* Person icon (white) for selected seats */
+    /* Person icon for booked seats */
     --img-person: url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
-  <circle cx='32' cy='20' r='10' fill='none' stroke='%23fff' stroke-width='4'/>\
-  <path d='M16 52c0-8.84 7.16-16 16-16s16 7.16 16 16' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/>\
+  <circle cx='32' cy='20' r='8' fill='none' stroke='%23fff' stroke-width='3'/>\
+  <path d='M18 52c0-7.73 6.27-14 14-14s14 6.27 14 14' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'/>\
 </svg>");
 
     /* Dark theme colors */
-    --bg:#0a0c10; 
-    --panel:#12151c; 
-    --line:#1f2530; 
-    --text:#f0f2f5; 
-    --muted:#8892a0;
-    --accent:#ff6b6b;
-    --vip:#ffc93d;
-    --sweet:#ff69b4;
-    --success:#4caf50;
-    --primary:#00C300; /* LINE Green */
+    --bg: #0a0c10; 
+    --panel: #12151c; 
+    --line: #1f2530; 
+    --text: #f0f2f5; 
+    --muted: #8892a0;
+    --accent: #ff6b6b;
+    --vip: #ffc93d;
+    --sweet: #ff69b4;
+    --success: #4caf50;
+    --primary: #00C300; /* LINE Green */
   }
 
   * { 
@@ -63,10 +63,10 @@
     overflow: hidden;
   }
 
-  /* ===== USER HEADER ===== */
+  /* ===== COMPACT USER HEADER ===== */
   .user-header {
     background: linear-gradient(135deg, #1f2530 0%, var(--panel) 100%);
-    padding: 1vh 2vw;
+    padding: 8px 12px;
     border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
@@ -77,32 +77,41 @@
   .user-info {
     display: flex;
     align-items: center;
-    gap: 1vw;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
   }
   
   .user-avatar {
-    width: clamp(35px, 5vw, 45px);
-    height: clamp(35px, 5vw, 45px);
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 2px solid var(--primary);
     object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,195,0,0.3);
+    flex-shrink: 0;
   }
   
   .user-details {
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
   
   .user-name {
-    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+    font-size: 12px;
     font-weight: 600;
     color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .user-badge {
-    font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+    font-size: 10px;
     color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .user-badge span {
@@ -110,82 +119,58 @@
     font-weight: 600;
   }
   
-  .user-actions {
-    display: flex;
-    gap: 0.5vw;
-  }
-  
-  .btn-header {
+  .refresh-btn {
     background: rgba(255,255,255,0.08);
     border: 1px solid var(--line);
     color: var(--text);
-    padding: 0.5vh 1vw;
+    padding: 6px 12px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+    font-size: 10px;
     transition: all 0.2s;
-    white-space: nowrap;
+    flex-shrink: 0;
   }
   
-  .btn-header:hover {
+  .refresh-btn:hover {
     background: rgba(255,255,255,0.12);
-    border-color: var(--muted);
-  }
-  
-  .btn-header.logout {
-    background: rgba(244,67,54,0.15);
-    border-color: rgba(244,67,54,0.3);
-    color: #ff5252;
-  }
-  
-  .btn-header.logout:hover {
-    background: rgba(244,67,54,0.25);
   }
 
-  /* ===== EVENT HEADER ===== */
+  /* ===== COMPACT EVENT HEADER ===== */
   .event-header {
     background: linear-gradient(135deg, #1f2530 0%, var(--panel) 100%);
-    padding: 0.8vh 2vw;
+    padding: 6px 12px;
     text-align: center;
     border-bottom: 1px solid var(--line);
     flex-shrink: 0;
   }
   
   .event-title {
-    font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     color: var(--vip);
     text-transform: uppercase;
-    margin-bottom: 0.2vh;
+    margin-bottom: 2px;
     opacity: 0.9;
   }
   
   .event-name {
-    font-size: clamp(0.8rem, 2vw, 1.2rem);
+    font-size: 14px;
     font-weight: 700;
     background: linear-gradient(135deg, #ff6b6b, #ffc93d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0.2vh;
-  }
-  
-  .event-status {
-    font-size: clamp(0.5rem, 1vw, 0.7rem);
-    color: var(--muted);
-    letter-spacing: 0.05em;
   }
 
-  /* ===== SCREEN ===== */
+  /* ===== COMPACT SCREEN ===== */
   .screen-container {
-    padding: 0.8vh 2vw 0.5vh;
+    padding: 6px 12px 4px;
     position: relative;
     flex-shrink: 0;
   }
   
   .screen {
-    height: 0.3vh;
-    min-height: 2px;
+    height: 2px;
     background: linear-gradient(90deg, 
       transparent 0%, 
       rgba(255,193,61,0.3) 20%, 
@@ -194,26 +179,26 @@
       transparent 100%
     );
     border-radius: 50%;
-    margin-bottom: 0.3vh;
-    box-shadow: 0 0 20px rgba(255,193,61,0.4);
+    margin-bottom: 2px;
+    box-shadow: 0 0 8px rgba(255,193,61,0.4);
   }
   
   .screen-label {
     text-align: center;
-    font-size: clamp(0.5rem, 1vw, 0.65rem);
+    font-size: 8px;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     opacity: 0.7;
   }
 
-  /* ===== SEATING MAP ===== */
+  /* ===== SEATING MAP (MOBILE OPTIMIZED) ===== */
   .seating-map {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1vh 1vw;
+    padding: 4px 8px;
     overflow: auto;
   }
   
@@ -229,14 +214,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(2px, 0.3vw, 4px);
-    margin-bottom: clamp(2px, 0.5vh, 6px);
+    gap: 1px;
+    margin-bottom: 2px;
     position: relative;
     width: 100%;
   }
   
   .section-divider {
-    height: clamp(4px, 1vh, 12px);
+    height: 6px;
     width: 100%;
     position: relative;
   }
@@ -254,21 +239,21 @@
       var(--line) 80%, 
       transparent
     );
-    opacity: 0.5;
+    opacity: 0.3;
   }
   
   .row-label {
-    width: clamp(14px, 2vw, 20px);
-    height: clamp(14px, 2vw, 20px);
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: clamp(0.5rem, 1vw, 0.7rem);
+    font-size: 9px;
     color: var(--muted);
     background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    margin: 0 clamp(2px, 0.3vw, 4px);
+    border-radius: 3px;
+    margin: 0 2px;
     flex-shrink: 0;
   }
   
@@ -284,19 +269,18 @@
   
   .seat-block {
     display: flex;
-    gap: clamp(2px, 0.3vw, 4px);
+    gap: 1px;
   }
   
   .center-aisle {
-    width: clamp(8px, 1.5vw, 16px);
+    width: 8px;
   }
   
   .seat {
     position: relative;
-    width: clamp(16px, 2.5vw, 28px);
-    height: clamp(16px, 2.5vw, 28px);
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
-    cursor: pointer;
   }
   
   .seat-inner {
@@ -306,7 +290,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: clamp(2px, 0.4vw, 6px);
+    border-radius: 3px;
     transition: all 0.2s ease;
     position: relative;
   }
@@ -323,21 +307,28 @@
     background-image: var(--img-sweet);
   }
   
-  .seat:not(.booked):not(.mine):hover .seat-inner {
-    transform: scale(1.15);
-    filter: brightness(1.2);
+  /* Available seats - can be clicked */
+  .seat.available {
+    cursor: pointer;
   }
   
-  .seat:not(.booked):not(.mine):active .seat-inner {
-    transform: scale(0.95);
+  .seat.available:hover .seat-inner {
+    transform: scale(1.2);
+    filter: brightness(1.3);
+    z-index: 10;
   }
   
+  .seat.available:active .seat-inner {
+    transform: scale(0.9);
+  }
+  
+  /* Booked seats - clickable for view */
   .seat.booked {
     cursor: pointer;
   }
   
   .seat.booked .seat-inner {
-    opacity: 0.5;
+    opacity: 0.6;
   }
   
   .seat.booked .seat-inner::after {
@@ -348,9 +339,15 @@
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
   }
   
+  .seat.booked:hover .seat-inner {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  
+  /* My seat - special highlighting */
   .seat.mine .seat-inner {
     opacity: 1;
-    box-shadow: 0 0 0 2px var(--primary), 0 0 12px rgba(0,195,0,0.6);
+    box-shadow: 0 0 0 1px var(--primary), 0 0 6px rgba(0,195,0,0.6);
     animation: pulse 2s infinite;
   }
   
@@ -359,15 +356,24 @@
     position: absolute;
     inset: 0;
     background: var(--img-person) center/65% no-repeat;
-    filter: drop-shadow(0 1px 3px rgba(0,195,0,0.8));
+    filter: drop-shadow(0 1px 2px rgba(0,195,0,0.8));
   }
   
   @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 2px var(--primary), 0 0 12px rgba(0,195,0,0.6); }
-    50% { box-shadow: 0 0 0 2px var(--primary), 0 0 20px rgba(0,195,0,0.8); }
+    0%, 100% { box-shadow: 0 0 0 1px var(--primary), 0 0 6px rgba(0,195,0,0.6); }
+    50% { box-shadow: 0 0 0 1px var(--primary), 0 0 10px rgba(0,195,0,0.8); }
+  }
+  
+  /* Unavailable seats - no interaction */
+  .seat:not(.available):not(.booked):not(.mine) {
+    cursor: default;
+  }
+  
+  .seat:not(.available):not(.booked):not(.mine) .seat-inner {
+    opacity: 0.3;
   }
 
-  /* ===== MODAL ===== */
+  /* ===== MOBILE MODAL ===== */
   .modal {
     display: none;
     position: fixed;
@@ -375,11 +381,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.9);
     z-index: 1000;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    animation: fadeIn 0.2s;
+    animation: fadeIn 0.3s;
   }
   
   @keyframes fadeIn {
@@ -394,29 +400,29 @@
   .modal-content {
     background: var(--panel);
     border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 2rem;
-    max-width: 90vw;
-    width: 420px;
-    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    width: 100%;
+    max-width: 100vw;
+    max-height: 80vh;
     overflow-y: auto;
-    animation: slideUp 0.3s;
+    animation: slideUp 0.4s ease-out;
   }
   
   @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
   }
   
   .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 20px;
   }
   
   .modal-title {
-    font-size: 1.3rem;
+    font-size: 18px;
     font-weight: 700;
     color: var(--vip);
   }
@@ -425,11 +431,11 @@
     background: none;
     border: none;
     color: var(--muted);
-    font-size: 1.8rem;
+    font-size: 24px;
     cursor: pointer;
     padding: 0;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -438,34 +444,33 @@
   
   .modal-close:hover {
     color: var(--text);
-    transform: rotate(90deg);
   }
   
   .seat-preview {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 1.5rem 0;
+    margin: 20px 0;
   }
   
   .seat-preview-icon {
-    font-size: 4rem;
+    font-size: 48px;
   }
   
   .seat-preview-id {
-    font-size: 2.5rem;
+    font-size: 32px;
     font-weight: 700;
     background: linear-gradient(135deg, var(--accent), var(--vip));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-left: 1rem;
+    margin-left: 16px;
   }
   
   .info-item {
-    padding: 1rem;
+    padding: 12px 16px;
     background: rgba(255,255,255,0.03);
-    border-radius: 10px;
-    margin-bottom: 0.75rem;
+    border-radius: 12px;
+    margin-bottom: 8px;
   }
   
   .info-item:last-of-type {
@@ -473,23 +478,24 @@
   }
   
   .info-label {
-    font-size: 0.75rem;
+    font-size: 11px;
     color: var(--muted);
-    margin-bottom: 0.35rem;
+    margin-bottom: 4px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-weight: 600;
   }
   
   .info-value {
-    font-size: 1.1rem;
+    font-size: 14px;
     color: var(--text);
     font-weight: 600;
   }
   
   .modal-actions {
     display: flex;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
+    gap: 12px;
+    margin-top: 20px;
   }
   
   .modal-actions .btn {
@@ -497,13 +503,13 @@
   }
   
   .btn {
-    padding: 0.85rem 1.25rem;
+    padding: 14px 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: 14px;
     font-weight: 600;
-    transition: all 0.2s;
+    transition: all 0.3s;
   }
   
   .btn-primary {
@@ -527,45 +533,36 @@
     background: rgba(255,255,255,0.12);
   }
   
-  .btn-danger {
-    background: rgba(244,67,54,0.15);
-    color: #ff5252;
-    border: 1px solid rgba(244,67,54,0.3);
-  }
-  
-  .btn-danger:hover:not(:disabled) {
-    background: rgba(244,67,54,0.25);
-  }
-  
   .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none !important;
   }
 
-  /* ===== LEGEND ===== */
+  /* ===== COMPACT LEGEND ===== */
   .legend {
-    padding: 0.8vh 2vw;
+    padding: 6px 8px;
     background: rgba(255,255,255,0.02);
     border-top: 1px solid var(--line);
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: clamp(8px, 1.5vw, 15px);
+    gap: 8px;
     flex-shrink: 0;
   }
   
   .legend-item {
     display: flex;
     align-items: center;
-    gap: clamp(4px, 0.6vw, 8px);
-    font-size: clamp(0.55rem, 1.1vw, 0.7rem);
+    gap: 4px;
+    font-size: 9px;
     color: var(--muted);
   }
   
   .legend-dot {
-    width: clamp(12px, 1.8vw, 16px);
-    height: clamp(10px, 1.5vw, 14px);
-    border-radius: 3px;
+    width: 10px;
+    height: 8px;
+    border-radius: 2px;
     flex-shrink: 0;
   }
   
@@ -591,24 +588,24 @@
   
   .legend-dot.mine {
     background: var(--primary);
-    box-shadow: 0 0 8px rgba(0,195,0,0.6);
+    box-shadow: 0 0 4px rgba(0,195,0,0.6);
   }
   
-  /* ===== STATS BAR ===== */
+  /* ===== COMPACT STATS BAR ===== */
   .stats-bar {
-    padding: 0.6vh 2vw;
+    padding: 6px 8px;
     background: rgba(0,0,0,0.2);
     border-top: 1px solid var(--line);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: clamp(10px, 2vw, 20px);
+    gap: 12px;
     flex-shrink: 0;
     flex-wrap: wrap;
   }
   
   .stat-item {
-    font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+    font-size: 9px;
     color: var(--muted);
   }
   
@@ -620,7 +617,7 @@
   /* Loading */
   .loading {
     text-align: center;
-    padding: 2rem;
+    padding: 40px 20px;
     color: var(--muted);
   }
   
@@ -628,30 +625,49 @@
     border: 3px solid rgba(255,255,255,0.1);
     border-top-color: var(--vip);
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
+    margin: 0 auto 16px;
   }
   
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
+  
+  .already-booked-notice {
+    background: rgba(0,195,0,0.1);
+    border: 1px solid rgba(0,195,0,0.3);
+    color: var(--primary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
 
-  @media (max-width: 600px) {
+  /* Larger screens adjustments */
+  @media (min-width: 768px) {
+    .seat {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .row-label {
+      width: 20px;
+      height: 20px;
+      font-size: 11px;
+    }
+    
     .modal-content {
-      padding: 1.5rem;
-      width: 95vw;
+      border-radius: 16px;
+      max-width: 420px;
+      max-height: 90vh;
     }
     
-    .user-header {
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    
-    .user-actions {
-      width: 100%;
-      justify-content: flex-end;
+    .modal {
+      align-items: center;
     }
   }
 </style>
@@ -667,17 +683,18 @@
           <div class="user-badge"><span id="userEmpNo">-</span> • <span id="userFactory">-</span></div>
         </div>
       </div>
-      <div class="user-actions">
-        <button class="btn-header" onclick="refreshBookings()">🔄 รีเฟรช</button>
-        <button class="btn-header logout" onclick="logout()">🚪 ออกจากระบบ</button>
-      </div>
+      <button class="refresh-btn" onclick="refreshBookings()">🔄 รีเฟรช</button>
     </div>
     
     <!-- Event Header -->
     <div class="event-header">
       <div class="event-title">HRA Function 2025</div>
       <div class="event-name">CINEMA CLUB</div>
-      <div class="event-status">A Night to Remember • Live Booking</div>
+    </div>
+    
+    <!-- Already Booked Notice -->
+    <div id="alreadyBookedNotice" class="already-booked-notice" style="display:none;">
+      ✅ คุณจองที่นั่งเรียบร้อยแล้ว (เฉพาะดูข้อมูลเท่านั้น)
     </div>
     
     <!-- Screen -->
@@ -728,7 +745,7 @@
     <!-- Stats Bar -->
     <div class="stats-bar">
       <div class="stat-item">
-        ทั้งหมด: <strong><span id="statTotal">0</span>/106</strong>
+        ทั้งหมด: <strong><span id="statTotal">0</span>/200</strong>
       </div>
       <div class="stat-item">
         Regular: <strong id="statRegular">0</strong>
@@ -810,7 +827,7 @@
         <div class="info-value" id="viewTime">-</div>
       </div>
       
-      <div class="modal-actions" id="viewActions">
+      <div class="modal-actions">
         <button type="button" class="btn btn-secondary" onclick="closeModal('viewModal')">ปิด</button>
       </div>
     </div>
@@ -820,21 +837,30 @@
     // ==================== CONFIGURATION ====================
     const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
     
+    // NEW LAYOUT: 200 seats total
     const seatLayout = {
-      'A': { count: 14, type: 'regular', split: 7 },
-      'B': { count: 14, type: 'regular', split: 7 },
-      'C': { count: 14, type: 'regular', split: 7 },
+      'A': { count: 16, type: 'regular', split: 8 },
+      'B': { count: 16, type: 'regular', split: 8 },
+      'C': { count: 16, type: 'regular', split: 8 },
       'D': { count: 16, type: 'regular', split: 8 },
       'E': { count: 16, type: 'regular', split: 8 },
       'F': { count: 16, type: 'regular', split: 8 },
-      'S': { count: 14, type: 'sweet', split: 7 },
-      'L': { count: 14, type: 'vip', split: 7 }
+      'G': { count: 16, type: 'regular', split: 8 },
+      'H': { count: 16, type: 'regular', split: 8 },
+      'I': { count: 16, type: 'regular', split: 8 },
+      'J': { count: 16, type: 'regular', split: 8 },
+      'K': { count: 12, type: 'sweet', split: 6 },
+      'L': { count: 12, type: 'sweet', split: 6 },
+      'M': { count: 12, type: 'sweet', split: 6 },
+      'V': { count: 4, type: 'vip', split: 2 }
     };
+    // Total: 160 + 36 + 4 = 200 seats
     
     let currentUser = null;
     let bookingsData = [];
     let myBooking = null;
     let selectedSeat = null;
+    let isViewOnlyMode = false; // Track if user already has a booking
     
     // ==================== INITIALIZATION ====================
     window.onload = function() {
@@ -919,11 +945,18 @@
         ]);
         
         bookingsData = Array.isArray(allBookings) ? allBookings : [];
-        // Handle null or empty response
         myBooking = (myBookingData && myBookingData.seatId) ? myBookingData : null;
+        
+        // Set view-only mode if user already has booking
+        isViewOnlyMode = !!myBooking;
+        
+        if (isViewOnlyMode) {
+          document.getElementById('alreadyBookedNotice').style.display = 'block';
+        }
         
         console.log('Loaded bookings:', bookingsData.length);
         console.log('My booking:', myBooking);
+        console.log('View only mode:', isViewOnlyMode);
         
         renderSeats();
         updateStats(stats);
@@ -950,11 +983,11 @@
       const rows = Object.keys(seatLayout);
       const mySeatId = myBooking ? myBooking.seatId : null;
       
-      rows.forEach((rowId) => {
+      rows.forEach((rowId, index) => {
         const rowData = seatLayout[rowId];
         
-        // Add dividers
-        if (rowId === 'D' || rowId === 'S' || rowId === 'L') {
+        // Add dividers before Sweet and VIP sections
+        if (rowId === 'K' || rowId === 'V') {
           const divider = document.createElement('div');
           divider.className = 'section-divider';
           wrapper.appendChild(divider);
@@ -968,7 +1001,7 @@
         labelLeft.className = 'row-label';
         if (rowData.type === 'vip') labelLeft.classList.add('vvip');
         if (rowData.type === 'sweet') labelLeft.classList.add('sweet');
-        labelLeft.textContent = rowId === 'L' ? 'VIP' : rowId;
+        labelLeft.textContent = rowId === 'V' ? 'VIP' : rowId;
         row.appendChild(labelLeft);
         
         // Left block
@@ -999,7 +1032,7 @@
         labelRight.className = 'row-label';
         if (rowData.type === 'vip') labelRight.classList.add('vvip');
         if (rowData.type === 'sweet') labelRight.classList.add('sweet');
-        labelRight.textContent = rowId === 'L' ? 'VIP' : rowId;
+        labelRight.textContent = rowId === 'V' ? 'VIP' : rowId;
         row.appendChild(labelRight);
         
         wrapper.appendChild(row);
@@ -1021,7 +1054,13 @@
         seat.classList.add('booked');
         seat.onclick = () => viewBooking(booking);
       } else {
-        seat.onclick = () => openBookModal(seatId);
+        // Available seat
+        if (!isViewOnlyMode) {
+          // Only clickable if user hasn't booked yet
+          seat.classList.add('available');
+          seat.onclick = () => openBookModal(seatId);
+        }
+        // If in view-only mode, empty seats are not clickable (no class, no onclick)
       }
       
       const seatInner = document.createElement('div');
@@ -1042,11 +1081,8 @@
     
     // ==================== BOOKING FLOW ====================
     function openBookModal(seatId) {
-      // Check if already booked
-      if (myBooking) {
-        alert('คุณจองที่นั่ง ' + myBooking.seatId + ' ไว้แล้ว\nหากต้องการเปลี่ยน กรุณายกเลิกที่นั่งเดิมก่อน');
-        return;
-      }
+      // This should only be called if user hasn't booked yet
+      if (isViewOnlyMode) return;
       
       selectedSeat = seatId;
       
@@ -1059,7 +1095,7 @@
     }
     
     async function confirmBooking() {
-      if (!selectedSeat) return;
+      if (!selectedSeat || isViewOnlyMode) return;
       
       const btn = event.target;
       btn.disabled = true;
@@ -1077,7 +1113,7 @@
         if (result.success) {
           alert('จองที่นั่ง ' + selectedSeat + ' สำเร็จ! 🎉');
           closeModal('bookModal');
-          await loadBookings();
+          await loadBookings(); // This will set view-only mode
         } else {
           alert('ไม่สามารถจองได้: ' + (result.message || 'เกิดข้อผิดพลาด'));
         }
@@ -1092,6 +1128,7 @@
     }
     
     function viewBooking(booking) {
+      // Show booking details - this should show the actual booking owner's info, not current user's info
       document.getElementById('viewSeatId').textContent = booking.seatId;
       document.getElementById('viewEmpNo').textContent = booking.empNo;
       document.getElementById('viewName').textContent = booking.name;
@@ -1100,16 +1137,13 @@
       const bookingTime = new Date(booking.bookingTime);
       document.getElementById('viewTime').textContent = bookingTime.toLocaleString('th-TH');
       
-      // Remove cancel button if exists
-      const actions = document.getElementById('viewActions');
-      actions.innerHTML = '<button type="button" class="btn btn-secondary" onclick="closeModal(\'viewModal\')">ปิด</button>';
-      
       document.getElementById('viewModal').classList.add('active');
     }
     
     function viewMyBooking() {
       if (!myBooking) return;
       
+      // Show my booking details
       document.getElementById('viewSeatId').textContent = myBooking.seatId;
       document.getElementById('viewEmpNo').textContent = myBooking.empNo;
       document.getElementById('viewName').textContent = myBooking.name;
@@ -1118,53 +1152,12 @@
       const bookingTime = new Date(myBooking.bookingTime);
       document.getElementById('viewTime').textContent = bookingTime.toLocaleString('th-TH');
       
-      // Add cancel button
-      const actions = document.getElementById('viewActions');
-      actions.innerHTML = `
-        <button type="button" class="btn btn-secondary" onclick="closeModal('viewModal')">ปิด</button>
-        <button type="button" class="btn btn-danger" onclick="cancelMyBooking()">ยกเลิกการจอง</button>
-      `;
-      
       document.getElementById('viewModal').classList.add('active');
-    }
-    
-    async function cancelMyBooking() {
-      if (!myBooking) return;
-      
-      const confirmed = confirm('ต้องการยกเลิกการจองที่นั่ง ' + myBooking.seatId + ' ใช่หรือไม่?');
-      if (!confirmed) return;
-      
-      try {
-        const result = await apiGet('cancelBooking', {
-          empNo: currentUser.empNo,
-          lineUserId: currentUser.lineUserId
-        });
-        
-        if (result.success) {
-          alert('ยกเลิกการจองสำเร็จ');
-          closeModal('viewModal');
-          await loadBookings();
-        } else {
-          alert('ไม่สามารถยกเลิกได้: ' + (result.message || 'เกิดข้อผิดพลาด'));
-        }
-        
-      } catch (error) {
-        console.error('Cancel error:', error);
-        alert('เกิดข้อผิดพลาด: ' + error.message);
-      }
     }
     
     function closeModal(modalId) {
       document.getElementById(modalId).classList.remove('active');
       selectedSeat = null;
-    }
-    
-    function logout() {
-      const confirmed = confirm('ต้องการออกจากระบบใช่หรือไม่?');
-      if (confirmed) {
-        sessionStorage.removeItem('userData');
-        window.location.href = 'index.html';
-      }
     }
     
     // Close modal on background click
