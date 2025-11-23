@@ -7,17 +7,18 @@
 <style>
   /* ============ MOBILE-FIRST DESIGN ============ */
   :root {
-    /* Dark theme colors */
-    --bg: #0a0c10; 
-    --panel: #12151c; 
-    --line: #1f2530; 
-    --text: #f0f2f5; 
-    --muted: #8892a0;
-    --accent: #ff6b6b;
-    --vip: #ffc93d;
-    --sweet: #ff69b4;
-    --success: #4caf50;
-    --primary: #00C300; /* LINE Green */
+    /* Clean minimal colors */
+    --bg: #0f1419; 
+    --panel: #1a1f2e; 
+    --line: #2d3748; 
+    --text: #e2e8f0; 
+    --muted: #94a3b8;
+    --accent: #3b82f6;
+    --success: #10b981;
+    --primary: #00C851; /* LINE Green */
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
   }
 
   * { 
@@ -33,9 +34,13 @@
   
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, #0a0c10 0%, #1a1d26 100%);
+    background: linear-gradient(135deg, var(--bg) 0%, #1e293b 100%);
     color: var(--text);
     padding: 16px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .container {
@@ -43,17 +48,26 @@
     max-width: 400px;
     margin: 0 auto;
     background: var(--panel);
-    border-radius: 20px;
-    padding: 24px;
+    border-radius: 24px;
+    padding: 32px 24px;
     box-shadow: 
-      0 20px 40px rgba(0,0,0,0.6),
-      inset 0 1px 0 rgba(255,255,255,0.05);
-    animation: containerFadeIn 0.6s ease-out;
+      0 25px 50px rgba(0,0,0,0.25),
+      0 0 0 1px rgba(255,255,255,0.05);
+    animation: containerFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
   }
   
   @keyframes containerFadeIn {
-    from { opacity: 0; transform: translateY(20px) scale(0.96); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from { 
+      opacity: 0; 
+      transform: translateY(30px) scale(0.95);
+      filter: blur(4px);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
   }
   
   .container::before {
@@ -62,55 +76,57 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--vip));
-    border-radius: 20px 20px 0 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 24px 24px 0 0;
   }
   
   /* ===== HEADER ===== */
   .header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
   
   .cinema-icon {
-    font-size: 48px;
-    margin-bottom: 8px;
+    font-size: 64px;
+    margin-bottom: 12px;
     display: inline-block;
-    animation: float 3s ease-in-out infinite;
+    animation: gentleFloat 4s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.3));
   }
   
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+  @keyframes gentleFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
   }
   
   .title {
-    font-size: 24px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #ff6b6b, #ffc93d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
     margin-bottom: 8px;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
   
   .subtitle {
     color: var(--muted);
     font-size: 14px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
+    font-weight: 400;
   }
   
   .event-badge {
     display: inline-block;
-    background: rgba(255,193,61,0.15);
-    border: 1px solid rgba(255,193,61,0.3);
-    color: var(--vip);
-    padding: 6px 16px;
-    border-radius: 16px;
-    font-size: 12px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: var(--accent);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(10px);
   }
   
   /* ===== STEP INDICATOR ===== */
@@ -366,48 +382,99 @@
   /* ===== BUTTONS ===== */
   .btn {
     width: 100%;
-    padding: 16px 20px;
+    padding: 16px 24px;
     border: none;
-    border-radius: 12px;
+    border-radius: 16px;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     margin-bottom: 12px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: inherit;
   }
   
   .btn:last-child {
     margin-bottom: 0;
   }
   
+  .btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn:hover::before {
+    left: 100%;
+  }
+  
   .btn-primary {
-    background: linear-gradient(135deg, var(--primary) 0%, #00e600 100%);
+    background: linear-gradient(135deg, var(--primary), var(--success));
     color: white;
-    box-shadow: 0 4px 16px rgba(0,195,0,0.3);
+    box-shadow: 
+      0 8px 24px rgba(16, 185, 129, 0.25),
+      0 0 0 1px rgba(255,255,255,0.1);
+    border: none;
   }
   
   .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,195,0,0.4);
+    box-shadow: 
+      0 12px 32px rgba(16, 185, 129, 0.35),
+      0 0 0 1px rgba(255,255,255,0.15);
+  }
+  
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0px);
   }
   
   .btn-secondary {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.05);
     color: var(--text);
-    border: 2px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
   }
   
   .btn-secondary:hover:not(:disabled) {
     background: rgba(255,255,255,0.1);
     border-color: rgba(255,255,255,0.2);
+    transform: translateY(-1px);
   }
   
   .btn:disabled {
-    opacity: 0.4;
+    opacity: 0.6;
     cursor: not-allowed;
     transform: none !important;
+  }
+  
+  .btn.loading {
+    pointer-events: none;
+  }
+  
+  .btn.loading::after {
+    content: "";
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-right-color: currentColor;
+    border-radius: 50%;
+    animation: btnSpin 0.8s linear infinite;
+  }
+  
+  @keyframes btnSpin {
+    to { transform: rotate(360deg); }
   }
   
   /* ===== MESSAGES ===== */
@@ -769,10 +836,12 @@
       
       hideMessages();
       
-      // Disable button
+      // Add loading animation
       const btn = event.target;
       btn.disabled = true;
-      btn.textContent = 'กำลังตรวจสอบ...';
+      btn.classList.add('loading');
+      const originalText = btn.textContent;
+      btn.textContent = 'กำลังตรวจสอบ';
       
       try {
         const result = await apiCall('getEmployeeInfo', { empNo });
@@ -782,8 +851,7 @@
           
           if (currentEmployee.uid) {
             showError('รหัสพนักงานนี้ลงทะเบียนแล้ว');
-            btn.disabled = false;
-            btn.textContent = 'ตรวจสอบข้อมูล →';
+            resetButton(btn, originalText);
             return;
           }
           
@@ -796,15 +864,13 @@
           
         } else {
           showError(result.message || 'ไม่พบข้อมูลพนักงาน');
-          btn.disabled = false;
-          btn.textContent = 'ตรวจสอบข้อมูล →';
+          resetButton(btn, originalText);
         }
         
       } catch (error) {
         console.error('Check employee error:', error);
         showError('เกิดข้อผิดพลาด: ' + error.message);
-        btn.disabled = false;
-        btn.textContent = 'ตรวจสอบข้อมูล →';
+        resetButton(btn, originalText);
       }
     }
 
@@ -818,7 +884,9 @@
       
       const btn = ev.target;
       btn.disabled = true;
-      btn.textContent = 'กำลังลงทะเบียน...';
+      btn.classList.add('loading');
+      const originalText = btn.textContent;
+      btn.textContent = 'กำลังลงทะเบียน';
       
       try {
         const result = await apiCall('registerUser', {
@@ -837,16 +905,20 @@
           
         } else {
           showError(result.message || 'ไม่สามารถลงทะเบียนได้');
-          btn.disabled = false;
-          btn.textContent = '✓ ยืนยันข้อมูลถูกต้อง';
+          resetButton(btn, originalText);
         }
         
       } catch (error) {
         console.error('Registration error:', error);
         showError('เกิดข้อผิดพลาด: ' + error.message);
-        btn.disabled = false;
-        btn.textContent = '✓ ยืนยันข้อมูลถูกต้อง';
+        resetButton(btn, originalText);
       }
+    }
+    
+    function resetButton(btn, originalText) {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      btn.textContent = originalText;
     }
 
     function backToStep1() {
