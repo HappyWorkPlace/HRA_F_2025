@@ -5,20 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>HRA Cinema - Select Seat</title>
 <style>
-  /* === THEME === */
+  /* === THEME & ASSETS === */
   :root {
-    --bg: #0f172a;       /* Dark Blue/Slate */
-    --panel: #1e293b;    /* Card Background */
-    --line: #334155;     /* Dividers */
-    --text: #f8fafc;     /* White Text */
-    --muted: #94a3b8;    /* Gray Text */
-    --primary: #3b82f6;  /* Bright Blue */
-    --booked: #475569;   /* Slate for booked */
-    --vip: #fbbf24;      /* Gold */
-    --sweet: #f472b6;    /* Pink */
+    /* Seat Images from Original Code */
+    --img-regular: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w80");
+    --img-vip:     url("https://drive.google.com/thumbnail?id=1TSU5WQqDC5lrWYN8SSq9agRVLfSsFHUu&sz=w80");
+    --img-sweet:   url("https://drive.google.com/thumbnail?id=1Du01KILJxPZZQf0vZnABSilXcMfqNX32&sz=w80");
+    
+    /* Person Icon for booked seats */
+    --img-person: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='20' r='10' fill='none' stroke='%23fff' stroke-width='4'/><path d='M16 52c0-8.84 7.16-16 16-16s16 7.16 16 16' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/></svg>");
+
+    /* Colors */
+    --bg: #0f172a;       
+    --panel: #1e293b;    
+    --line: #334155;     
+    --text: #f8fafc;     
+    --muted: #94a3b8;    
+    --primary: #3b82f6;  
+    --accent: #f43f5e;
+    --success: #22c55e;
+    --gold: #fbbf24;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
   body {
     background-color: var(--bg);
@@ -27,70 +36,76 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: hidden; /* Prevent body scroll, handle inside map-container */
   }
 
   /* === HEADER === */
   header {
     background: var(--panel);
-    padding: 15px 20px;
+    padding: 10px 15px;
     border-bottom: 1px solid var(--line);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    z-index: 20;
+    flex-shrink: 0;
   }
 
-  .user-info { display: flex; align-items: center; gap: 12px; }
-  .avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
-  .user-text h3 { font-size: 0.95rem; font-weight: 700; line-height: 1.2; }
+  .user-info { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+  .user-text h3 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 2px;}
   .user-text p { font-size: 0.75rem; color: var(--muted); }
   
   .event-title { text-align: right; }
-  .event-title h2 { font-size: 0.9rem; color: var(--primary); letter-spacing: 1px; }
-  .event-title span { font-size: 0.7rem; color: var(--muted); display: block;}
+  .event-title h2 { font-size: 0.85rem; color: var(--gold); letter-spacing: 0.5px; text-transform: uppercase; }
+  .event-title span { font-size: 0.65rem; color: var(--muted); display: block; }
 
   /* === SCREEN AREA === */
   .screen-area {
+    background: var(--bg);
     text-align: center;
-    padding: 20px 0 10px;
+    padding: 15px 0 5px;
     perspective: 500px;
+    flex-shrink: 0;
+    z-index: 10;
   }
   .screen {
-    height: 5px;
-    width: 80%;
+    height: 4px;
+    width: 60%;
     margin: 0 auto;
-    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+    box-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
     border-radius: 50%;
     transform: rotateX(-5deg);
   }
-  .screen-text { font-size: 0.7rem; color: var(--muted); margin-top: 8px; letter-spacing: 2px; text-transform: uppercase; }
+  .screen-text { font-size: 0.65rem; color: var(--muted); margin-top: 6px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
 
   /* === SEAT MAP (SCROLLABLE) === */
   .map-container {
     flex: 1;
-    overflow: auto;
+    overflow: auto; /* Enable scrolling */
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: flex-start; /* Start from top */
-    padding: 20px;
+    justify-content: center; /* Center initially if fits */
+    align-items: flex-start;
+    padding: 20px 10px 60px 10px; /* Extra padding bottom for easy scroll */
     position: relative;
-    cursor: grab;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%);
   }
   
   .seat-grid {
     display: flex;
     flex-direction: column;
     gap: 8px; /* Gap between rows */
+    margin: 0 auto; /* Center in scroll view */
   }
 
   .row {
     display: flex;
     gap: 4px; /* Gap between seats */
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Keep rows in one line */
   }
 
   /* Row Label */
@@ -101,93 +116,175 @@
     font-weight: bold;
     text-align: center;
     margin-right: 5px;
+    position: sticky; /* Keep label visible */
+    left: 0;
+    z-index: 5;
+    text-shadow: 0 0 5px var(--bg);
   }
 
-  /* SEAT STYLES */
+  /* SEAT STYLES (GRAPHIC) */
   .seat {
-    width: 28px;
-    height: 28px;
-    background: #334155; /* Default Empty Color */
-    border-radius: 6px 6px 2px 2px;
+    width: 32px; /* Bigger touch target */
+    height: 32px;
     position: relative;
     cursor: pointer;
-    transition: transform 0.1s;
-    /* Icon placeholder */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-shrink: 0; /* Don't shrink */
   }
 
-  .seat::before { content: ""; width: 80%; height: 80%; background: rgba(255,255,255,0.1); border-radius: 4px; }
-  
-  /* Seat Types */
-  .seat.sweet { border-top: 3px solid var(--sweet); }
-  .seat.vip { border-top: 3px solid var(--vip); }
-  
-  /* States */
-  .seat:hover { transform: scale(1.1); z-index: 2; }
-  
-  .seat.booked { background: var(--booked); cursor: pointer; }
-  .seat.booked::before { background: transparent; content: "👤"; font-size: 14px; opacity: 0.5; }
+  .seat-inner {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 0.2s, filter 0.2s;
+  }
 
-  .seat.mine { background: var(--primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); border: 1px solid #60a5fa; }
-  .seat.mine::before { content: "★"; color: white; opacity: 1; }
+  /* Image Assignments */
+  .seat.regular .seat-inner { background-image: var(--img-regular); }
+  .seat.vip .seat-inner { background-image: var(--img-vip); }
+  .seat.sweet .seat-inner { background-image: var(--img-sweet); }
+
+  /* States */
+  .seat:not(.booked):not(.mine):not(.disabled):hover .seat-inner {
+    transform: scale(1.15);
+    filter: brightness(1.2);
+  }
+  .seat:active .seat-inner { transform: scale(0.95); }
+
+  /* Booked State */
+  .seat.booked .seat-inner { 
+    opacity: 0.5; 
+    filter: grayscale(0.8);
+  }
+  .seat.booked::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--img-person) center/60% no-repeat;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
+    pointer-events: none;
+  }
+
+  /* Mine State */
+  .seat.mine .seat-inner {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px var(--success));
+  }
+  .seat.mine::after {
+    content: "★";
+    position: absolute;
+    top: -5px; right: -5px;
+    color: #fff;
+    background: var(--success);
+    border-radius: 50%;
+    width: 14px; height: 14px;
+    font-size: 10px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    z-index: 2;
+  }
+
+  /* Disabled State (View Only - Empty) */
+  .seat.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+    filter: grayscale(1);
+  }
 
   /* Aisle spacer */
-  .aisle { width: 20px; }
+  .aisle { width: 25px; flex-shrink: 0; }
 
   /* === FOOTER / LEGEND === */
   footer {
     background: var(--panel);
-    padding: 15px;
+    padding: 10px 5px;
     border-top: 1px solid var(--line);
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
-    z-index: 10;
+    gap: 15px;
+    z-index: 20;
+    flex-shrink: 0;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
   }
 
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); }
-  .dot { width: 12px; height: 12px; border-radius: 3px; }
-  .dot.empty { background: #334155; }
-  .dot.booked { background: var(--booked); }
-  .dot.mine { background: var(--primary); }
-  .dot.vip { background: #334155; border-top: 3px solid var(--vip); }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--muted); }
+  .dot { width: 14px; height: 14px; border-radius: 3px; background-size: cover; }
+  .dot.regular { background-image: var(--img-regular); }
+  .dot.vip { background-image: var(--img-vip); }
+  .dot.sweet { background-image: var(--img-sweet); }
+  .dot.booked { background-color: #475569; position: relative; }
+  .dot.booked::after { content:""; position: absolute; inset:0; background: var(--img-person) center/70% no-repeat; opacity: 0.6; }
+  .dot.mine { background-color: var(--success); display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; }
+  .dot.mine::after { content:"★"; }
 
   /* === MODAL === */
   .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
     display: flex; align-items: center; justify-content: center;
     z-index: 100; opacity: 0; pointer-events: none; transition: 0.2s;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(4px);
+    padding: 20px;
   }
   .modal-overlay.active { opacity: 1; pointer-events: all; }
 
   .modal-box {
     background: var(--panel);
-    width: 90%; max-width: 350px;
-    border-radius: 20px;
+    width: 100%; max-width: 320px;
+    border-radius: 16px;
     padding: 25px;
     text-align: center;
-    border: 1px solid var(--line);
-    transform: translateY(20px); transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.1);
+    transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   }
-  .modal-overlay.active .modal-box { transform: translateY(0); }
+  .modal-overlay.active .modal-box { transform: scale(1); }
 
-  .modal-seat-id { font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
-  .modal-detail { margin: 15px 0; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; text-align: left; }
+  .modal-seat-id { 
+    font-size: 2.5rem; 
+    font-weight: 800; 
+    background: linear-gradient(135deg, #fff 0%, var(--muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px; 
+  }
+  
+  .modal-subtitle { font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;}
+
+  .modal-detail { 
+    margin-bottom: 20px; 
+    padding: 15px; 
+    background: rgba(0,0,0,0.3); 
+    border-radius: 12px; 
+    text-align: left; 
+    border: 1px solid rgba(255,255,255,0.05);
+  }
   .detail-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
   .detail-row span:first-child { color: var(--muted); }
   .detail-row span:last-child { font-weight: 600; color: var(--text); }
 
-  .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: 1rem; }
-  .btn-confirm { background: var(--primary); color: white; }
-  .btn-close { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+  .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; font-size: 1rem; transition: 0.2s;}
+  .btn:active { transform: scale(0.98); }
+  .btn-confirm { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
+  .btn-close { background: rgba(255,255,255,0.1); color: var(--text); }
 
   /* Loading State */
-  .loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--muted); }
+  .loader { 
+    position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); 
+    color: var(--muted); background: rgba(0,0,0,0.6); padding: 15px 25px; border-radius: 30px;
+    pointer-events: none; z-index: 50; display: none;
+  }
+  
+  /* Status Bar */
+  #statusText {
+    position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+    background: rgba(34, 197, 94, 0.9); color: white;
+    padding: 8px 16px; border-radius: 20px; font-size: 0.8rem;
+    z-index: 90; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  #statusText.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -206,30 +303,33 @@
     </div>
   </header>
 
+  <div id="statusText"></div>
+
   <div class="screen-area">
     <div class="screen"></div>
-    <div class="screen-text">จอภาพยนตร์</div>
-    <div id="statusText" style="margin-top:5px; font-size:0.8rem; color: var(--success); height:15px;"></div>
+    <div class="screen-text">SCREEN</div>
   </div>
 
   <div class="map-container">
-    <div id="loader" class="loader">กำลังโหลดผังที่นั่ง...</div>
+    <div id="loader" class="loader">กำลังโหลดข้อมูล...</div>
     <div id="seatGrid" class="seat-grid">
       <!-- Grid generated by JS -->
     </div>
   </div>
 
   <footer>
-    <div class="legend-item"><div class="dot empty"></div>ว่าง</div>
+    <div class="legend-item"><div class="dot regular"></div>Reg</div>
+    <div class="legend-item"><div class="dot sweet"></div>Sweet</div>
+    <div class="legend-item"><div class="dot vip"></div>VIP</div>
     <div class="legend-item"><div class="dot booked"></div>จองแล้ว</div>
     <div class="legend-item"><div class="dot mine"></div>ของฉัน</div>
-    <div class="legend-item"><div class="dot vip"></div>VIP</div>
   </footer>
 
   <!-- ACTION MODAL -->
   <div id="modal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-seat-id" id="modalSeatId">A1</div>
+      <div class="modal-subtitle" id="modalSubtitle">Regular Seat</div>
       <div class="modal-detail" id="modalContent">
         <!-- Details inserted here -->
       </div>
@@ -244,7 +344,6 @@
     const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
     
     // 200 Seats Layout: 10 Rows (A-J), 20 Seats per row
-    // Rows A-H = Regular, I = Sweet, J = VIP
     const SEAT_CONFIG = [
       { id: 'J', count: 20, type: 'vip' },
       { id: 'I', count: 20, type: 'sweet' },
@@ -273,7 +372,7 @@
       currentUser = JSON.parse(stored);
       
       // Update Header
-      document.getElementById('userName').textContent = currentUser.name;
+      document.getElementById('userName').textContent = currentUser.name.length > 15 ? currentUser.name.substring(0,12) + '...' : currentUser.name;
       document.getElementById('userEmp').textContent = currentUser.empNo;
       document.getElementById('userAvatar').src = currentUser.linePictureUrl || 'https://via.placeholder.com/40';
 
@@ -284,7 +383,7 @@
     async function fetchBookings() {
       try {
         document.getElementById('loader').style.display = 'block';
-        document.getElementById('seatGrid').innerHTML = '';
+        document.getElementById('seatGrid').innerHTML = ''; // Clear for redraw
 
         // Parallel Fetch
         const [bookingsData, myData] = await Promise.all([
@@ -295,11 +394,8 @@
         allBookings = Array.isArray(bookingsData) ? bookingsData : [];
         myBooking = (myData && myData.seatId) ? myData : null;
 
-        // Status update
         if (myBooking) {
-          document.getElementById('statusText').textContent = `คุณจองที่นั่ง ${myBooking.seatId} เรียบร้อยแล้ว`;
-        } else {
-          document.getElementById('statusText').textContent = '';
+           showToast(`คุณจองที่นั่ง ${myBooking.seatId} แล้ว`);
         }
 
         renderMap();
@@ -307,6 +403,7 @@
 
       } catch (err) {
         alert('โหลดข้อมูลไม่สำเร็จ: ' + err.message);
+        document.getElementById('loader').style.display = 'none';
       }
     }
 
@@ -329,27 +426,39 @@
           const seatId = `${rowInfo.id}${i}`;
           const seatEl = document.createElement('div');
           
-          // Basic Classes
+          // Determine Classes
           let classes = ['seat', rowInfo.type];
           
-          // State Check
+          // Check Status
           const booking = allBookings.find(b => b.seatId === seatId);
           const isMine = myBooking && myBooking.seatId === seatId;
+
+          // Inner Graphic
+          const inner = document.createElement('div');
+          inner.className = 'seat-inner';
+          seatEl.appendChild(inner);
 
           if (isMine) {
             classes.push('mine');
             seatEl.onclick = () => showMySeatInfo();
           } else if (booking) {
             classes.push('booked');
+            // Pass the SPECIFIC booking object found for this seat
             seatEl.onclick = () => showOtherSeatInfo(booking);
           } else {
-            // Empty Seat
-            seatEl.onclick = () => handleEmptySeatClick(seatId);
+            // Empty Seat Logic
+            if (myBooking) {
+              // User already has a seat -> View Only Mode -> Empty seats not clickable
+              classes.push('disabled');
+            } else {
+              // User has no seat -> Can book
+              seatEl.onclick = () => handleEmptySeatClick(seatId, rowInfo.type);
+            }
           }
 
           seatEl.className = classes.join(' ');
           
-          // Add aisle after seat 10 (Split 10/10)
+          // Add seat and check for aisle
           rowDiv.appendChild(seatEl);
           if (i === 10) {
             const aisle = document.createElement('div');
@@ -364,34 +473,32 @@
 
     // === INTERACTIONS ===
     
-    // 1. Click Empty Seat
-    function handleEmptySeatClick(seatId) {
-      if (myBooking) {
-        // VIEW ONLY MODE: User already has a seat
-        showToast("คุณมีที่นั่งแล้ว ไม่สามารถจองเพิ่มได้");
-        return;
-      }
-      
-      // Prepare Booking Modal
+    // 1. Click Empty Seat (Booking Mode)
+    function handleEmptySeatClick(seatId, type) {
       selectedSeatId = seatId;
       document.getElementById('modalSeatId').textContent = seatId;
+      document.getElementById('modalSubtitle').textContent = type.toUpperCase() + " SEAT";
+      
+      // Show Current User Info (Confirming they are booking for themselves)
       document.getElementById('modalContent').innerHTML = `
         <div class="detail-row"><span>ผู้จอง</span> <span>${currentUser.name}</span></div>
         <div class="detail-row"><span>รหัส</span> <span>${currentUser.empNo}</span></div>
         <div class="detail-row"><span>สังกัด</span> <span>${currentUser.factory}</span></div>
-        <p style="margin-top:10px; font-size:0.8rem; color:#f43f5e; text-align:center;">* ยืนยันแล้วไม่สามารถยกเลิกได้ *</p>
+        <p style="margin-top:15px; font-size:0.75rem; color:var(--accent); text-align:center; opacity:0.8;">
+          ⚠ ยืนยันแล้วจะไม่สามารถเปลี่ยนหรือยกเลิกได้
+        </p>
       `;
       document.getElementById('modalActions').innerHTML = `
         <button class="btn btn-confirm" onclick="confirmBooking()">ยืนยันการจอง</button>
-        <button class="btn btn-close" onclick="closeModal()">ปิด</button>
+        <button class="btn btn-close" onclick="closeModal()">ปิดหน้าต่าง</button>
       `;
       openModal();
     }
 
-    // 2. Booking Logic
+    // 2. Confirm Booking API
     async function confirmBooking() {
       const btn = document.querySelector('.btn-confirm');
-      btn.textContent = 'กำลังจอง...';
+      btn.textContent = 'กำลังบันทึก...';
       btn.disabled = true;
 
       try {
@@ -399,7 +506,8 @@
 
         if (res.success) {
           closeModal();
-          await fetchBookings(); // Refresh
+          showToast('จองสำเร็จ! 🎉');
+          await fetchBookings(); // Refresh map
         } else {
           alert(res.message);
           closeModal();
@@ -410,30 +518,37 @@
       }
     }
 
-    // 3. View Other's Info (Read Only)
-    function showOtherSeatInfo(booking) {
-      document.getElementById('modalSeatId').textContent = booking.seatId;
+    // 3. View Other's Info (Fix: Use passed booking object)
+    function showOtherSeatInfo(bookingData) {
+      document.getElementById('modalSeatId').textContent = bookingData.seatId;
+      document.getElementById('modalSubtitle').textContent = "RESERVED";
+      
+      // Show the person who booked THIS seat
       document.getElementById('modalContent').innerHTML = `
-        <div class="detail-row"><span>สถานะ</span> <span style="color:var(--booked)">ถูกจองแล้ว</span></div>
-        <div class="detail-row"><span>ชื่อ</span> <span>${booking.name}</span></div>
-        <div class="detail-row"><span>สังกัด</span> <span>${booking.factory}</span></div>
+        <div class="detail-row"><span>สถานะ</span> <span style="color:#94a3b8">ถูกจองแล้ว</span></div>
+        <div class="detail-row"><span>ชื่อ</span> <span>${bookingData.name}</span></div>
+        <div class="detail-row"><span>สังกัด</span> <span>${bookingData.factory}</span></div>
       `;
       document.getElementById('modalActions').innerHTML = `
-        <button class="btn btn-close" onclick="closeModal()">ปิด</button>
+        <button class="btn btn-close" onclick="closeModal()">ปิดหน้าต่าง</button>
       `;
       openModal();
     }
 
-    // 4. View My Seat (Read Only - No Cancel)
+    // 4. View My Seat Info
     function showMySeatInfo() {
       document.getElementById('modalSeatId').textContent = myBooking.seatId;
+      document.getElementById('modalSubtitle').textContent = "YOUR SEAT";
+      
       document.getElementById('modalContent').innerHTML = `
-        <div class="detail-row"><span>สถานะ</span> <span style="color:var(--primary)">ที่นั่งของคุณ</span></div>
-        <div class="detail-row"><span>เวลาจอง</span> <span>${new Date(myBooking.bookingTime).toLocaleTimeString('th-TH')}</span></div>
-        <p style="margin-top:10px; font-size:0.8rem; color:var(--success); text-align:center;">เจอกันที่งานนะครับ! 🎉</p>
+        <div class="detail-row"><span>สถานะ</span> <span style="color:var(--success)">ที่นั่งของคุณ</span></div>
+        <div class="detail-row"><span>เวลาจอง</span> <span>${new Date(myBooking.bookingTime).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}</span></div>
+        <p style="margin-top:15px; font-size:0.8rem; color:var(--success); text-align:center;">
+          แคปหน้าจอนี้ไว้เพื่อใช้เข้างาน
+        </p>
       `;
       document.getElementById('modalActions').innerHTML = `
-        <button class="btn btn-close" onclick="closeModal()">ปิด</button>
+        <button class="btn btn-close" onclick="closeModal()">ปิดหน้าต่าง</button>
       `;
       openModal();
     }
@@ -443,15 +558,10 @@
     function closeModal() { document.getElementById('modal').classList.remove('active'); }
     
     function showToast(msg) {
-      // Simple custom toast
-      const status = document.getElementById('statusText');
-      const original = status.textContent;
-      status.textContent = msg;
-      status.style.color = '#f43f5e';
-      setTimeout(() => {
-        status.textContent = original;
-        status.style.color = '#22c55e';
-      }, 3000);
+      const el = document.getElementById('statusText');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3000);
     }
   </script>
 </body>
