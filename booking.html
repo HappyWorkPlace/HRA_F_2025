@@ -866,6 +866,13 @@
     // ==================== INITIALIZATION ====================
     window.onload = function() {
       if (!initUser()) return;
+      
+      // Show seating map immediately for testing, then try to load data
+      renderSeats();
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('seatingMap').style.display = 'flex';
+      
+      // Try to load actual data
       loadBookings();
     };
     
@@ -930,8 +937,11 @@
     
     // ==================== DATA LOADING ====================
     async function loadBookings() {
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('seatingMap').style.display = 'none';
+      const loadingEl = document.getElementById('loading');
+      const seatingMapEl = document.getElementById('seatingMap');
+      
+      loadingEl.style.display = 'block';
+      seatingMapEl.style.display = 'none';
       
       try {
         // Clear old data first
@@ -951,8 +961,11 @@
         // Set view-only mode if user already has booking
         isViewOnlyMode = !!myBooking;
         
-        if (isViewOnlyMode) {
-          document.getElementById('alreadyBookedNotice').style.display = 'block';
+        const noticeEl = document.getElementById('alreadyBookedNotice');
+        if (isViewOnlyMode && noticeEl) {
+          noticeEl.style.display = 'block';
+        } else if (noticeEl) {
+          noticeEl.style.display = 'none';
         }
         
         console.log('Loaded bookings:', bookingsData.length);
@@ -962,13 +975,17 @@
         renderSeats();
         updateStats(stats);
         
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('seatingMap').style.display = 'flex';
+        loadingEl.style.display = 'none';
+        seatingMapEl.style.display = 'flex';
         
       } catch (error) {
         console.error('Load error:', error);
         alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
-        document.getElementById('loading').style.display = 'none';
+        loadingEl.style.display = 'none';
+        
+        // Show seating map even if there's an error
+        renderSeats();
+        seatingMapEl.style.display = 'flex';
       }
     }
     
@@ -978,72 +995,84 @@
     
     // ==================== RENDERING ====================
     function renderSeats() {
-      const wrapper = document.getElementById('seatingWrapper');
-      wrapper.innerHTML = '';
-      
-      const rows = Object.keys(seatLayout);
-      const mySeatId = myBooking ? myBooking.seatId : null;
-      
-      rows.forEach((rowId, index) => {
-        const rowData = seatLayout[rowId];
+      try {
+        const wrapper = document.getElementById('seatingWrapper');
+        wrapper.innerHTML = '';
         
-        // Add dividers before Sweet and VIP sections
-        if (rowId === 'S1' || rowId === 'V1') {
-          const divider = document.createElement('div');
-          divider.className = 'section-divider';
-          wrapper.appendChild(divider);
-        }
+        const rows = Object.keys(seatLayout);
+        const mySeatId = myBooking ? myBooking.seatId : null;
         
-        const row = document.createElement('div');
-        row.className = 'row';
+        console.log('Rendering seats for rows:', rows);
+        console.log('My seat ID:', mySeatId);
         
-        // Left label
-        const labelLeft = document.createElement('span');
-        labelLeft.className = 'row-label';
-        if (rowData.type === 'vip') labelLeft.classList.add('vvip');
-        if (rowData.type === 'sweet') labelLeft.classList.add('sweet');
+        rows.forEach((rowId, index) => {
+          const rowData = seatLayout[rowId];
+          
+          // Add dividers before Sweet and VIP sections
+          if (rowId === 'S1' || rowId === 'V1') {
+            const divider = document.createElement('div');
+            divider.className = 'section-divider';
+            wrapper.appendChild(divider);
+          }
+          
+          const row = document.createElement('div');
+          row.className = 'row';
+          
+          // Left label
+          const labelLeft = document.createElement('span');
+          labelLeft.className = 'row-label';
+          if (rowData.type === 'vip') labelLeft.classList.add('vvip');
+          if (rowData.type === 'sweet') labelLeft.classList.add('sweet');
+          
+          // Display label logic
+          let displayLabel = rowId;
+          if (rowId.startsWith('S')) displayLabel = 'S' + rowId.slice(1);
+          if (rowId.startsWith('V')) displayLabel = 'VIP';
+          
+          labelLeft.textContent = displayLabel;
+          row.appendChild(labelLeft);
+          
+          // Left block
+          const blockLeft = document.createElement('div');
+          blockLeft.className = 'seat-block';
+          for (let i = 1; i <= rowData.split; i++) {
+            const seatId = rowId + i;
+            blockLeft.appendChild(createSeat(seatId, rowData.type, mySeatId));
+          }
+          row.appendChild(blockLeft);
+          
+          // Center aisle
+          const aisle = document.createElement('div');
+          aisle.className = 'center-aisle';
+          row.appendChild(aisle);
+          
+          // Right block
+          const blockRight = document.createElement('div');
+          blockRight.className = 'seat-block';
+          for (let i = rowData.split + 1; i <= rowData.count; i++) {
+            const seatId = rowId + i;
+            blockRight.appendChild(createSeat(seatId, rowData.type, mySeatId));
+          }
+          row.appendChild(blockRight);
+          
+          // Right label
+          const labelRight = document.createElement('span');
+          labelRight.className = 'row-label';
+          if (rowData.type === 'vip') labelRight.classList.add('vvip');
+          if (rowData.type === 'sweet') labelRight.classList.add('sweet');
+          labelRight.textContent = displayLabel;
+          row.appendChild(labelRight);
+          
+          wrapper.appendChild(row);
+        });
         
-        // Display label logic
-        let displayLabel = rowId;
-        if (rowId.startsWith('S')) displayLabel = 'S' + rowId.slice(1);
-        if (rowId.startsWith('V')) displayLabel = 'VIP';
+        console.log('Seats rendered successfully');
         
-        labelLeft.textContent = displayLabel;
-        row.appendChild(labelLeft);
-        
-        // Left block
-        const blockLeft = document.createElement('div');
-        blockLeft.className = 'seat-block';
-        for (let i = 1; i <= rowData.split; i++) {
-          const seatId = rowId + i;
-          blockLeft.appendChild(createSeat(seatId, rowData.type, mySeatId));
-        }
-        row.appendChild(blockLeft);
-        
-        // Center aisle
-        const aisle = document.createElement('div');
-        aisle.className = 'center-aisle';
-        row.appendChild(aisle);
-        
-        // Right block
-        const blockRight = document.createElement('div');
-        blockRight.className = 'seat-block';
-        for (let i = rowData.split + 1; i <= rowData.count; i++) {
-          const seatId = rowId + i;
-          blockRight.appendChild(createSeat(seatId, rowData.type, mySeatId));
-        }
-        row.appendChild(blockRight);
-        
-        // Right label
-        const labelRight = document.createElement('span');
-        labelRight.className = 'row-label';
-        if (rowData.type === 'vip') labelRight.classList.add('vvip');
-        if (rowData.type === 'sweet') labelRight.classList.add('sweet');
-        labelRight.textContent = displayLabel;
-        row.appendChild(labelRight);
-        
-        wrapper.appendChild(row);
-      });
+      } catch (error) {
+        console.error('Error rendering seats:', error);
+        const wrapper = document.getElementById('seatingWrapper');
+        wrapper.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--muted);">เกิดข้อผิดพลาดในการแสดงที่นั่ง</div>';
+      }
     }
     
     function createSeat(seatId, type, mySeatId) {
