@@ -1000,18 +1000,17 @@
             confirmBtn.textContent = 'กำลังจอง...';
 
             try {
-                const response = await fetch(`${API_URL}?action=bookSeat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        empNo: currentEmployee.empNo,
-                        name: currentEmployee.name,
-                        factory: currentEmployee.factory,
-                        seatId: selectedSeats[0],
-                        lineUserId: lineProfile.userId
-                    })
+                // Use GET request with URL parameters
+                const params = new URLSearchParams({
+                    action: 'bookSeat',
+                    empNo: currentEmployee.empNo,
+                    name: encodeURIComponent(currentEmployee.name || ''),
+                    factory: encodeURIComponent(currentEmployee.factory || ''),
+                    seatId: selectedSeats[0],
+                    lineUserId: lineProfile.userId
                 });
 
+                const response = await fetch(`${API_URL}?${params.toString()}`);
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1044,7 +1043,7 @@
                 
             } catch (error) {
                 console.error('Error booking seat:', error);
-                showAlert('error', 'เกิดข้อผิดพลาดในการจอง');
+                showAlert('error', 'เกิดข้อผิดพลาดในการจอง: ' + error.message);
             } finally {
                 confirmBtn.disabled = false;
                 confirmBtn.textContent = 'ยืนยันการจอง';
