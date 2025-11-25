@@ -1,1031 +1,625 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>HRA Cinema Club - Registration</title>
-<style>
-  /* ============ MOBILE-FIRST DESIGN ============ */
-  :root {
-    /* Clean minimal colors */
-    --bg: #0f1419; 
-    --panel: #1a1f2e; 
-    --line: #2d3748; 
-    --text: #e2e8f0; 
-    --muted: #94a3b8;
-    --accent: #3b82f6;
-    --success: #10b981;
-    --primary: #00C851; /* LINE Green */
-    --white: #ffffff;
-    --gray-50: #f8fafc;
-    --gray-100: #f1f5f9;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Club - HRA Function 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  * { 
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
-  
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, var(--bg) 0%, #1e293b 100%);
-    color: var(--text);
-    padding: 16px;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    background: var(--panel);
-    border-radius: 24px;
-    padding: 32px 24px;
-    box-shadow: 
-      0 25px 50px rgba(0,0,0,0.25),
-      0 0 0 1px rgba(255,255,255,0.05);
-    animation: containerFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-  
-  @keyframes containerFadeIn {
-    from { 
-      opacity: 0; 
-      transform: translateY(30px) scale(0.95);
-      filter: blur(4px);
-    }
-    to { 
-      opacity: 1; 
-      transform: translateY(0) scale(1);
-      filter: blur(0);
-    }
-  }
-  
-  .container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    border-radius: 24px 24px 0 0;
-  }
-  
-  /* ===== HEADER ===== */
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  
-  .cinema-icon {
-    font-size: 64px;
-    margin-bottom: 12px;
-    display: inline-block;
-    animation: gentleFloat 4s ease-in-out infinite;
-    filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.3));
-  }
-  
-  @keyframes gentleFloat {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-8px) rotate(2deg); }
-  }
-  
-  .title {
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--white);
-    margin-bottom: 8px;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  }
-  
-  .subtitle {
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 16px;
-    font-weight: 400;
-  }
-  
-  .event-badge {
-    display: inline-block;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    color: var(--accent);
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    backdrop-filter: blur(10px);
-  }
-  
-  /* ===== STEP INDICATOR ===== */
-  .step-indicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 32px;
-    gap: 12px;
-  }
-  
-  .step {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    border: 2px solid rgba(255,255,255,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--muted);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .step.active {
-    background: linear-gradient(135deg, var(--accent), var(--vip));
-    border-color: transparent;
-    color: white;
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(255,107,107,0.3);
-  }
-  
-  .step.completed {
-    background: linear-gradient(135deg, rgba(76,175,80,0.2), rgba(76,175,80,0.3));
-    border-color: var(--success);
-    color: var(--success);
-  }
-  
-  .step.completed::after {
-    content: "✓";
-    position: absolute;
-    font-size: 16px;
-    font-weight: 900;
-  }
-  
-  .step-line {
-    width: 32px;
-    height: 2px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-    transition: all 0.4s;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .step-line::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0;
-    background: linear-gradient(90deg, var(--success), #4caf50);
-    transition: width 0.4s;
-  }
-  
-  .step-line.completed::before {
-    width: 100%;
-  }
-  
-  /* ===== PROFILE SECTION ===== */
-  .profile-section {
-    display: none;
-    text-align: center;
-    margin-bottom: 24px;
-    animation: fadeIn 0.6s ease-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .profile-pic-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 16px;
-  }
-  
-  .profile-pic-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), #00e600);
-    animation: gradientRotate 3s ease infinite;
-    z-index: -1;
-    filter: blur(6px);
-    opacity: 0.6;
-  }
-  
-  @keyframes gradientRotate {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  
-  .profile-pic {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid var(--panel);
-    box-shadow: 0 4px 16px rgba(0,195,0,0.25);
-    object-fit: cover;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .line-badge {
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    background: linear-gradient(135deg, var(--primary), #00e600);
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-    border: 2px solid var(--panel);
-    box-shadow: 0 2px 8px rgba(0,195,0,0.5);
-  }
-  
-  .profile-name {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    color: var(--text);
-  }
-  
-  .profile-label {
-    font-size: 12px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  
-  .profile-label::before {
-    content: "✓";
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background: rgba(0,195,0,0.15);
-    border-radius: 50%;
-    color: var(--primary);
-    font-size: 10px;
-    line-height: 16px;
-  }
-  
-  /* ===== FORM ===== */
-  .form-section {
-    margin-bottom: 16px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    color: var(--text);
-    font-size: 14px;
-    font-weight: 600;
-  }
-  
-  .form-input {
-    width: 100%;
-    padding: 16px;
-    background: rgba(255,255,255,0.03);
-    border: 2px solid var(--line);
-    border-radius: 12px;
-    color: var(--text);
-    font-size: 16px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-  
-  .form-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: rgba(255,255,255,0.06);
-    box-shadow: 0 0 0 3px rgba(0,195,0,0.08);
-  }
-  
-  .form-input::placeholder {
-    color: var(--muted);
-    opacity: 0.5;
-  }
-  
-  /* ===== INFO CARD ===== */
-  .info-card {
-    background: linear-gradient(135deg, 
-      rgba(255,255,255,0.05) 0%, 
-      rgba(255,255,255,0.02) 100%);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 20px;
-    animation: slideUp 0.4s ease-out;
-  }
-  
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .info-item {
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  
-  .info-item:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-  }
-  
-  .info-label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-  }
-  
-  .info-value {
-    font-size: 16px;
-    color: var(--text);
-    font-weight: 700;
-  }
-  
-  /* ===== BUTTONS ===== */
-  .btn {
-    width: 100%;
-    padding: 16px 24px;
-    border: none;
-    border-radius: 16px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 12px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-    font-family: inherit;
-  }
-  
-  .btn:last-child {
-    margin-bottom: 0;
-  }
-  
-  .btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-  }
-  
-  .btn:hover::before {
-    left: 100%;
-  }
-  
-  .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--success));
-    color: white;
-    box-shadow: 
-      0 8px 24px rgba(16, 185, 129, 0.25),
-      0 0 0 1px rgba(255,255,255,0.1);
-    border: none;
-  }
-  
-  .btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 12px 32px rgba(16, 185, 129, 0.35),
-      0 0 0 1px rgba(255,255,255,0.15);
-  }
-  
-  .btn-primary:active:not(:disabled) {
-    transform: translateY(0px);
-  }
-  
-  .btn-secondary {
-    background: rgba(255,255,255,0.05);
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-  }
-  
-  .btn-secondary:hover:not(:disabled) {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.2);
-    transform: translateY(-1px);
-  }
-  
-  .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-  }
-  
-  .btn.loading {
-    pointer-events: none;
-  }
-  
-  .btn.loading::after {
-    content: "";
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top-color: currentColor;
-    border-right-color: currentColor;
-    border-radius: 50%;
-    animation: btnSpin 0.8s linear infinite;
-  }
-  
-  @keyframes btnSpin {
-    to { transform: rotate(360deg); }
-  }
-  
-  /* ===== MESSAGES ===== */
-  .message {
-    padding: 16px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    display: none;
-    font-size: 14px;
-    line-height: 1.5;
-    animation: messageSlide 0.4s ease-out;
-  }
-  
-  @keyframes messageSlide {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .error-message {
-    background: linear-gradient(135deg, 
-      rgba(244,67,54,0.15) 0%, 
-      rgba(244,67,54,0.1) 100%);
-    border: 1px solid rgba(244,67,54,0.4);
-    color: #ff6b6b;
-    font-weight: 500;
-  }
-  
-  .error-message::before {
-    content: "⚠ ";
-    font-weight: 700;
-  }
-  
-  .success-message {
-    background: linear-gradient(135deg, 
-      rgba(76,175,80,0.15) 0%, 
-      rgba(76,175,80,0.1) 100%);
-    border: 1px solid rgba(76,175,80,0.4);
-    color: #4caf50;
-    font-weight: 500;
-  }
-  
-  .success-message::before {
-    content: "✓ ";
-    font-weight: 700;
-  }
-  
-  /* ===== LOADING ===== */
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 40px 16px;
-  }
-  
-  .loading.active {
-    display: block;
-  }
-  
-  .spinner {
-    border: 3px solid rgba(255,255,255,0.08);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-    filter: drop-shadow(0 0 8px rgba(0,195,0,0.4));
-  }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
-  .loading-text {
-    font-size: 14px;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  
-  /* ===== PAGE SYSTEM ===== */
-  .page {
-    display: none;
-  }
-  
-  .page.active {
-    display: block;
-    animation: fadeIn 0.3s;
-  }
-  
-  /* ===== SUCCESS PAGE ===== */
-  .success-icon {
-    font-size: 64px;
-    text-align: center;
-    margin-bottom: 20px;
-    animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    filter: drop-shadow(0 4px 16px rgba(76,175,80,0.3));
-  }
-  
-  @keyframes successPop {
-    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-    50% { transform: scale(1.1) rotate(10deg); }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  }
-  
-  .countdown {
-    font-size: 14px;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 20px;
-    padding: 16px 20px;
-    background: rgba(0,195,0,0.05);
-    border: 1px solid rgba(0,195,0,0.15);
-    border-radius: 12px;
-  }
-  
-  .countdown strong {
-    color: var(--primary);
-    font-weight: 800;
-    font-size: 1.1em;
-  }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
 
-  /* ===== MOBILE OPTIMIZATIONS ===== */
-  @media (max-height: 600px) {
-    .container {
-      padding: 16px;
-    }
-    
-    .header {
-      margin-bottom: 20px;
-    }
-    
-    .cinema-icon {
-      font-size: 36px;
-    }
-    
-    .title {
-      font-size: 20px;
-    }
-  }
-</style>
+        /* ==================== HEADER ==================== */
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* ==================== LOADING ==================== */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            min-height: 50vh;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* ==================== REGISTRATION ==================== */
+        .registration {
+            display: none;
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .reg-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .reg-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .reg-header h2 {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reg-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .employee-info {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #27ae60;
+        }
+
+        .employee-info h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .employee-info p {
+            margin: 0.25rem 0;
+            color: #666;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219a52;
+            transform: translateY(-1px);
+        }
+
+        /* ==================== CINEMA SEATING ==================== */
+        .cinema-container {
+            display: none;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .booking-info {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .booking-info h3 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-name {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        /* Screen */
+        .screen-container {
+            padding: 6px 12px 4px;
+            position: relative;
+            flex-shrink: 0;
+            text-align: center;
+            margin: 2rem 0 3rem 0;
+        }
+
+        .screen {
+            width: 80%;
+            max-width: 300px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,193,61,0.3) 20%, 
+                rgba(255,193,61,0.8) 50%, 
+                rgba(255,193,61,0.3) 80%, 
+                transparent 100%
+            );
+            border-radius: 50%;
+            margin: 0 auto 2px auto;
+            box-shadow: 0 0 8px rgba(255,193,61,0.4);
+        }
+
+        .screen-label {
+            text-align: center;
+            font-size: 8px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.7;
+        }
+
+        /* Seating Map */
+        .seating-map {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .seating-wrapper {
+            max-width: 100%;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            gap: 3px;
+        }
+
+        .row-label {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+            color: #ffffff;
+            margin-right: 10px;
+        }
+
+        .seat {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            background-color: #666;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .seat.available {
+            background-color: #666;
+        }
+
+        .seat.available:hover {
+            background-color: #777;
+        }
+
+        .seat.booked {
+            background-image: url("https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/booked.png");
+            background-size: cover;
+            background-position: center;
+            cursor: not-allowed;
+        }
+
+        .seat.selected {
+            background-color: #ff9800;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+        }
+
+        .seat.regular {
+            background-image: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w80");
+        }
+
+        .seat.sweet {
+            background-image: url("https://drive.google.com/thumbnail?id=1Du01KILJxPZZQf0vZnABSilXcMfqNX32&sz=w80");
+        }
+
+        .seat.vip {
+            background-image: url("https://drive.google.com/thumbnail?id=1TSU5WQqDC5lrWYN8SSq9agRVLfSsFHUu&sz=w80");
+        }
+
+        .aisle {
+            width: 20px;
+        }
+
+        /* Booking Controls */
+        .booking-controls {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .selected-info {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #333;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            color: #ffffff;
+        }
+
+        .selected-seats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        .selected-seat-tag {
+            background: #3498db;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .seat {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .row-label {
+                min-width: 25px;
+                font-size: 0.9rem;
+            }
+        }
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
     <!-- Header -->
-    <div class="header">
-      <div class="cinema-icon">🎬</div>
-      <div class="title">HRA CINEMA CLUB</div>
-      <div class="subtitle">ระบบลงทะเบียนและจองที่นั่ง</div>
-      <div class="event-badge">HRA Function 2025</div>
-    </div>
-    
-    <!-- Loading Page -->
-    <div id="loadingPage" class="page active">
-      <div class="loading active">
-        <div class="spinner"></div>
-        <div class="loading-text">กำลังเชื่อมต่อ LINE...</div>
-      </div>
-    </div>
-    
-    <!-- Registration Page -->
-    <div id="registerPage" class="page">
-      <!-- Step Indicator -->
-      <div class="step-indicator">
-        <div class="step" id="step1Indicator">1</div>
-        <div class="step-line" id="line1"></div>
-        <div class="step" id="step2Indicator">2</div>
-      </div>
-      
-      <!-- LINE Profile -->
-      <div class="profile-section" id="profileSection">
-        <div class="profile-pic-wrapper">
-          <img id="profilePic" class="profile-pic" src="" alt="Profile">
-          <div class="line-badge">LINE</div>
-        </div>
-        <div class="profile-name" id="profileName"></div>
-        <div class="profile-label">เชื่อมต่อจาก LINE</div>
-      </div>
-      
-      <!-- Messages -->
-      <div class="error-message" id="errorMessage"></div>
-      <div class="success-message" id="successMessage"></div>
-      
-      <!-- Step 1: Enter Employee ID -->
-      <div id="step1" class="form-section" style="display:none;">
-        <div class="form-group">
-          <label class="form-label">🎫 รหัสพนักงาน</label>
-          <input type="text" 
-                 class="form-input" 
-                 id="empNoInput" 
-                 placeholder="กรอกรหัสพนักงาน เช่น A9473"
-                 autocomplete="off"
-                 autofocus>
-        </div>
-        <button class="btn btn-primary" onclick="checkEmployee()">
-          ตรวจสอบข้อมูล →
-        </button>
-      </div>
-      
-      <!-- Step 2: Confirm Information -->
-      <div id="step2" class="form-section" style="display:none;">
-        <div class="info-card">
-          <div class="info-item">
-            <div class="info-label">รหัสพนักงาน</div>
-            <div class="info-value" id="confirmEmpNo">-</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">ชื่อ-สกุล</div>
-            <div class="info-value" id="confirmName">-</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">โรงงาน</div>
-            <div class="info-value" id="confirmFactory">-</div>
-          </div>
-        </div>
-        
-        <button class="btn btn-primary" onclick="confirmRegistration(event)">
-          ✓ ยืนยันข้อมูลถูกต้อง
-        </button>
-        <button class="btn btn-secondary" onclick="backToStep1()">
-          ← แก้ไขข้อมูล
-        </button>
-      </div>
-    </div>
-    
-    <!-- Already Registered Page -->
-    <div id="registeredPage" class="page">
-      <div class="success-icon">✅</div>
-      
-      <div class="success-message" style="display:block; text-align:center;">
-        คุณลงทะเบียนเรียบร้อยแล้ว!
-      </div>
-      
-      <div class="info-card">
-        <div class="info-item">
-          <div class="info-label">รหัสพนักงาน</div>
-          <div class="info-value" id="regEmpNo">-</div>
-        </div>
-        <div class="info-item">
-          <div class="info-label">ชื่อ-สกุล</div>
-          <div class="info-value" id="regName">-</div>
-        </div>
-        <div class="info-item">
-          <div class="info-label">โรงงาน</div>
-          <div class="info-value" id="regFactory">-</div>
-        </div>
-      </div>
-      
-      <button class="btn btn-primary" onclick="goToBooking()">
-        🎬 เข้าสู่ระบบจองที่นั่ง
-      </button>
-      
-      <div class="countdown">
-        กำลังนำคุณไปหน้าจองที่นั่งใน <strong id="countdownTimer">3</strong> วินาที...
-      </div>
-    </div>
-  </div>
+    <header class="header">
+        <h1>🎬 Cinema Club</h1>
+        <p>HRA Function 2025 - ระบบจองที่นั่งโรงหนัง</p>
+    </header>
 
-  <!-- LINE LIFF SDK -->
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script>
-    // ==================== CONFIGURATION ====================
-    const LIFF_ID = '2008529302-50MNLyDV';
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
-    const BOOKING_URL = 'booking.html';
+    <!-- Loading Section -->
+    <section id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p>กำลังโหลดข้อมูล...</p>
+    </section>
 
-    let liffProfile = null;
-    let currentEmployee = null;
-    let countdownInterval = null;
+    <!-- Registration Section -->
+    <section id="registration" class="registration">
+        <div class="reg-card">
+            <div class="reg-header">
+                <h2>ลงทะเบียนเข้าร่วมงาน</h2>
+                <p>กรุณากรอกรหัสพนักงานเพื่อลงทะเบียน</p>
+            </div>
+            
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="empNo">รหัสพนักงาน</label>
+                    <input type="text" id="empNo" name="empNo" placeholder="กรอกรหัสพนักงาน" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">ตรวจสอบข้อมูล</button>
+            </form>
+            
+            <!-- Employee Info (Hidden initially) -->
+            <div id="employeeInfo" class="employee-info">
+                <h4>ข้อมูลพนักงาน</h4>
+                <p><strong>ชื่อ:</strong> <span id="empName">-</span></p>
+                <p><strong>แผนก:</strong> <span id="empDept">-</span></p>
+                <p><strong>รหัส:</strong> <span id="empCode">-</span></p>
+                <button id="confirmReg" class="btn btn-success" style="margin-top: 1rem;">ยืนยันการลงทะเบียน</button>
+            </div>
+        </div>
+    </section>
 
-    // ==================== INITIALIZATION ====================
-    window.onload = async function() {
-      try {
-        await liff.init({ liffId: LIFF_ID });
-        
-        if (!liff.isLoggedIn()) {
-          liff.login();
-          return;
-        }
-        
-        // Get LINE Profile
-        liffProfile = await liff.getProfile();
-        
-        // Display profile
-        if (liffProfile.pictureUrl) {
-          document.getElementById('profilePic').src = liffProfile.pictureUrl;
-          document.getElementById('profileSection').style.display = 'block';
-        }
-        document.getElementById('profileName').textContent = liffProfile.displayName;
-        
-        // Check registration
-        await checkRegistration();
-        
-      } catch (error) {
-        console.error('LIFF Error:', error);
-        showError('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE: ' + error.message);
-        showPage('registerPage');
-        showStep(1);
-      }
-    };
+    <!-- Cinema Seating Section -->
+    <section id="cinema" class="cinema-container">
+        <!-- User Info -->
+        <div class="booking-info">
+            <h3>สวัสดี <span class="user-name" id="userName">-</span></h3>
+            <p>เลือกที่นั่งที่คุณต้องการ</p>
+        </div>
 
-    // ==================== API CALLS ====================
-    async function apiCall(action, params = {}) {
-      try {
-        const url = new URL(API_URL);
-        url.searchParams.append('action', action);
-        
-        for (const [key, value] of Object.entries(params)) {
-          if (value !== undefined && value !== null && value !== '') {
-            url.searchParams.append(key, value);
-          }
-        }
-        
-        const response = await fetch(url.toString());
-        const data = await response.json();
-        return data;
-        
-      } catch (error) {
-        console.error('API Error:', error);
-        throw error;
-      }
-    }
+        <!-- Screen -->
+        <div class="screen-container">
+            <div class="screen"></div>
+            <div class="screen-label">จอภาพยนตร์</div>
+        </div>
 
-    // ==================== REGISTRATION FLOW ====================
-    async function checkRegistration() {
-      try {
-        const result = await apiCall('checkRegistration', {
-          lineUserId: liffProfile.userId
+        <!-- Seating Map -->
+        <main class="seating-map">
+            <div class="seating-wrapper" id="seatingWrapper">
+                <!-- Seats will be generated here -->
+            </div>
+        </main>
+
+        <!-- Booking Controls -->
+        <div class="booking-controls">
+            <div id="selectedInfo" class="selected-info" style="display:none;">
+                <p><strong>ที่นั่งที่เลือก:</strong></p>
+                <div class="selected-seats" id="selectedSeats"></div>
+            </div>
+            <button id="confirmBooking" class="btn btn-success" style="display:none;">ยืนยันการจอง</button>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script>
+        // Test Script - จำลองการทำงาน
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // จำลองข้อมูล Layout ที่นั่ง (170 ที่นั่ง)
+            const seatLayout = {
+                'A': { count: 14, type: 'regular', split: 7 },
+                'B': { count: 14, type: 'regular', split: 7 },
+                'C': { count: 14, type: 'regular', split: 7 },
+                'D': { count: 14, type: 'regular', split: 7 },
+                'E': { count: 14, type: 'regular', split: 7 },
+                'F': { count: 14, type: 'regular', split: 7 },
+                'G': { count: 14, type: 'regular', split: 7 },
+                'H': { count: 14, type: 'regular', split: 7 },
+                'I': { count: 12, type: 'regular', split: 6 },
+                'J': { count: 12, type: 'regular', split: 6 },
+                'K': { count: 10, type: 'regular', split: 5 },
+                'V1': { count: 8, type: 'vip', split: 4 },
+                'V2': { count: 8, type: 'vip', split: 4 },
+                'V3': { count: 8, type: 'vip', split: 4 }
+            };
+
+            // ซ่อน Loading หลังจาก 2 วินาที
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                
+                // แสดง Cinema Section เพื่อทดสอบ Layout
+                document.getElementById('cinema').style.display = 'block';
+                document.getElementById('userName').textContent = 'ทดสอบระบบ';
+                
+                // สร้างที่นั่งทดสอบ
+                generateSeatingMap();
+            }, 2000);
+
+            function generateSeatingMap() {
+                const seatingWrapper = document.getElementById('seatingWrapper');
+                seatingWrapper.innerHTML = '';
+
+                // สร้างข้อมูลที่นั่งที่จองแล้วแบบสุ่ม (จำลอง)
+                const bookedSeats = generateRandomBookedSeats();
+
+                for (const [rowLabel, rowData] of Object.entries(seatLayout)) {
+                    const seatRow = document.createElement('div');
+                    seatRow.className = 'seat-row';
+
+                    // Row Label
+                    const rowLabelDiv = document.createElement('div');
+                    rowLabelDiv.className = 'row-label';
+                    rowLabelDiv.textContent = rowLabel;
+                    seatRow.appendChild(rowLabelDiv);
+
+                    // สร้างที่นั่งแถวแรก
+                    for (let i = 1; i <= rowData.split; i++) {
+                        const seat = createSeat(rowLabel, i, rowData.type, bookedSeats);
+                        seatRow.appendChild(seat);
+                    }
+
+                    // ช่องว่างกลาง (Aisle)
+                    const aisle = document.createElement('div');
+                    aisle.className = 'aisle';
+                    seatRow.appendChild(aisle);
+
+                    // สร้างที่นั่งแถวหลัง
+                    for (let i = rowData.split + 1; i <= rowData.count; i++) {
+                        const seat = createSeat(rowLabel, i, rowData.type, bookedSeats);
+                        seatRow.appendChild(seat);
+                    }
+
+                    seatingWrapper.appendChild(seatRow);
+                }
+            }
+
+            function createSeat(row, number, type, bookedSeats) {
+                const seat = document.createElement('div');
+                const seatId = `${row}${number}`;
+                
+                seat.className = `seat ${type}`;
+                seat.setAttribute('data-seat', seatId);
+                seat.setAttribute('data-row', row);
+                seat.setAttribute('data-number', number);
+                seat.setAttribute('data-type', type);
+                
+                // เช็คว่าที่นั่งถูกจองแล้วหรือยัง
+                if (bookedSeats.includes(seatId)) {
+                    seat.classList.add('booked');
+                } else {
+                    seat.classList.add('available');
+                    seat.addEventListener('click', selectSeat);
+                }
+
+                return seat;
+            }
+
+            function generateRandomBookedSeats() {
+                // สร้างที่นั่งที่จองแล้วแบบสุ่มเพื่อทดสอบ (ประมาณ 20% ของที่นั่ง)
+                const bookedSeats = [];
+                const sampleBooked = ['A3', 'A4', 'B7', 'B8', 'C1', 'D10', 'E5', 'F6', 'G2', 'H9', 
+                                    'I3', 'J4', 'K5', 'V12', 'V23', 'V31'];
+                return sampleBooked;
+            }
+
+            let selectedSeats = [];
+
+            function selectSeat() {
+                if (this.classList.contains('booked')) return;
+
+                const seatId = this.getAttribute('data-seat');
+                
+                if (this.classList.contains('selected')) {
+                    // ยกเลิกการเลือก
+                    this.classList.remove('selected');
+                    this.classList.add('available');
+                    selectedSeats = selectedSeats.filter(seat => seat !== seatId);
+                } else {
+                    // เลือกที่นั่ง (จำกัด 1 ที่นั่ง)
+                    if (selectedSeats.length >= 1) {
+                        alert('สามารถจองได้เพียง 1 ที่นั่งเท่านั้น');
+                        return;
+                    }
+                    
+                    this.classList.remove('available');
+                    this.classList.add('selected');
+                    selectedSeats.push(seatId);
+                }
+
+                updateSelectedInfo();
+            }
+
+            function updateSelectedInfo() {
+                const selectedInfo = document.getElementById('selectedInfo');
+                const selectedSeatsDiv = document.getElementById('selectedSeats');
+                const confirmBtn = document.getElementById('confirmBooking');
+
+                if (selectedSeats.length > 0) {
+                    selectedInfo.style.display = 'block';
+                    confirmBtn.style.display = 'block';
+                    
+                    selectedSeatsDiv.innerHTML = '';
+                    selectedSeats.forEach(seatId => {
+                        const seatTag = document.createElement('div');
+                        seatTag.className = 'selected-seat-tag';
+                        seatTag.textContent = seatId;
+                        selectedSeatsDiv.appendChild(seatTag);
+                    });
+                } else {
+                    selectedInfo.style.display = 'none';
+                    confirmBtn.style.display = 'none';
+                }
+            }
+
+            // Event Listener สำหรับยืนยันการจอง
+            document.getElementById('confirmBooking').addEventListener('click', function() {
+                if (selectedSeats.length === 0) return;
+                
+                if (confirm(`ยืนยันการจองที่นั่ง ${selectedSeats.join(', ')} หรือไม่?`)) {
+                    // แสดงข้อความยืนยันการจอง
+                    alert(`🎉 จองที่นั่งสำเร็จ!\nที่นั่ง: ${selectedSeats.join(', ')}\nวันที่: ${new Date().toLocaleDateString('th-TH')}\nเวลา: ${new Date().toLocaleTimeString('th-TH')}`);
+                    
+                    // อัพเดตที่นั่งเป็นสถานะ "จองแล้ว" และรีเซ็ตการเลือก
+                    selectedSeats.forEach(seatId => {
+                        const seatElement = document.querySelector(`[data-seat="${seatId}"]`);
+                        if (seatElement) {
+                            seatElement.classList.remove('selected', 'available');
+                            seatElement.classList.add('booked');
+                            seatElement.removeEventListener('click', selectSeat);
+                        }
+                    });
+                    
+                    // รีเซ็ตการเลือก
+                    selectedSeats = [];
+                    updateSelectedInfo();
+                }
+            });
         });
-        
-        if (result.registered) {
-          // Already registered - show registered page
-          document.getElementById('regEmpNo').textContent = result.data.empNo;
-          document.getElementById('regName').textContent = result.data.name;
-          document.getElementById('regFactory').textContent = result.data.factory;
-          
-          showPage('registeredPage');
-          startCountdown();
-          
-        } else {
-          // Not registered - show registration form
-          showPage('registerPage');
-          showStep(1);
-        }
-        
-      } catch (error) {
-        console.error('Check registration error:', error);
-        showError('ไม่สามารถตรวจสอบข้อมูลได้');
-        showPage('registerPage');
-        showStep(1);
-      }
-    }
-
-    async function checkEmployee() {
-      const empNo = document.getElementById('empNoInput').value.trim().toUpperCase();
-      
-      if (!empNo) {
-        showError('กรุณาใส่รหัสพนักงาน');
-        return;
-      }
-      
-      hideMessages();
-      
-      // Add loading animation
-      const btn = event.target;
-      btn.disabled = true;
-      btn.classList.add('loading');
-      const originalText = btn.textContent;
-      btn.textContent = 'กำลังตรวจสอบ';
-      
-      try {
-        const result = await apiCall('getEmployeeInfo', { empNo });
-        
-        if (result.success) {
-          currentEmployee = result.data;
-          
-          if (currentEmployee.uid) {
-            showError('รหัสพนักงานนี้ลงทะเบียนแล้ว');
-            resetButton(btn, originalText);
-            return;
-          }
-          
-          // Show confirmation
-          document.getElementById('confirmEmpNo').textContent = currentEmployee.empNo;
-          document.getElementById('confirmName').textContent = currentEmployee.name;
-          document.getElementById('confirmFactory').textContent = currentEmployee.factory;
-          
-          showStep(2);
-          
-        } else {
-          showError(result.message || 'ไม่พบข้อมูลพนักงาน');
-          resetButton(btn, originalText);
-        }
-        
-      } catch (error) {
-        console.error('Check employee error:', error);
-        showError('เกิดข้อผิดพลาด: ' + error.message);
-        resetButton(btn, originalText);
-      }
-    }
-
-    async function confirmRegistration(ev) {
-      if (!currentEmployee || !liffProfile) {
-        showError('ข้อมูลไม่ครบถ้วน');
-        return;
-      }
-      
-      hideMessages();
-      
-      const btn = ev.target;
-      btn.disabled = true;
-      btn.classList.add('loading');
-      const originalText = btn.textContent;
-      btn.textContent = 'กำลังลงทะเบียน';
-      
-      try {
-        const result = await apiCall('registerUser', {
-          empNo: currentEmployee.empNo,
-          lineUserId: liffProfile.userId,
-          lineDisplayName: liffProfile.displayName,
-          linePictureUrl: liffProfile.pictureUrl || ''
-        });
-        
-        if (result.success) {
-          showSuccess('ลงทะเบียนสำเร็จ! 🎉');
-          
-          setTimeout(() => {
-            goToBooking();
-          }, 1500);
-          
-        } else {
-          showError(result.message || 'ไม่สามารถลงทะเบียนได้');
-          resetButton(btn, originalText);
-        }
-        
-      } catch (error) {
-        console.error('Registration error:', error);
-        showError('เกิดข้อผิดพลาด: ' + error.message);
-        resetButton(btn, originalText);
-      }
-    }
-    
-    function resetButton(btn, originalText) {
-      btn.disabled = false;
-      btn.classList.remove('loading');
-      btn.textContent = originalText;
-    }
-
-    function backToStep1() {
-      showStep(1);
-      currentEmployee = null;
-      document.getElementById('empNoInput').value = '';
-      document.getElementById('empNoInput').focus();
-    }
-
-    function goToBooking() {
-      const userData = {
-        empNo: currentEmployee ? currentEmployee.empNo : document.getElementById('regEmpNo').textContent,
-        name: currentEmployee ? currentEmployee.name : document.getElementById('regName').textContent,
-        factory: currentEmployee ? currentEmployee.factory : document.getElementById('regFactory').textContent,
-        lineUserId: liffProfile ? liffProfile.userId : '',
-        lineDisplayName: liffProfile ? liffProfile.displayName : '',
-        linePictureUrl: liffProfile ? (liffProfile.pictureUrl || '') : ''
-      };
-      
-      sessionStorage.setItem('userData', JSON.stringify(userData));
-      window.location.href = BOOKING_URL;
-    }
-
-    // ==================== UI HELPERS ====================
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-    }
-
-    function showStep(stepNumber) {
-      const step1 = document.getElementById('step1');
-      const step2 = document.getElementById('step2');
-      const step1Ind = document.getElementById('step1Indicator');
-      const step2Ind = document.getElementById('step2Indicator');
-      const line1 = document.getElementById('line1');
-      
-      if (stepNumber === 1) {
-        step1.style.display = 'block';
-        step2.style.display = 'none';
-        
-        step1Ind.classList.add('active');
-        step1Ind.classList.remove('completed');
-        step2Ind.classList.remove('active');
-        step2Ind.classList.remove('completed');
-        line1.classList.remove('completed');
-        
-      } else if (stepNumber === 2) {
-        step1.style.display = 'none';
-        step2.style.display = 'block';
-        
-        step1Ind.classList.remove('active');
-        step1Ind.classList.add('completed');
-        step2Ind.classList.add('active');
-        step2Ind.classList.remove('completed');
-        line1.classList.add('completed');
-      }
-    }
-
-    function showError(message) {
-      const errorEl = document.getElementById('errorMessage');
-      errorEl.textContent = message;
-      errorEl.style.display = 'block';
-      
-      setTimeout(() => {
-        errorEl.style.display = 'none';
-      }, 5000);
-    }
-
-    function showSuccess(message) {
-      const successEl = document.getElementById('successMessage');
-      successEl.textContent = message;
-      successEl.style.display = 'block';
-    }
-
-    function hideMessages() {
-      document.getElementById('errorMessage').style.display = 'none';
-      document.getElementById('successMessage').style.display = 'none';
-    }
-
-    function startCountdown() {
-      let seconds = 3;
-      const timerEl = document.getElementById('countdownTimer');
-      
-      countdownInterval = setInterval(() => {
-        seconds--;
-        timerEl.textContent = seconds;
-        
-        if (seconds <= 0) {
-          clearInterval(countdownInterval);
-          goToBooking();
-        }
-      }, 1000);
-    }
-
-    // ==================== EVENT LISTENERS ====================
-    document.addEventListener('DOMContentLoaded', function() {
-      const empNoInput = document.getElementById('empNoInput');
-      
-      if (empNoInput) {
-        empNoInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            checkEmployee();
-          }
-        });
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>
