@@ -704,7 +704,50 @@
             'V3': { count: 8, type: 'vip', split: 4 }
         };
 
-        // ==================== INITIALIZATION ====================
+        // ==================== JSONP HELPER ====================
+        function makeJSONPRequest(url, params) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                
+                // Create callback function
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                
+                // Create script element
+                const script = document.createElement('script');
+                
+                // Build URL with parameters
+                const urlParams = new URLSearchParams(params);
+                urlParams.append('callback', callbackName);
+                
+                script.src = `${url}?${urlParams.toString()}`;
+                
+                // Handle errors
+                script.onerror = function() {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                
+                // Add script to document
+                document.body.appendChild(script);
+            });
+        }
+
+        // ==================== API CALLS (แก้ไขเป็น JSONP) ====================
+        async function apiCall(action, params = {}) {
+            try {
+                const allParams = { action, ...params };
+                const result = await makeJSONPRequest(API_URL, allParams);
+                return result;
+            } catch (error) {
+                console.error('API call error:', error);
+                return { success: false, message: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้' };
+            }
+        }
         document.addEventListener('DOMContentLoaded', function() {
             initializeLIFF();
         });
@@ -750,8 +793,9 @@
             try {
                 updateLoadingText('กำลังตรวจสอบการลงทะเบียน...');
                 
-                const response = await fetch(`${API_URL}?action=getMyBookingByUID&lineUserId=${lineProfile.userId}`);
-                const result = await response.json();
+                const result = await apiCall('getMyBookingByUID', {
+                    lineUserId: lineProfile.userId
+                });
                 
                 if (result.success && result.data && result.data.empNo) {
                     // ผู้ใช้ได้จองที่นั่งแล้ว
@@ -804,8 +848,7 @@
             checkBtn.textContent = 'กำลังตรวจสอบ...';
 
             try {
-                const response = await fetch(`${API_URL}?action=getEmployeeInfo&empNo=${empNo}`);
-                const result = await response.json();
+                const result = await apiCall('getEmployeeInfo', { empNo: empNo });
                 
                 if (result.success) {
                     currentEmployee = { empNo: empNo, ...result.data };
@@ -854,13 +897,13 @@
         }
 
         async function loadBookingData() {
-            const response = await fetch(`${API_URL}?action=getAllBookings`);
-            const result = await response.json();
+            const result = await apiCall('getAllBookings');
             
             if (result.success) {
                 allBookings = result.data || [];
             } else {
                 allBookings = [];
+                console.warn('Could not load booking data:', result.message);
             }
         }
 
@@ -1000,18 +1043,13 @@
             confirmBtn.textContent = 'กำลังจอง...';
 
             try {
-                // Use GET request with URL parameters
-                const params = new URLSearchParams({
-                    action: 'bookSeat',
+                const result = await apiCall('bookSeat', {
                     empNo: currentEmployee.empNo,
                     name: encodeURIComponent(currentEmployee.name || ''),
                     factory: encodeURIComponent(currentEmployee.factory || ''),
                     seatId: selectedSeats[0],
                     lineUserId: lineProfile.userId
                 });
-
-                const response = await fetch(`${API_URL}?${params.toString()}`);
-                const result = await response.json();
                 
                 if (result.success) {
                     showAlert('success', '🎉 จองที่นั่งสำเร็จ!');
