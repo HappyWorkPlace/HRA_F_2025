@@ -16,6 +16,7 @@
             background-color: #1a1a1a;
             color: #ffffff;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         /* ==================== HEADER ==================== */
@@ -25,6 +26,9 @@
             padding: 1rem;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header h1 {
@@ -64,7 +68,7 @@
         }
 
         .loading p {
-            color: #666;
+            color: #999;
             font-size: 1rem;
         }
 
@@ -77,11 +81,11 @@
         }
 
         .reg-card {
-            background: white;
+            background: #2a2a2a;
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border: 1px solid #e9ecef;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid #333;
         }
 
         .reg-header {
@@ -90,14 +94,40 @@
         }
 
         .reg-header h2 {
-            color: #2c3e50;
+            color: #ffffff;
             font-size: 1.4rem;
             margin-bottom: 0.5rem;
         }
 
         .reg-header p {
-            color: #666;
+            color: #999;
             font-size: 0.9rem;
+        }
+
+        .line-info {
+            background: #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #00c300;
+            text-align: center;
+        }
+
+        .line-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        .line-info h4 {
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .line-info p {
+            color: #999;
+            font-size: 0.8rem;
         }
 
         .form-group {
@@ -107,17 +137,20 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #2c3e50;
+            color: #ffffff;
             font-weight: 500;
         }
 
         .form-group input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e9ecef;
+            border: 2px solid #444;
             border-radius: 8px;
             font-size: 1rem;
+            background-color: #333;
+            color: #ffffff;
             transition: border-color 0.3s ease;
+            text-transform: uppercase;
         }
 
         .form-group input:focus {
@@ -127,7 +160,7 @@
 
         .employee-info {
             display: none;
-            background: #f8f9fa;
+            background: #333;
             border-radius: 8px;
             padding: 1rem;
             margin-top: 1rem;
@@ -135,13 +168,13 @@
         }
 
         .employee-info h4 {
-            color: #2c3e50;
+            color: #ffffff;
             margin-bottom: 0.5rem;
         }
 
         .employee-info p {
             margin: 0.25rem 0;
-            color: #666;
+            color: #ccc;
         }
 
         .btn {
@@ -153,6 +186,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-transform: none;
         }
 
         .btn-primary {
@@ -173,6 +207,12 @@
         .btn-success:hover {
             background-color: #219a52;
             transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            transform: none;
         }
 
         /* ==================== CINEMA SEATING ==================== */
@@ -201,6 +241,49 @@
         .user-name {
             color: #4caf50;
             font-weight: 600;
+        }
+
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .legend-seat {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .legend-seat.available {
+            background-image: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w40");
+        }
+
+        .legend-seat.booked {
+            background-image: url("https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/booked.png");
+        }
+
+        .legend-seat.selected {
+            background-color: #ff9800;
+        }
+
+        .legend-seat.vip {
+            background-image: url("https://drive.google.com/thumbnail?id=1TSU5WQqDC5lrWYN8SSq9agRVLfSsFHUu&sz=w40");
         }
 
         /* Screen */
@@ -276,38 +359,31 @@
             cursor: pointer;
             position: relative;
             transition: all 0.3s ease;
-            background-color: #666;
             background-size: cover;
             background-position: center;
-        }
-
-        .seat.available {
-            background-color: #666;
         }
 
         .seat.available:hover {
-            background-color: #777;
+            transform: scale(1.1);
         }
 
         .seat.booked {
-            background-image: url("https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/booked.png");
-            background-size: cover;
-            background-position: center;
+            background-image: url("https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/booked.png") !important;
+            background-size: cover !important;
+            background-position: center !important;
             cursor: not-allowed;
+            opacity: 0.7;
         }
 
         .seat.selected {
             background-color: #ff9800;
             transform: scale(1.1);
             box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+            background-image: none !important;
         }
 
         .seat.regular {
             background-image: url("https://drive.google.com/thumbnail?id=13EpT70QOGuThPHaCsbD44Q4cdMUpElfL&sz=w80");
-        }
-
-        .seat.sweet {
-            background-image: url("https://drive.google.com/thumbnail?id=1Du01KILJxPZZQf0vZnABSilXcMfqNX32&sz=w80");
         }
 
         .seat.vip {
@@ -353,6 +429,88 @@
             font-weight: 500;
         }
 
+        /* ==================== ALREADY BOOKED ==================== */
+        .already-booked {
+            display: none;
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .booked-card {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .booked-header {
+            margin-bottom: 2rem;
+        }
+
+        .booked-header h2 {
+            color: #4caf50;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-details {
+            background: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #4caf50;
+        }
+
+        .booking-details h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .booking-details p {
+            margin: 0.5rem 0;
+            color: #ccc;
+        }
+
+        .booking-details .seat-display {
+            background: #4caf50;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+
+        /* ==================== ALERTS ==================== */
+        .alert {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: rgba(39, 174, 96, 0.1);
+            border-left-color: #27ae60;
+            color: #27ae60;
+        }
+
+        .alert-error {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .alert-warning {
+            background-color: rgba(241, 196, 15, 0.1);
+            border-left-color: #f1c40f;
+            color: #f1c40f;
+        }
+
         /* Responsive */
         @media (max-width: 480px) {
             .header h1 {
@@ -368,8 +526,27 @@
                 min-width: 25px;
                 font-size: 0.9rem;
             }
-        }
+
+            .seat-legend {
+                gap: 0.5rem;
             }
+
+            .legend-item {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ==================== UTILITIES ==================== */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -383,15 +560,22 @@
     <!-- Loading Section -->
     <section id="loading" class="loading">
         <div class="loading-spinner"></div>
-        <p>กำลังโหลดข้อมูล...</p>
+        <p id="loadingText">กำลังเชื่อมต่อ LINE...</p>
     </section>
 
     <!-- Registration Section -->
     <section id="registration" class="registration">
         <div class="reg-card">
             <div class="reg-header">
-                <h2>ลงทะเบียนเข้าร่วมงาน</h2>
-                <p>กรุณากรอกรหัสพนักงานเพื่อลงทะเบียน</p>
+                <h2>ลงทะเบียนจองที่นั่ง</h2>
+                <p>กรุณากรอกรหัสพนักงานเพื่อดำเนินการ</p>
+            </div>
+
+            <!-- LINE Info -->
+            <div id="lineInfo" class="line-info">
+                <img id="lineAvatar" src="" alt="Avatar">
+                <h4 id="lineDisplayName">-</h4>
+                <p>LINE User</p>
             </div>
             
             <form id="registrationForm">
@@ -400,7 +584,7 @@
                     <input type="text" id="empNo" name="empNo" placeholder="กรอกรหัสพนักงาน" required>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">ตรวจสอบข้อมูล</button>
+                <button type="submit" class="btn btn-primary" id="checkBtn">ตรวจสอบข้อมูล</button>
             </form>
             
             <!-- Employee Info (Hidden initially) -->
@@ -409,8 +593,11 @@
                 <p><strong>ชื่อ:</strong> <span id="empName">-</span></p>
                 <p><strong>แผนก:</strong> <span id="empDept">-</span></p>
                 <p><strong>รหัส:</strong> <span id="empCode">-</span></p>
-                <button id="confirmReg" class="btn btn-success" style="margin-top: 1rem;">ยืนยันการลงทะเบียน</button>
+                <button id="confirmReg" class="btn btn-success" style="margin-top: 1rem;">ดำเนินการจองที่นั่ง</button>
             </div>
+
+            <!-- Alert Messages -->
+            <div id="alertMessages"></div>
         </div>
     </section>
 
@@ -419,7 +606,27 @@
         <!-- User Info -->
         <div class="booking-info">
             <h3>สวัสดี <span class="user-name" id="userName">-</span></h3>
-            <p>เลือกที่นั่งที่คุณต้องการ</p>
+            <p>เลือกที่นั่งที่คุณต้องการ (สามารถจองได้ 1 ที่นั่งเท่านั้น)</p>
+        </div>
+
+        <!-- Seat Legend -->
+        <div class="seat-legend">
+            <div class="legend-item">
+                <div class="legend-seat available"></div>
+                <span>ที่นั่งว่าง</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-seat vip"></div>
+                <span>VIP</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-seat selected"></div>
+                <span>เลือกแล้ว</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-seat booked"></div>
+                <span>จองแล้ว</span>
+            </div>
         </div>
 
         <!-- Screen -->
@@ -445,166 +652,372 @@
         </div>
     </section>
 
-    <!-- Scripts -->
-    <script>
-        // Test Script - จำลองการทำงาน
-        document.addEventListener('DOMContentLoaded', function() {
+    <!-- Already Booked Section -->
+    <section id="alreadyBooked" class="already-booked">
+        <div class="booked-card">
+            <div class="booked-header">
+                <h2>✅ คุณได้จองที่นั่งแล้ว</h2>
+                <p>ขอบคุณที่ลงทะเบียนเข้าร่วมงาน</p>
+            </div>
             
-            // จำลองข้อมูล Layout ที่นั่ง (170 ที่นั่ง)
-            const seatLayout = {
-                'A': { count: 14, type: 'regular', split: 7 },
-                'B': { count: 14, type: 'regular', split: 7 },
-                'C': { count: 14, type: 'regular', split: 7 },
-                'D': { count: 14, type: 'regular', split: 7 },
-                'E': { count: 14, type: 'regular', split: 7 },
-                'F': { count: 14, type: 'regular', split: 7 },
-                'G': { count: 14, type: 'regular', split: 7 },
-                'H': { count: 14, type: 'regular', split: 7 },
-                'I': { count: 12, type: 'regular', split: 6 },
-                'J': { count: 12, type: 'regular', split: 6 },
-                'K': { count: 10, type: 'regular', split: 5 },
-                'V1': { count: 8, type: 'vip', split: 4 },
-                'V2': { count: 8, type: 'vip', split: 4 },
-                'V3': { count: 8, type: 'vip', split: 4 }
-            };
+            <div class="booking-details">
+                <h4>รายละเอียดการจอง</h4>
+                <p><strong>ชื่อ:</strong> <span id="bookedName">-</span></p>
+                <p><strong>แผนก:</strong> <span id="bookedDept">-</span></p>
+                <p><strong>ที่นั่ง:</strong></p>
+                <div class="seat-display" id="bookedSeat">-</div>
+                <p><strong>เวลาจอง:</strong> <span id="bookedTime">-</span></p>
+            </div>
+        </div>
+    </section>
 
-            // ซ่อน Loading หลังจาก 2 วินาที
-            setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
+    <!-- LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    
+    <!-- Main Script -->
+    <script>
+        // ==================== CONFIGURATION ====================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+        const LIFF_ID = '2008529302-50MNLyDV';
+
+        // ==================== GLOBAL VARIABLES ====================
+        let lineProfile = null;
+        let currentEmployee = null;
+        let selectedSeats = [];
+        let allBookings = [];
+
+        // Seat Layout (170 ที่นั่ง)
+        const seatLayout = {
+            'A': { count: 14, type: 'regular', split: 7 },
+            'B': { count: 14, type: 'regular', split: 7 },
+            'C': { count: 14, type: 'regular', split: 7 },
+            'D': { count: 14, type: 'regular', split: 7 },
+            'E': { count: 14, type: 'regular', split: 7 },
+            'F': { count: 14, type: 'regular', split: 7 },
+            'G': { count: 14, type: 'regular', split: 7 },
+            'H': { count: 14, type: 'regular', split: 7 },
+            'I': { count: 12, type: 'regular', split: 6 },
+            'J': { count: 12, type: 'regular', split: 6 },
+            'K': { count: 10, type: 'regular', split: 5 },
+            'V1': { count: 8, type: 'vip', split: 4 },
+            'V2': { count: 8, type: 'vip', split: 4 },
+            'V3': { count: 8, type: 'vip', split: 4 }
+        };
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLIFF();
+        });
+
+        async function initializeLIFF() {
+            try {
+                updateLoadingText('กำลังเตรียม LINE LIFF...');
                 
-                // แสดง Cinema Section เพื่อทดสอบ Layout
-                document.getElementById('cinema').style.display = 'block';
-                document.getElementById('userName').textContent = 'ทดสอบระบบ';
+                await liff.init({ liffId: LIFF_ID });
                 
-                // สร้างที่นั่งทดสอบ
-                generateSeatingMap();
-            }, 2000);
-
-            function generateSeatingMap() {
-                const seatingWrapper = document.getElementById('seatingWrapper');
-                seatingWrapper.innerHTML = '';
-
-                // สร้างข้อมูลที่นั่งที่จองแล้วแบบสุ่ม (จำลอง)
-                const bookedSeats = generateRandomBookedSeats();
-
-                for (const [rowLabel, rowData] of Object.entries(seatLayout)) {
-                    const seatRow = document.createElement('div');
-                    seatRow.className = 'seat-row';
-
-                    // Row Label
-                    const rowLabelDiv = document.createElement('div');
-                    rowLabelDiv.className = 'row-label';
-                    rowLabelDiv.textContent = rowLabel;
-                    seatRow.appendChild(rowLabelDiv);
-
-                    // สร้างที่นั่งแถวแรก
-                    for (let i = 1; i <= rowData.split; i++) {
-                        const seat = createSeat(rowLabel, i, rowData.type, bookedSeats);
-                        seatRow.appendChild(seat);
-                    }
-
-                    // ช่องว่างกลาง (Aisle)
-                    const aisle = document.createElement('div');
-                    aisle.className = 'aisle';
-                    seatRow.appendChild(aisle);
-
-                    // สร้างที่นั่งแถวหลัง
-                    for (let i = rowData.split + 1; i <= rowData.count; i++) {
-                        const seat = createSeat(rowLabel, i, rowData.type, bookedSeats);
-                        seatRow.appendChild(seat);
-                    }
-
-                    seatingWrapper.appendChild(seatRow);
+                if (!liff.isLoggedIn()) {
+                    updateLoadingText('กำลังเข้าสู่ระบบ LINE...');
+                    liff.login();
+                    return;
                 }
-            }
 
-            function createSeat(row, number, type, bookedSeats) {
-                const seat = document.createElement('div');
-                const seatId = `${row}${number}`;
+                updateLoadingText('กำลังโหลดข้อมูลผู้ใช้...');
+                lineProfile = await liff.getProfile();
                 
-                seat.className = `seat ${type}`;
-                seat.setAttribute('data-seat', seatId);
-                seat.setAttribute('data-row', row);
-                seat.setAttribute('data-number', number);
-                seat.setAttribute('data-type', type);
+                displayLineInfo();
+                await checkUserRegistration();
                 
-                // เช็คว่าที่นั่งถูกจองแล้วหรือยัง
-                if (bookedSeats.includes(seatId)) {
-                    seat.classList.add('booked');
+            } catch (error) {
+                console.error('LIFF initialization error:', error);
+                showAlert('error', 'ไม่สามารถเชื่อมต่อกับ LINE ได้: ' + error.message);
+                showRegistrationForm();
+            }
+        }
+
+        function updateLoadingText(text) {
+            const loadingText = document.getElementById('loadingText');
+            if (loadingText) loadingText.textContent = text;
+        }
+
+        function displayLineInfo() {
+            if (lineProfile) {
+                document.getElementById('lineAvatar').src = lineProfile.pictureUrl || '';
+                document.getElementById('lineDisplayName').textContent = lineProfile.displayName || 'ไม่ระบุชื่อ';
+            }
+        }
+
+        async function checkUserRegistration() {
+            try {
+                updateLoadingText('กำลังตรวจสอบการลงทะเบียน...');
+                
+                const response = await fetch(`${API_URL}?action=getMyBookingByUID&lineUserId=${lineProfile.userId}`);
+                const result = await response.json();
+                
+                if (result.success && result.data && result.data.empNo) {
+                    // ผู้ใช้ได้จองที่นั่งแล้ว
+                    displayBookingResult(result.data);
                 } else {
-                    seat.classList.add('available');
-                    seat.addEventListener('click', selectSeat);
+                    // ยังไม่ได้ลงทะเบียน
+                    showRegistrationForm();
                 }
+            } catch (error) {
+                console.error('Error checking registration:', error);
+                showAlert('error', 'ไม่สามารถตรวจสอบข้อมูลได้');
+                showRegistrationForm();
+            }
+        }
 
-                return seat;
+        function showRegistrationForm() {
+            hideLoading();
+            document.getElementById('registration').style.display = 'block';
+            setupRegistrationForm();
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // ==================== REGISTRATION ====================
+        function setupRegistrationForm() {
+            const form = document.getElementById('registrationForm');
+            const empNoInput = document.getElementById('empNo');
+            
+            // Force uppercase
+            empNoInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+            
+            form.addEventListener('submit', handleEmployeeCheck);
+        }
+
+        async function handleEmployeeCheck(e) {
+            e.preventDefault();
+            
+            const empNo = document.getElementById('empNo').value.trim();
+            if (!empNo) {
+                showAlert('warning', 'กรุณากรอกรหัสพนักงาน');
+                return;
             }
 
-            function generateRandomBookedSeats() {
-                // สร้างที่นั่งที่จองแล้วแบบสุ่มเพื่อทดสอบ (ประมาณ 20% ของที่นั่ง)
-                const bookedSeats = [];
-                const sampleBooked = ['A3', 'A4', 'B7', 'B8', 'C1', 'D10', 'E5', 'F6', 'G2', 'H9', 
-                                    'I3', 'J4', 'K5', 'V12', 'V23', 'V31'];
-                return sampleBooked;
-            }
+            const checkBtn = document.getElementById('checkBtn');
+            checkBtn.disabled = true;
+            checkBtn.textContent = 'กำลังตรวจสอบ...';
 
-            let selectedSeats = [];
-
-            function selectSeat() {
-                if (this.classList.contains('booked')) return;
-
-                const seatId = this.getAttribute('data-seat');
+            try {
+                const response = await fetch(`${API_URL}?action=getEmployeeInfo&empNo=${empNo}`);
+                const result = await response.json();
                 
-                if (this.classList.contains('selected')) {
-                    // ยกเลิกการเลือก
-                    this.classList.remove('selected');
-                    this.classList.add('available');
-                    selectedSeats = selectedSeats.filter(seat => seat !== seatId);
+                if (result.success) {
+                    currentEmployee = { empNo: empNo, ...result.data };
+                    showEmployeeInfo(result.data);
                 } else {
-                    // เลือกที่นั่ง (จำกัด 1 ที่นั่ง)
-                    if (selectedSeats.length >= 1) {
-                        alert('สามารถจองได้เพียง 1 ที่นั่งเท่านั้น');
-                        return;
-                    }
-                    
-                    this.classList.remove('available');
-                    this.classList.add('selected');
-                    selectedSeats.push(seatId);
+                    showAlert('error', result.message || 'ไม่พบข้อมูลพนักงาน');
                 }
-
-                updateSelectedInfo();
+            } catch (error) {
+                console.error('Error checking employee:', error);
+                showAlert('error', 'ไม่สามารถตรวจสอบข้อมูลได้');
+            } finally {
+                checkBtn.disabled = false;
+                checkBtn.textContent = 'ตรวจสอบข้อมูล';
             }
+        }
 
-            function updateSelectedInfo() {
-                const selectedInfo = document.getElementById('selectedInfo');
-                const selectedSeatsDiv = document.getElementById('selectedSeats');
-                const confirmBtn = document.getElementById('confirmBooking');
+        function showEmployeeInfo(employee) {
+            document.getElementById('empName').textContent = employee.name || '-';
+            document.getElementById('empDept').textContent = employee.factory || '-';
+            document.getElementById('empCode').textContent = currentEmployee.empNo || '-';
+            
+            document.getElementById('employeeInfo').style.display = 'block';
+            document.getElementById('confirmReg').addEventListener('click', proceedToBooking);
+            
+            clearAlerts();
+        }
 
-                if (selectedSeats.length > 0) {
-                    selectedInfo.style.display = 'block';
-                    confirmBtn.style.display = 'block';
-                    
-                    selectedSeatsDiv.innerHTML = '';
-                    selectedSeats.forEach(seatId => {
-                        const seatTag = document.createElement('div');
-                        seatTag.className = 'selected-seat-tag';
-                        seatTag.textContent = seatId;
-                        selectedSeatsDiv.appendChild(seatTag);
-                    });
-                } else {
-                    selectedInfo.style.display = 'none';
-                    confirmBtn.style.display = 'none';
-                }
-            }
-
-            // Event Listener สำหรับยืนยันการจอง
-            document.getElementById('confirmBooking').addEventListener('click', function() {
-                if (selectedSeats.length === 0) return;
+        async function proceedToBooking() {
+            try {
+                updateLoadingText('กำลังโหลดข้อมูลที่นั่ง...');
+                showLoading();
                 
-                if (confirm(`ยืนยันการจองที่นั่ง ${selectedSeats.join(', ')} หรือไม่?`)) {
-                    // แสดงข้อความยืนยันการจอง
-                    alert(`🎉 จองที่นั่งสำเร็จ!\nที่นั่ง: ${selectedSeats.join(', ')}\nวันที่: ${new Date().toLocaleDateString('th-TH')}\nเวลา: ${new Date().toLocaleTimeString('th-TH')}`);
+                await loadBookingData();
+                showCinemaSection();
+                
+            } catch (error) {
+                console.error('Error proceeding to booking:', error);
+                showAlert('error', 'ไม่สามารถโหลดข้อมูลที่นั่งได้');
+                hideLoading();
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('registration').style.display = 'none';
+        }
+
+        async function loadBookingData() {
+            const response = await fetch(`${API_URL}?action=getAllBookings`);
+            const result = await response.json();
+            
+            if (result.success) {
+                allBookings = result.data || [];
+            } else {
+                allBookings = [];
+            }
+        }
+
+        function showCinemaSection() {
+            hideLoading();
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('cinema').style.display = 'block';
+            
+            // Display user info
+            document.getElementById('userName').textContent = currentEmployee.name || currentEmployee.empNo;
+            
+            // Generate seating map
+            generateSeatingMap();
+        }
+
+        // ==================== SEATING ====================
+        function generateSeatingMap() {
+            const seatingWrapper = document.getElementById('seatingWrapper');
+            seatingWrapper.innerHTML = '';
+
+            // Get list of booked seats
+            const bookedSeatIds = allBookings.map(booking => booking.seatId);
+
+            for (const [rowLabel, rowData] of Object.entries(seatLayout)) {
+                const seatRow = document.createElement('div');
+                seatRow.className = 'seat-row';
+
+                // Row Label
+                const rowLabelDiv = document.createElement('div');
+                rowLabelDiv.className = 'row-label';
+                rowLabelDiv.textContent = rowLabel;
+                seatRow.appendChild(rowLabelDiv);
+
+                // First half of seats
+                for (let i = 1; i <= rowData.split; i++) {
+                    const seat = createSeat(rowLabel, i, rowData.type, bookedSeatIds);
+                    seatRow.appendChild(seat);
+                }
+
+                // Aisle
+                const aisle = document.createElement('div');
+                aisle.className = 'aisle';
+                seatRow.appendChild(aisle);
+
+                // Second half of seats
+                for (let i = rowData.split + 1; i <= rowData.count; i++) {
+                    const seat = createSeat(rowLabel, i, rowData.type, bookedSeatIds);
+                    seatRow.appendChild(seat);
+                }
+
+                seatingWrapper.appendChild(seatRow);
+            }
+
+            setupBookingControls();
+        }
+
+        function createSeat(row, number, type, bookedSeatIds) {
+            const seat = document.createElement('div');
+            const seatId = `${row}${number}`;
+            
+            seat.className = `seat ${type}`;
+            seat.setAttribute('data-seat', seatId);
+            seat.setAttribute('data-row', row);
+            seat.setAttribute('data-number', number);
+            seat.setAttribute('data-type', type);
+            
+            if (bookedSeatIds.includes(seatId)) {
+                seat.classList.add('booked');
+            } else {
+                seat.classList.add('available');
+                seat.addEventListener('click', selectSeat);
+            }
+
+            return seat;
+        }
+
+        function selectSeat() {
+            if (this.classList.contains('booked')) return;
+
+            const seatId = this.getAttribute('data-seat');
+            
+            if (this.classList.contains('selected')) {
+                // Deselect
+                this.classList.remove('selected');
+                this.classList.add('available');
+                selectedSeats = selectedSeats.filter(seat => seat !== seatId);
+            } else {
+                // Select (limit to 1 seat)
+                if (selectedSeats.length >= 1) {
+                    showAlert('warning', 'สามารถจองได้เพียง 1 ที่นั่งเท่านั้น');
+                    return;
+                }
+                
+                this.classList.remove('available');
+                this.classList.add('selected');
+                selectedSeats.push(seatId);
+            }
+
+            updateSelectedInfo();
+        }
+
+        function updateSelectedInfo() {
+            const selectedInfo = document.getElementById('selectedInfo');
+            const selectedSeatsDiv = document.getElementById('selectedSeats');
+            const confirmBtn = document.getElementById('confirmBooking');
+
+            if (selectedSeats.length > 0) {
+                selectedInfo.style.display = 'block';
+                confirmBtn.style.display = 'block';
+                
+                selectedSeatsDiv.innerHTML = '';
+                selectedSeats.forEach(seatId => {
+                    const seatTag = document.createElement('div');
+                    seatTag.className = 'selected-seat-tag';
+                    seatTag.textContent = seatId;
+                    selectedSeatsDiv.appendChild(seatTag);
+                });
+            } else {
+                selectedInfo.style.display = 'none';
+                confirmBtn.style.display = 'none';
+            }
+        }
+
+        function setupBookingControls() {
+            document.getElementById('confirmBooking').addEventListener('click', handleBookingConfirmation);
+        }
+
+        async function handleBookingConfirmation() {
+            if (selectedSeats.length === 0) return;
+            
+            if (!confirm(`ยืนยันการจองที่นั่ง ${selectedSeats.join(', ')} หรือไม่?`)) {
+                return;
+            }
+
+            const confirmBtn = document.getElementById('confirmBooking');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'กำลังจอง...';
+
+            try {
+                const response = await fetch(`${API_URL}?action=bookSeat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        empNo: currentEmployee.empNo,
+                        name: currentEmployee.name,
+                        factory: currentEmployee.factory,
+                        seatId: selectedSeats[0],
+                        lineUserId: lineProfile.userId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('success', '🎉 จองที่นั่งสำเร็จ!');
                     
-                    // อัพเดตที่นั่งเป็นสถานะ "จองแล้ว" และรีเซ็ตการเลือก
+                    // Update UI
                     selectedSeats.forEach(seatId => {
                         const seatElement = document.querySelector(`[data-seat="${seatId}"]`);
                         if (seatElement) {
@@ -614,12 +1027,71 @@
                         }
                     });
                     
-                    // รีเซ็ตการเลือก
-                    selectedSeats = [];
-                    updateSelectedInfo();
+                    // Show booking result
+                    setTimeout(() => {
+                        displayBookingResult({
+                            empNo: currentEmployee.empNo,
+                            name: currentEmployee.name,
+                            factory: currentEmployee.factory,
+                            seatId: selectedSeats[0],
+                            bookingTime: new Date().toLocaleString('th-TH')
+                        });
+                    }, 2000);
+                    
+                } else {
+                    showAlert('error', result.message || 'ไม่สามารถจองที่นั่งได้');
                 }
-            });
-        });
+                
+            } catch (error) {
+                console.error('Error booking seat:', error);
+                showAlert('error', 'เกิดข้อผิดพลาดในการจอง');
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'ยืนยันการจอง';
+                selectedSeats = [];
+                updateSelectedInfo();
+            }
+        }
+
+        // ==================== ALREADY BOOKED ====================
+        function displayBookingResult(booking) {
+            // Hide all other sections
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('cinema').style.display = 'none';
+            
+            // Show booking result
+            document.getElementById('alreadyBooked').style.display = 'block';
+            
+            // Fill booking details
+            document.getElementById('bookedName').textContent = booking.name || '-';
+            document.getElementById('bookedDept').textContent = booking.factory || '-';
+            document.getElementById('bookedSeat').textContent = booking.seatId || '-';
+            document.getElementById('bookedTime').textContent = booking.bookingTime || '-';
+        }
+
+        // ==================== UTILITIES ====================
+        function showAlert(type, message) {
+            const alertMessages = document.getElementById('alertMessages');
+            if (!alertMessages) return;
+
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertMessages.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function clearAlerts() {
+            const alertMessages = document.getElementById('alertMessages');
+            if (alertMessages) {
+                alertMessages.innerHTML = '';
+            }
+        }
     </script>
 </body>
 </html>
