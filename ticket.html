@@ -11,17 +11,13 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
             font-family: Arial, sans-serif;
             background: #1a1a1a;
             color: #000;
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
+            height: 100%;
+            height: 100dvh;
+            width: 100%;
             overflow: hidden;
         }
 
@@ -66,16 +62,16 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ==================== TICKET CONTAINER ==================== */
+        /* ==================== TICKET WRAPPER ==================== */
         .ticket-wrapper {
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
             visibility: hidden;
+            transition: opacity 0.5s ease;
         }
 
         .ticket-wrapper.ready {
@@ -83,21 +79,37 @@
             visibility: visible;
         }
 
+        /* ==================== ROTATED VIEW (Mobile Portrait) ==================== */
         .ticket-wrapper.rotated {
-            transform: rotate(90deg);
+            /* ทำให้เป็น scrollable container */
+            overflow-x: auto;
+            overflow-y: hidden;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px;
         }
 
+        .ticket-wrapper.rotated .ticket-container {
+            /* หมุน 90 องศา */
+            transform: rotate(90deg);
+            transform-origin: center center;
+            
+            /* ใช้ความสูงหน้าจอเป็นความกว้างของตั๋ว */
+            width: calc(100dvh - 20px);
+            min-width: calc(100dvh - 20px);
+            height: auto;
+            
+            /* margin เพื่อให้ scroll ได้ */
+            margin: 0 calc((100dvh - 100vw) / 2 + 50px);
+        }
+
+        /* ==================== TICKET CONTAINER ==================== */
         .ticket-container {
             position: relative;
             width: 100%;
             max-width: 800px;
             height: auto;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .ticket-wrapper.rotated .ticket-container {
-            max-width: 95vh;
-            width: 95vh;
+            transition: all 0.3s ease;
         }
 
         .ticket-background {
@@ -105,7 +117,7 @@
             height: auto;
             display: block;
             border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         }
 
         /* ==================== TEXT OVERLAYS ==================== */
@@ -118,7 +130,7 @@
         .employee-code {
             top: 8%;
             left: 22.5%;
-            font-size: clamp(0.7rem, 2.5vw, 1.1rem);
+            font-size: clamp(0.9rem, 3vw, 1.4rem);
             color: white;
             font-weight: bold;
         }
@@ -126,7 +138,7 @@
         .employee-name {
             top: 17%;
             left: 22.5%;
-            font-size: clamp(0.5rem, 2vw, 0.9rem);
+            font-size: clamp(0.6rem, 2.5vw, 1.1rem);
             color: grey;
             font-weight: bold;
             text-transform: uppercase;
@@ -135,7 +147,7 @@
         .row-letter {
             top: 15%;
             right: 3%;
-            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+            font-size: clamp(1rem, 3vw, 1.5rem);
             color: #8B4513;
             font-weight: bold;
             writing-mode: vertical-rl;
@@ -146,7 +158,7 @@
         .seat-number {
             top: 60%;
             right: 3.0%;
-            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+            font-size: clamp(1rem, 3vw, 1.5rem);
             color: #8B4513;
             font-weight: bold;
             writing-mode: vertical-rl;
@@ -159,37 +171,37 @@
             position: absolute;
             top: 50%;
             left: 6.3%;
-            width: 60px;
-            height: 60px;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 4px;
             z-index: 10;
         }
 
         .qr-container canvas,
         .qr-container img {
-            width: 120px !important;
-            height: 120px !important;
+            width: 100% !important;
+            height: 100% !important;
             border-radius: 2px;
         }
 
         .qr-loading {
-            font-size: 0.5rem;
+            font-size: 0.6rem;
             color: #666;
             text-align: center;
-            line-height: 1.1;
+            line-height: 1.2;
             animation: pulse 1.5s ease-in-out infinite;
         }
 
         .qr-fallback {
-            font-size: 0.45rem;
+            font-size: 0.5rem;
             color: #000;
             text-align: center;
             line-height: 1;
             font-weight: bold;
-            padding: 2px;
+            padding: 4px;
             word-break: break-all;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 2px;
@@ -208,40 +220,67 @@
             transform: translateX(-50%);
             background: #27ae60;
             color: white;
-            padding: 15px 30px;
+            padding: 12px 24px;
             border-radius: 25px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             box-shadow: 0 4px 20px rgba(39, 174, 96, 0.3);
             z-index: 100;
+            white-space: nowrap;
         }
 
-        /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 768px) {
-            .ticket-wrapper.rotated .ticket-container {
-                max-width: 95vh;
-                width: 95vh;
-            }
+        /* ==================== SCROLL HINT ==================== */
+        .scroll-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #DAA520;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeInOut 3s ease-in-out forwards;
         }
 
-        @media (max-width: 480px) {
-            .qr-container {
-                width: 50px;
-                height: 50px;
-                top: 40%;
-                left: 3.5%;
+        .scroll-hint.hidden {
+            display: none;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+
+        /* ==================== LANDSCAPE MODE ==================== */
+        @media (orientation: landscape) {
+            .ticket-wrapper {
+                overflow: hidden;
+                justify-content: center;
+                padding: 20px;
             }
 
-            .qr-container canvas,
-            .qr-container img {
-                width: 60px !important;
-                height: 60px !important;
+            .ticket-wrapper .ticket-container {
+                transform: none;
+                width: auto;
+                min-width: unset;
+                height: calc(100dvh - 40px);
+                margin: 0;
             }
-            
-            /* ตั๋วใหญ่ขึ้นบนมือถือ */
-            .ticket-wrapper.rotated .ticket-container {
-                max-width: 98vh;
-                width: 98vh;
+
+            .ticket-wrapper .ticket-container .ticket-background {
+                height: 100%;
+                width: auto;
+            }
+
+            .scroll-hint {
+                display: none;
             }
         }
     </style>
@@ -258,10 +297,15 @@
         🎫 ตั๋วของคุณพร้อมแล้ว!
     </div>
 
-    <!-- Ticket Wrapper (for rotation) -->
+    <!-- Scroll Hint -->
+    <div class="scroll-hint" id="scrollHint">
+        👆 เลื่อนซ้าย-ขวาเพื่อดูตั๋วทั้งหมด
+    </div>
+
+    <!-- Ticket Wrapper -->
     <div class="ticket-wrapper" id="ticketWrapper">
         <!-- Ticket Container -->
-        <div class="ticket-container">
+        <div class="ticket-container" id="ticketContainer">
             <!-- Background Image -->
             <img src="https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/2.png" 
                  alt="Cinema Ticket" 
@@ -340,23 +384,50 @@
             }
         }
 
+        // ==================== ORIENTATION CHECK ====================
+        function isPortraitMobile() {
+            return window.innerHeight > window.innerWidth && window.innerWidth < 768;
+        }
+
+        function updateOrientation() {
+            const wrapper = document.getElementById('ticketWrapper');
+            const scrollHint = document.getElementById('scrollHint');
+            
+            if (isPortraitMobile()) {
+                wrapper.classList.add('rotated');
+                scrollHint.classList.remove('hidden');
+                
+                // Center scroll position
+                setTimeout(() => {
+                    const scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+                    wrapper.scrollLeft = scrollLeft;
+                }, 100);
+            } else {
+                wrapper.classList.remove('rotated');
+                scrollHint.classList.add('hidden');
+            }
+        }
+
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎬 Cinema Ticket: DOM loaded, initializing LIFF...');
+            console.log('🎬 Cinema Ticket: DOM loaded, initializing...');
             
-            // หมุนตั๋วล่วงหน้าถ้าเป็นมือถือแนวตั้ง (ก่อนแสดงผล)
-            if (isPortraitMobile()) {
-                document.getElementById('ticketWrapper').classList.add('rotated');
-                console.log('Pre-rotated for mobile portrait view');
-            }
+            // Set orientation before showing
+            updateOrientation();
+            
+            // Hide scroll hint after 4 seconds
+            setTimeout(() => {
+                document.getElementById('scrollHint').classList.add('hidden');
+            }, 4000);
             
             initializeLIFF();
         });
 
-        // ตรวจสอบว่าเป็นมือถือแนวตั้งหรือไม่
-        function isPortraitMobile() {
-            return window.innerHeight > window.innerWidth && window.innerWidth < 768;
-        }
+        // Handle orientation/resize changes
+        window.addEventListener('resize', updateOrientation);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateOrientation, 300);
+        });
 
         async function initializeLIFF() {
             try {
@@ -373,14 +444,12 @@
                 updateLoadingText('กำลังโหลดข้อมูลผู้ใช้...');
                 lineProfile = await liff.getProfile();
                 
-                // ตรวจสอบการจองของผู้ใช้
                 await checkBookingStatus();
                 
             } catch (error) {
                 console.error('LIFF initialization error:', error);
                 updateLoadingText('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE');
                 
-                // Fallback: ลองโหลดจาก localStorage
                 setTimeout(() => {
                     loadFromLocalStorage();
                 }, 2000);
@@ -401,7 +470,6 @@
                 });
                 
                 if (result.success && result.data && result.data.empNo) {
-                    // พบการจอง - แสดงตั๋ว
                     ticketData = {
                         empNo: result.data.empNo,
                         name: result.data.name || '',
@@ -412,15 +480,11 @@
                     };
                     
                     console.log('Found booking data:', ticketData);
-                    
-                    // บันทึกไว้ใน localStorage
                     localStorage.setItem('cinemaTicketData', JSON.stringify(ticketData));
                     
-                    // แสดงตั๋ว
                     await displayTicket();
                     
                 } else {
-                    // ไม่พบการจอง - redirect ไปหน้าจอง
                     updateLoadingText('ไม่พบการจอง กำลังนำไปหน้าจอง...');
                     
                     setTimeout(() => {
@@ -432,7 +496,6 @@
                 console.error('Error checking booking status:', error);
                 updateLoadingText('เกิดข้อผิดพลาด กำลังลองอีกครั้ง...');
                 
-                // Fallback: ลองโหลดจาก localStorage
                 setTimeout(() => {
                     loadFromLocalStorage();
                 }, 2000);
@@ -455,7 +518,6 @@
                 console.error('Error loading from localStorage:', error);
             }
             
-            // หากไม่มีข้อมูลใน localStorage ให้ redirect ไปหน้าจอง
             updateLoadingText('ไม่พบข้อมูลการจอง กำลังนำไปหน้าจอง...');
             setTimeout(() => {
                 window.location.href = BOOKING_LIFF;
@@ -466,21 +528,18 @@
             try {
                 updateLoadingText('กำลังเตรียมตั๋ว...');
                 
-                // Update ticket display
                 updateTicketDisplay();
-                
-                // Generate QR Code
                 await generateQRCode();
                 
-                // Hide loading
                 hideLoading();
                 
-                // Show ticket with animation
+                // Update orientation again before showing
+                updateOrientation();
+                
                 setTimeout(() => {
                     document.getElementById('ticketWrapper').classList.add('ready');
                 }, 100);
                 
-                // Hide success message after 3 seconds
                 setTimeout(() => {
                     document.getElementById('successMessage').style.display = 'none';
                 }, 3000);
@@ -492,11 +551,9 @@
         }
 
         function updateTicketDisplay() {
-            // Update employee info
             document.getElementById('empCode').textContent = ticketData.empNo || '-';
             document.getElementById('empName').textContent = ticketData.name || '-';
             
-            // Parse seat information and separate row/seat
             const seatId = ticketData.seatId;
             let rowLetter = '';
             let seatNumber = '';
@@ -538,20 +595,20 @@
                 
                 const qr = new QRious({
                     value: ticketData.empNo || 'TICKET',
-                    size: 52,
+                    size: 80,
                     background: 'transparent', 
                     backgroundAlpha: 0,  
                     foreground: '#000000',
                     foregroundAlpha: 1,
                     level: 'M',
-                    padding: 1
+                    padding: 2
                 });
                 
                 const canvas = qr.canvas;
                 
                 if (canvas) {
-                    canvas.style.width = '52px';
-                    canvas.style.height = '52px';
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
                     canvas.style.borderRadius = '2px';
                     qrContainer.appendChild(canvas);
                     console.log('QR Code generated successfully');
@@ -582,34 +639,11 @@
             generateQRCode();
         };
 
-        // Handle orientation change - recheck rotation
-        window.addEventListener('orientationchange', function() {
-            setTimeout(() => {
-                const wrapper = document.getElementById('ticketWrapper');
-                if (isPortraitMobile()) {
-                    wrapper.classList.add('rotated');
-                } else {
-                    wrapper.classList.remove('rotated');
-                }
-            }, 300);
-        });
-
-        // Handle resize - recheck rotation
-        window.addEventListener('resize', function() {
-            const wrapper = document.getElementById('ticketWrapper');
-            if (isPortraitMobile()) {
-                wrapper.classList.add('rotated');
-            } else {
-                wrapper.classList.remove('rotated');
-            }
-        });
-
-        // Debug function
         window.debugTicket = function() {
             console.log('Current ticket data:', ticketData);
             console.log('LINE Profile:', lineProfile);
-            console.log('QRious available:', typeof QRious !== 'undefined');
             console.log('Is Portrait Mobile:', isPortraitMobile());
+            console.log('Window size:', window.innerWidth, 'x', window.innerHeight);
         };
     </script>
 </body>
