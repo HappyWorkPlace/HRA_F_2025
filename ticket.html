@@ -929,11 +929,33 @@
             }
         });
 
-        // Debug function
+        // Debug function - เพิ่มข้อมูลทดสอบ
         window.debugTicket = function() {
             console.log('Current ticket data:', ticketData);
             console.log('QRious available:', typeof QRious !== 'undefined');
             console.log('html2canvas available:', typeof html2canvas !== 'undefined');
+        };
+
+        // Test function - ใส่ข้อมูลทดสอบ
+        window.loadTestData = function() {
+            const testData = {
+                empNo: 'LC769',
+                name: 'KANOKPUN SUKPAN',
+                factory: 'LOPBURI',
+                seatId: 'J5',
+                bookingTime: new Date().toLocaleString('th-TH')
+            };
+            
+            updateTicket(testData);
+            hideLoading();
+            document.getElementById('errorState').classList.remove('show');
+            
+            console.log('Test data loaded:', testData);
+        };
+
+        // Emergency function - กลับไปหน้าจองทันที
+        window.emergencyReturn = function() {
+            window.location.href = 'index.html';
         };
     </script>
 </body>
