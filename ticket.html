@@ -82,8 +82,8 @@
         /* ==================== ROTATED VIEW (Mobile Portrait) ==================== */
         .ticket-wrapper.rotated {
             /* ทำให้เป็น scrollable container */
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow-x: auto;
+            overflow-y: hidden;
             justify-content: flex-start;
             align-items: center;
             padding: 10px;
@@ -91,16 +91,16 @@
 
         .ticket-wrapper.rotated .ticket-container {
             /* หมุน 90 องศา */
-            transform: none;
+            transform: rotate(90deg);
             transform-origin: center center;
             
             /* ใช้ความสูงหน้าจอเป็นความกว้างของตั๋ว */
-            width: 100%; ;
-            min-width: unset;
+            width: calc(100dvh - 20px);
+            min-width: calc(100dvh - 20px);
             height: auto;
             
             /* margin เพื่อให้ scroll ได้ */
-            margin: 50px auto;
+            margin: 0 calc((100dvh - 100vw) / 2 + 50px);
         }
 
         /* ==================== TICKET CONTAINER ==================== */
