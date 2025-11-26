@@ -1064,32 +1064,24 @@
                         }
                     });
                     
-                    // Show booking result - แบบใหม่: redirect ไปหน้าตั๋ว
+                    // Redirect ไปหน้าตั๋วผ่าน LIFF ใหม่
                     setTimeout(() => {
+                        // บันทึกข้อมูลสำหรับหน้าตั๋ว
                         const ticketData = {
                             empNo: currentEmployee.empNo,
                             name: currentEmployee.name,
                             factory: currentEmployee.factory,
                             seatId: selectedSeats[0],
-                            bookingTime: new Date().toLocaleString('th-TH')
+                            bookingTime: new Date().toLocaleString('th-TH'),
+                            lineUserId: lineProfile.userId
                         };
                         
-                        // บันทึกใน localStorage
                         localStorage.setItem('cinemaTicketData', JSON.stringify(ticketData));
                         
-                        // สร้าง URL พร้อม parameters
-                        const ticketUrl = new URL('ticket-updated.html', window.location.origin);
-                        ticketUrl.searchParams.set('empNo', ticketData.empNo);
-                        ticketUrl.searchParams.set('name', encodeURIComponent(ticketData.name || ''));
-                        ticketUrl.searchParams.set('factory', encodeURIComponent(ticketData.factory || ''));
-                        ticketUrl.searchParams.set('seatId', ticketData.seatId);
-                        ticketUrl.searchParams.set('bookingTime', encodeURIComponent(ticketData.bookingTime));
-                        ticketUrl.searchParams.set('autoRotate', '1'); // Auto-rotate บนมือถือ
+                        console.log('Redirecting to LIFF ticket with data:', ticketData);
                         
-                        console.log('Redirecting to ticket with data:', ticketData);
-                        console.log('Ticket URL:', ticketUrl.toString());
-                        
-                        window.location.href = ticketUrl.toString();
+                        // Redirect ไปหน้าตั๋วผ่าน LIFF ID ใหม่
+                        window.location.href = 'https://liff.line.me/2008529302-VgK0MJqm';
                     }, 2000);
                     
                 } else {
