@@ -58,6 +58,7 @@
             color: #DAA520;
             font-size: 1rem;
             text-align: center;
+            margin-bottom: 0.5rem;
         }
 
         @keyframes spin {
@@ -89,10 +90,6 @@
         .rotate-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 25px rgba(218, 165, 32, 0.5);
-        }
-
-        .rotate-btn:active {
-            transform: scale(0.95);
         }
 
         .rotate-btn svg {
@@ -130,10 +127,6 @@
         .download-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 25px rgba(39, 174, 96, 0.5);
-        }
-
-        .download-btn:active {
-            transform: scale(0.95);
         }
 
         /* ==================== ROTATION HINT ==================== */
@@ -179,7 +172,6 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* When rotated, adjust the size for portrait view */
         .ticket-wrapper.rotated .ticket-container {
             max-width: 95vh;
             width: 95vh;
@@ -200,7 +192,6 @@
             text-align: center;
         }
 
-        /* Employee Code - Top Left Area */
         .employee-code {
             top: 8%;
             left: 22.5%;
@@ -209,7 +200,6 @@
             font-weight: bold;
         }
 
-        /* Employee Name - Below Code */
         .employee-name {
             top: 15%;
             left: 22.5%;
@@ -219,7 +209,6 @@
             text-transform: uppercase;
         }
 
-        /* Row Letter - Right Side Top */
         .row-letter {
             top: 15%;
             right: 3%;
@@ -231,7 +220,6 @@
             transform: rotate(180deg);
         }
 
-        /* Seat Number - Right Side Bottom */
         .seat-number {
             top: 60%;
             right: 3.0%;
@@ -264,7 +252,6 @@
             border-radius: 2px;
         }
 
-        /* QR Loading/Error States */
         .qr-loading {
             font-size: 0.5rem;
             color: #666;
@@ -328,48 +315,6 @@
             opacity: 1;
         }
 
-        /* ==================== ERROR STATE ==================== */
-        .error-state {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #2a2a2a;
-            color: white;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 300px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 1001;
-            display: none;
-        }
-
-        .error-state.show {
-            display: block;
-        }
-
-        .error-title {
-            color: #e74c3c;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .error-text {
-            margin-bottom: 1.5rem;
-            color: #ccc;
-        }
-
-        .error-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 480px) {
             .rotate-btn, .download-btn {
@@ -427,19 +372,12 @@
     <!-- Loading Screen -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
-        <div class="loading-text" id="loadingText">กำลังโหลดข้อมูลตั๋ว...</div>
-    </div>
-
-    <!-- Error State -->
-    <div id="errorState" class="error-state">
-        <div class="error-title">⚠️ เกิดข้อผิดพลาด</div>
-        <div class="error-text" id="errorText">ไม่พบข้อมูลการจอง</div>
-        <button class="error-btn" onclick="goToBooking()">กลับไปหน้าจอง</button>
+        <div class="loading-text" id="loadingText">กำลังตรวจสอบข้อมูล...</div>
     </div>
 
     <!-- Success Message -->
     <div class="success-message" id="successMessage">
-        🎉 ตั๋วของคุณพร้อมแล้ว!
+        🎫 ตั๋วของคุณพร้อมแล้ว!
     </div>
 
     <!-- Orientation Status -->
@@ -487,6 +425,8 @@
         📱
     </button>
 
+    <!-- LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <!-- QRious Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <!-- html2canvas for download -->
@@ -495,15 +435,19 @@
     <script>
         // ==================== CONFIGURATION ====================
         const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
+        const LIFF_ID = '2008529302-VgK0MJqm';
+        const BOOKING_LIFF = 'https://liff.line.me/2008529302-50MNLyDV';
 
         // ==================== STATE ====================
         let isRotated = false;
+        let lineProfile = null;
         let ticketData = {
             empNo: '',
             name: '',
             factory: '',
             seatId: '',
-            bookingTime: ''
+            bookingTime: '',
+            lineUserId: ''
         };
 
         // ==================== JSONP HELPER ====================
@@ -557,16 +501,13 @@
                 status.textContent = '🔄 แนวนอน - ปกติ';
             }
             
-            // Show status briefly
             status.classList.add('show');
             setTimeout(() => {
                 status.classList.remove('show');
             }, 1500);
 
-            // Hide hint after first use
             document.getElementById('rotateHint').classList.add('hidden');
 
-            // Vibration feedback if available
             if (navigator.vibrate) {
                 navigator.vibrate(50);
             }
@@ -574,34 +515,117 @@
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎬 Cinema Ticket: DOM loaded, initializing...');
-            initializeTicket();
+            console.log('🎬 Cinema Ticket: DOM loaded, initializing LIFF...');
+            initializeLIFF();
         });
 
-        async function initializeTicket() {
+        async function initializeLIFF() {
             try {
-                updateLoadingText('กำลังโหลดข้อมูลตั๋ว...');
+                updateLoadingText('กำลังเชื่อมต่อ LINE...');
                 
-                // Try to load ticket data from multiple sources
-                let dataLoaded = false;
+                await liff.init({ liffId: LIFF_ID });
                 
-                // 1. Try URL parameters first
-                dataLoaded = loadFromURLParams();
-                
-                // 2. Try localStorage if URL params failed
-                if (!dataLoaded) {
-                    dataLoaded = loadFromLocalStorage();
-                }
-                
-                // 3. Try API call if we have some identifiers
-                if (!dataLoaded) {
-                    dataLoaded = await loadFromAPI();
-                }
-                
-                if (!dataLoaded) {
-                    showError('ไม่พบข้อมูลการจอง', 'กรุณาทำการจองใหม่อีกครั้ง');
+                if (!liff.isLoggedIn()) {
+                    updateLoadingText('กำลังเข้าสู่ระบบ...');
+                    liff.login();
                     return;
                 }
+
+                updateLoadingText('กำลังโหลดข้อมูลผู้ใช้...');
+                lineProfile = await liff.getProfile();
+                
+                // ตรวจสอบการจองของผู้ใช้
+                await checkBookingStatus();
+                
+            } catch (error) {
+                console.error('LIFF initialization error:', error);
+                updateLoadingText('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE');
+                
+                // Fallback: ลองโหลดจาก localStorage
+                setTimeout(() => {
+                    loadFromLocalStorage();
+                }, 2000);
+            }
+        }
+
+        function updateLoadingText(text) {
+            const loadingText = document.getElementById('loadingText');
+            if (loadingText) loadingText.textContent = text;
+        }
+
+        async function checkBookingStatus() {
+            try {
+                updateLoadingText('กำลังตรวจสอบการจอง...');
+                
+                const result = await apiCall('getMyBookingByUID', {
+                    lineUserId: lineProfile.userId
+                });
+                
+                if (result.success && result.data && result.data.empNo) {
+                    // พบการจอง - แสดงตั๋ว
+                    ticketData = {
+                        empNo: result.data.empNo,
+                        name: result.data.name || '',
+                        factory: result.data.factory || '',
+                        seatId: result.data.seatId || '',
+                        bookingTime: result.data.bookingTime || '',
+                        lineUserId: lineProfile.userId
+                    };
+                    
+                    console.log('Found booking data:', ticketData);
+                    
+                    // บันทึกไว้ใน localStorage
+                    localStorage.setItem('cinemaTicketData', JSON.stringify(ticketData));
+                    
+                    // แสดงตั๋ว
+                    await displayTicket();
+                    
+                } else {
+                    // ไม่พบการจอง - redirect ไปหน้าจอง
+                    updateLoadingText('ไม่พบการจอง กำลังนำไปหน้าจอง...');
+                    
+                    setTimeout(() => {
+                        window.location.href = BOOKING_LIFF;
+                    }, 1500);
+                }
+                
+            } catch (error) {
+                console.error('Error checking booking status:', error);
+                updateLoadingText('เกิดข้อผิดพลาด กำลังลองอีกครั้ง...');
+                
+                // Fallback: ลองโหลดจาก localStorage
+                setTimeout(() => {
+                    loadFromLocalStorage();
+                }, 2000);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem('cinemaTicketData');
+                if (stored) {
+                    const parsedData = JSON.parse(stored);
+                    if (parsedData.empNo && parsedData.seatId) {
+                        ticketData = { ...ticketData, ...parsedData };
+                        console.log('Loaded ticket data from localStorage:', ticketData);
+                        displayTicket();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading from localStorage:', error);
+            }
+            
+            // หากไม่มีข้อมูลใน localStorage ให้ redirect ไปหน้าจอง
+            updateLoadingText('ไม่พบข้อมูลการจอง กำลังนำไปหน้าจอง...');
+            setTimeout(() => {
+                window.location.href = BOOKING_LIFF;
+            }, 2000);
+        }
+
+        async function displayTicket() {
+            try {
+                updateLoadingText('กำลังเตรียมตั๋ว...');
                 
                 // Update ticket display
                 updateTicketDisplay();
@@ -630,122 +654,13 @@
                 }, 3000);
                 
             } catch (error) {
-                console.error('Initialization error:', error);
-                showError('เกิดข้อผิดพลาด', error.message);
-            }
-        }
-
-        function updateLoadingText(text) {
-            const loadingText = document.getElementById('loadingText');
-            if (loadingText) loadingText.textContent = text;
-        }
-
-        function loadFromURLParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            const empNo = urlParams.get('empNo');
-            const name = urlParams.get('name');
-            const factory = urlParams.get('factory');
-            const seatId = urlParams.get('seatId');
-            const bookingTime = urlParams.get('bookingTime');
-            
-            if (empNo && seatId) {
-                ticketData = {
-                    empNo: empNo,
-                    name: name ? decodeURIComponent(name) : '',
-                    factory: factory ? decodeURIComponent(factory) : '',
-                    seatId: seatId,
-                    bookingTime: bookingTime ? decodeURIComponent(bookingTime) : new Date().toLocaleString('th-TH')
-                };
-                
-                // Save to localStorage for future reference
-                saveToLocalStorage();
-                
-                console.log('Loaded ticket data from URL params:', ticketData);
-                return true;
-            }
-            
-            return false;
-        }
-
-        function loadFromLocalStorage() {
-            try {
-                const stored = localStorage.getItem('cinemaTicketData');
-                if (stored) {
-                    const parsedData = JSON.parse(stored);
-                    if (parsedData.empNo && parsedData.seatId) {
-                        ticketData = { ...ticketData, ...parsedData };
-                        console.log('Loaded ticket data from localStorage:', ticketData);
-                        return true;
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading from localStorage:', error);
-            }
-            
-            return false;
-        }
-
-        async function loadFromAPI() {
-            try {
-                // Try to get data from API if we have any identifier
-                const lineUserId = getLineUserIdFromSession();
-                if (lineUserId) {
-                    updateLoadingText('กำลังดึงข้อมูลจากเซิร์ฟเวอร์...');
-                    
-                    const result = await apiCall('getMyBookingByUID', {
-                        lineUserId: lineUserId
-                    });
-                    
-                    if (result.success && result.data) {
-                        ticketData = {
-                            empNo: result.data.empNo || '',
-                            name: result.data.name || '',
-                            factory: result.data.factory || '',
-                            seatId: result.data.seatId || '',
-                            bookingTime: result.data.bookingTime || ''
-                        };
-                        
-                        // Save to localStorage
-                        saveToLocalStorage();
-                        
-                        console.log('Loaded ticket data from API:', ticketData);
-                        return true;
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading from API:', error);
-            }
-            
-            return false;
-        }
-
-        function getLineUserIdFromSession() {
-            // Try to get LINE User ID from various sources
-            try {
-                const userData = sessionStorage.getItem('userData');
-                if (userData) {
-                    const parsed = JSON.parse(userData);
-                    return parsed.lineUserId;
-                }
-            } catch (e) {}
-            
-            return null;
-        }
-
-        function saveToLocalStorage() {
-            try {
-                localStorage.setItem('cinemaTicketData', JSON.stringify(ticketData));
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
+                console.error('Error displaying ticket:', error);
+                updateLoadingText('เกิดข้อผิดพลาดในการแสดงตั๋ว');
             }
         }
 
         function shouldAutoRotate() {
-            // Auto-rotate on mobile portrait or if explicitly requested
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('autoRotate') === '1' || 
-                   (window.innerHeight > window.innerWidth && window.innerWidth < 768);
+            return window.innerHeight > window.innerWidth && window.innerWidth < 768;
         }
 
         function updateTicketDisplay() {
@@ -759,13 +674,11 @@
             let seatNumber = '';
             
             if (seatId) {
-                // Extract row letter (first character(s) that are letters)
                 const match = seatId.match(/^([A-Z]+)(\d+)$/);
                 if (match) {
-                    rowLetter = match[1]; // e.g., "J" or "V1"
-                    seatNumber = match[2]; // e.g., "5"
+                    rowLetter = match[1];
+                    seatNumber = match[2];
                 } else {
-                    // Fallback: first char as row, rest as seat
                     rowLetter = seatId.charAt(0);
                     seatNumber = seatId.substring(1);
                 }
@@ -793,10 +706,8 @@
                     return;
                 }
                 
-                // Clear container first
                 qrContainer.innerHTML = '';
                 
-                // Generate QR code with employee number
                 const qr = new QRious({
                     value: ticketData.empNo || 'TICKET',
                     size: 52,
@@ -835,16 +746,6 @@
             document.getElementById('loadingScreen').classList.add('hidden');
         }
 
-        function showError(title, message) {
-            hideLoading();
-            document.getElementById('errorText').textContent = message;
-            document.getElementById('errorState').classList.add('show');
-        }
-
-        function goToBooking() {
-            window.location.href = 'index.html';
-        }
-
         // ==================== DOWNLOAD FUNCTION ====================
         async function downloadTicket() {
             const downloadBtn = document.getElementById('downloadBtn');
@@ -869,7 +770,6 @@
                 link.click();
                 document.body.removeChild(link);
 
-                // Show success message
                 const status = document.getElementById('orientationStatus');
                 status.textContent = '✅ บันทึกตั๋วสำเร็จ!';
                 status.classList.add('show');
@@ -894,7 +794,7 @@
         // ==================== EXTERNAL FUNCTIONS ====================
         window.updateTicket = function(data) {
             ticketData = { ...ticketData, ...data };
-            saveToLocalStorage();
+            localStorage.setItem('cinemaTicketData', JSON.stringify(ticketData));
             updateTicketDisplay();
             generateQRCode();
         };
@@ -908,9 +808,7 @@
         // Handle device orientation
         window.addEventListener('orientationchange', function() {
             setTimeout(() => {
-                // Auto-adjust if needed
                 if (window.innerHeight > window.innerWidth && !isRotated) {
-                    // Portrait mode, might want to suggest rotation
                     document.getElementById('rotateHint').classList.remove('hidden');
                     setTimeout(() => {
                         document.getElementById('rotateHint').classList.add('hidden');
@@ -919,7 +817,7 @@
             }, 300);
         });
 
-        // Keyboard shortcut: R to rotate
+        // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             if (e.key === 'r' || e.key === 'R') {
                 toggleRotation();
@@ -929,33 +827,12 @@
             }
         });
 
-        // Debug function - เพิ่มข้อมูลทดสอบ
+        // Debug function
         window.debugTicket = function() {
             console.log('Current ticket data:', ticketData);
+            console.log('LINE Profile:', lineProfile);
             console.log('QRious available:', typeof QRious !== 'undefined');
             console.log('html2canvas available:', typeof html2canvas !== 'undefined');
-        };
-
-        // Test function - ใส่ข้อมูลทดสอบ
-        window.loadTestData = function() {
-            const testData = {
-                empNo: 'LC769',
-                name: 'KANOKPUN SUKPAN',
-                factory: 'LOPBURI',
-                seatId: 'J5',
-                bookingTime: new Date().toLocaleString('th-TH')
-            };
-            
-            updateTicket(testData);
-            hideLoading();
-            document.getElementById('errorState').classList.remove('show');
-            
-            console.log('Test data loaded:', testData);
-        };
-
-        // Emergency function - กลับไปหน้าจองทันที
-        window.emergencyReturn = function() {
-            window.location.href = 'index.html';
         };
     </script>
 </body>
