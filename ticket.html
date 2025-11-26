@@ -258,6 +258,74 @@
             100% { opacity: 0; display: none; }
         }
 
+        /* ==================== NAVIGATION BUTTONS ==================== */
+        .nav-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 200;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #DAA520, #B8860B);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, #B8860B, #DAA520);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(218, 165, 32, 0.4);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        .nav-btn.primary:hover {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
+        }
+
+        /* Mobile responsive buttons */
+        @media (max-width: 480px) {
+            .nav-buttons {
+                bottom: 15px;
+                right: 15px;
+                gap: 8px;
+            }
+
+            .nav-btn {
+                padding: 10px 16px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Rotated view adjustments */
+        .ticket-wrapper.rotated ~ .nav-buttons {
+            bottom: 15px;
+            right: 15px;
+        }
+
         /* ==================== LANDSCAPE MODE ==================== */
         @media (orientation: landscape) {
             .ticket-wrapper {
@@ -281,6 +349,11 @@
 
             .scroll-hint {
                 display: none;
+            }
+
+            .nav-buttons {
+                bottom: 25px;
+                right: 25px;
             }
         }
     </style>
@@ -325,6 +398,16 @@
         </div>
     </div>
 
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="goToCinema()">
+            🎬 ดูรอบฉาย
+        </button>
+        <button class="nav-btn primary" onclick="goToBooking()">
+            📝 จองใหม่
+        </button>
+    </div>
+
     <!-- LIFF SDK -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <!-- QRious Library -->
@@ -335,6 +418,7 @@
         const API_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec';
         const LIFF_ID = '2008529302-VgK0MJqm';
         const BOOKING_LIFF = 'https://liff.line.me/2008529302-50MNLyDV';
+        const CINEMA_URL = 'https://happyworkplace.github.io/HRA_F_2025/cinema';
 
         // ==================== STATE ====================
         let lineProfile = null;
@@ -346,6 +430,17 @@
             bookingTime: '',
             lineUserId: ''
         };
+
+        // ==================== NAVIGATION FUNCTIONS ====================
+        function goToCinema() {
+            console.log('🎬 Navigating to Cinema page...');
+            window.open(CINEMA_URL, '_blank');
+        }
+
+        function goToBooking() {
+            console.log('📝 Navigating to Booking page...');
+            window.location.href = BOOKING_LIFF;
+        }
 
         // ==================== JSONP HELPER ====================
         function makeJSONPRequest(url, params) {
