@@ -66,90 +66,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ==================== ROTATION BUTTON ==================== */
-        .rotate-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(145deg, #DAA520, #B8860B);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(218, 165, 32, 0.4);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .rotate-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(218, 165, 32, 0.5);
-        }
-
-        .rotate-btn svg {
-            width: 28px;
-            height: 28px;
-            fill: white;
-            transition: transform 0.3s ease;
-        }
-
-        .rotate-btn:hover svg {
-            transform: rotate(45deg);
-        }
-
-        /* ==================== DOWNLOAD BUTTON ==================== */
-        .download-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(145deg, #27ae60, #2ecc71);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(39, 174, 96, 0.4);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .download-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(39, 174, 96, 0.5);
-        }
-
-        /* ==================== ROTATION HINT ==================== */
-        .rotate-hint {
-            position: fixed;
-            bottom: 85px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: #DAA520;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-            z-index: 99;
-        }
-
-        .rotate-hint.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
         /* ==================== TICKET CONTAINER ==================== */
         .ticket-wrapper {
             display: flex;
@@ -300,28 +216,6 @@
             z-index: 100;
         }
 
-        /* ==================== ORIENTATION STATUS ==================== */
-        .orientation-status {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: #DAA520;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .orientation-status.show {
-            opacity: 1;
-        }
-
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
             .ticket-wrapper.rotated .ticket-container {
@@ -331,35 +225,6 @@
         }
 
         @media (max-width: 480px) {
-            .rotate-btn, .download-btn {
-                width: 48px;
-                height: 48px;
-                bottom: 15px;
-            }
-
-            .rotate-btn {
-                right: 15px;
-            }
-
-            .download-btn {
-                left: 15px;
-            }
-
-            .rotate-btn svg {
-                width: 20px;
-                height: 20px;
-            }
-
-            .download-btn {
-                font-size: 1.2rem;
-            }
-
-            .rotate-hint {
-                bottom: 70px;
-                right: 5px;
-                font-size: 0.7rem;
-            }
-
             .qr-container {
                 width: 50px;
                 height: 50px;
@@ -379,13 +244,6 @@
                 width: 98vh;
             }
         }
-
-        /* Landscape mode adjustments */
-        @media (orientation: landscape) {
-            .rotate-hint {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -398,16 +256,6 @@
     <!-- Success Message -->
     <div class="success-message" id="successMessage">
         🎫 ตั๋วของคุณพร้อมแล้ว!
-    </div>
-
-    <!-- Orientation Status -->
-    <div class="orientation-status" id="orientationStatus">
-        🔄 หมุนเป็นแนวตั้ง
-    </div>
-
-    <!-- Rotation Hint -->
-    <div class="rotate-hint" id="rotateHint">
-        👆 กดเพื่อหมุนตั๋ว
     </div>
 
     <!-- Ticket Wrapper (for rotation) -->
@@ -433,24 +281,10 @@
         </div>
     </div>
 
-    <!-- Rotate Button -->
-    <button class="rotate-btn" id="rotateBtn" onclick="toggleRotation()" title="หมุนตั๋ว">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.49-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.87-1.59-1.01-2.47zM7.1 18.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03L7.1 18.32zM13 4.07V1L8.45 5.55 13 10V6.09c2.84.48 5 2.94 5 5.91s-2.16 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93s-3.05-7.44-7-7.93z"/>
-        </svg>
-    </button>
-
-    <!-- Download Button -->
-    <button class="download-btn" id="downloadBtn" onclick="downloadTicket()" title="บันทึกตั๋ว">
-        📱
-    </button>
-
     <!-- LIFF SDK -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <!-- QRious Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-    <!-- html2canvas for download -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <script>
         // ==================== CONFIGURATION ====================
@@ -459,7 +293,6 @@
         const BOOKING_LIFF = 'https://liff.line.me/2008529302-50MNLyDV';
 
         // ==================== STATE ====================
-        let isRotated = false;
         let lineProfile = null;
         let ticketData = {
             empNo: '',
@@ -507,37 +340,23 @@
             }
         }
 
-        // ==================== ROTATION FUNCTIONS ====================
-        function toggleRotation() {
-            isRotated = !isRotated;
-            const wrapper = document.getElementById('ticketWrapper');
-            const status = document.getElementById('orientationStatus');
-            
-            if (isRotated) {
-                wrapper.classList.add('rotated');
-                status.textContent = '📱 แนวตั้ง - พอดีกับมือถือ';
-            } else {
-                wrapper.classList.remove('rotated');
-                status.textContent = '🔄 แนวนอน - ปกติ';
-            }
-            
-            status.classList.add('show');
-            setTimeout(() => {
-                status.classList.remove('show');
-            }, 1500);
-
-            document.getElementById('rotateHint').classList.add('hidden');
-
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
-        }
-
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🎬 Cinema Ticket: DOM loaded, initializing LIFF...');
+            
+            // หมุนตั๋วล่วงหน้าถ้าเป็นมือถือแนวตั้ง (ก่อนแสดงผล)
+            if (isPortraitMobile()) {
+                document.getElementById('ticketWrapper').classList.add('rotated');
+                console.log('Pre-rotated for mobile portrait view');
+            }
+            
             initializeLIFF();
         });
+
+        // ตรวจสอบว่าเป็นมือถือแนวตั้งหรือไม่
+        function isPortraitMobile() {
+            return window.innerHeight > window.innerWidth && window.innerWidth < 768;
+        }
 
         async function initializeLIFF() {
             try {
@@ -653,25 +472,13 @@
                 // Generate QR Code
                 await generateQRCode();
                 
-                // Auto-rotate for mobile BEFORE showing ticket
-                if (shouldAutoRotate()) {
-                    isRotated = true;
-                    document.getElementById('ticketWrapper').classList.add('rotated');
-                    console.log('Auto-rotated for mobile view');
-                }
-                
-                // Hide loading and show ticket
+                // Hide loading
                 hideLoading();
                 
                 // Show ticket with animation
                 setTimeout(() => {
                     document.getElementById('ticketWrapper').classList.add('ready');
                 }, 100);
-                
-                // Hide hint after 5 seconds
-                setTimeout(() => {
-                    document.getElementById('rotateHint').classList.add('hidden');
-                }, 5000);
                 
                 // Hide success message after 3 seconds
                 setTimeout(() => {
@@ -682,10 +489,6 @@
                 console.error('Error displaying ticket:', error);
                 updateLoadingText('เกิดข้อผิดพลาดในการแสดงตั๋ว');
             }
-        }
-
-        function shouldAutoRotate() {
-            return window.innerHeight > window.innerWidth && window.innerWidth < 768;
         }
 
         function updateTicketDisplay() {
@@ -771,51 +574,6 @@
             document.getElementById('loadingScreen').classList.add('hidden');
         }
 
-        // ==================== DOWNLOAD FUNCTION ====================
-        async function downloadTicket() {
-            const downloadBtn = document.getElementById('downloadBtn');
-            downloadBtn.style.opacity = '0.5';
-            downloadBtn.disabled = true;
-            
-            try {
-                const ticketElement = document.querySelector('.ticket-container');
-                
-                const canvas = await html2canvas(ticketElement, {
-                    scale: 3,
-                    backgroundColor: null,
-                    useCORS: true,
-                    allowTaint: true
-                });
-
-                const link = document.createElement('a');
-                link.download = `CinemaTicket_${ticketData.empNo}_${ticketData.seatId}.png`;
-                link.href = canvas.toDataURL('image/png', 1.0);
-                
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                const status = document.getElementById('orientationStatus');
-                status.textContent = '✅ บันทึกตั๋วสำเร็จ!';
-                status.classList.add('show');
-                setTimeout(() => {
-                    status.classList.remove('show');
-                }, 2000);
-
-            } catch (error) {
-                console.error('Download error:', error);
-                const status = document.getElementById('orientationStatus');
-                status.textContent = '❌ ไม่สามารถบันทึกได้';
-                status.classList.add('show');
-                setTimeout(() => {
-                    status.classList.remove('show');
-                }, 2000);
-            } finally {
-                downloadBtn.style.opacity = '1';
-                downloadBtn.disabled = false;
-            }
-        }
-
         // ==================== EXTERNAL FUNCTIONS ====================
         window.updateTicket = function(data) {
             ticketData = { ...ticketData, ...data };
@@ -824,31 +582,25 @@
             generateQRCode();
         };
 
-        window.setRotation = function(rotate) {
-            if (rotate !== isRotated) {
-                toggleRotation();
-            }
-        };
-
-        // Handle device orientation
+        // Handle orientation change - recheck rotation
         window.addEventListener('orientationchange', function() {
             setTimeout(() => {
-                if (window.innerHeight > window.innerWidth && !isRotated) {
-                    document.getElementById('rotateHint').classList.remove('hidden');
-                    setTimeout(() => {
-                        document.getElementById('rotateHint').classList.add('hidden');
-                    }, 3000);
+                const wrapper = document.getElementById('ticketWrapper');
+                if (isPortraitMobile()) {
+                    wrapper.classList.add('rotated');
+                } else {
+                    wrapper.classList.remove('rotated');
                 }
             }, 300);
         });
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'r' || e.key === 'R') {
-                toggleRotation();
-            }
-            if (e.key === 'd' || e.key === 'D') {
-                downloadTicket();
+        // Handle resize - recheck rotation
+        window.addEventListener('resize', function() {
+            const wrapper = document.getElementById('ticketWrapper');
+            if (isPortraitMobile()) {
+                wrapper.classList.add('rotated');
+            } else {
+                wrapper.classList.remove('rotated');
             }
         });
 
@@ -857,7 +609,7 @@
             console.log('Current ticket data:', ticketData);
             console.log('LINE Profile:', lineProfile);
             console.log('QRious available:', typeof QRious !== 'undefined');
-            console.log('html2canvas available:', typeof html2canvas !== 'undefined');
+            console.log('Is Portrait Mobile:', isPortraitMobile());
         };
     </script>
 </body>
