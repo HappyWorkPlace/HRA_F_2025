@@ -82,8 +82,8 @@
         /* ==================== ROTATED VIEW (Mobile Portrait) ==================== */
         .ticket-wrapper.rotated {
             /* ทำให้เป็น scrollable container */
-            overflow-x: auto;
-            overflow-y: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             justify-content: flex-start;
             align-items: center;
             padding: 10px;
@@ -91,16 +91,16 @@
 
         .ticket-wrapper.rotated .ticket-container {
             /* หมุน 90 องศา */
-            transform: rotate(90deg);
+            transform: none;
             transform-origin: center center;
             
             /* ใช้ความสูงหน้าจอเป็นความกว้างของตั๋ว */
-            width: calc(100dvh - 20px);
-            min-width: calc(100dvh - 20px);
+            width: 100%; ;
+            min-width: unset;
             height: auto;
             
             /* margin เพื่อให้ scroll ได้ */
-            margin: 0 calc((100dvh - 100vw) / 2 + 50px);
+            margin: 50px auto;
         }
 
         /* ==================== TICKET CONTAINER ==================== */
@@ -230,7 +230,7 @@
         }
 
         /* ==================== SCROLL HINT ==================== */
-        .scroll-hint {
+        /* .scroll-hint {
             position: fixed;
             bottom: 20px;
             left: 50%;
@@ -256,7 +256,7 @@
             15% { opacity: 1; }
             85% { opacity: 1; }
             100% { opacity: 0; display: none; }
-        }
+        } */
 
         /* ==================== LANDSCAPE MODE ==================== */
         @media (orientation: landscape) {
