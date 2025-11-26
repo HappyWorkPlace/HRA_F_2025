@@ -401,10 +401,7 @@
     <!-- Navigation Buttons -->
     <div class="nav-buttons">
         <button class="nav-btn" onclick="goToCinema()">
-            🎬 ดูรอบฉาย
-        </button>
-        <button class="nav-btn primary" onclick="goToBooking()">
-            📝 จองใหม่
+            🎬 ผังที่นั่ง
         </button>
     </div>
 
@@ -437,10 +434,6 @@
             window.open(CINEMA_URL, '_blank');
         }
 
-        function goToBooking() {
-            console.log('📝 Navigating to Booking page...');
-            window.location.href = BOOKING_LIFF;
-        }
 
         // ==================== JSONP HELPER ====================
         function makeJSONPRequest(url, params) {
