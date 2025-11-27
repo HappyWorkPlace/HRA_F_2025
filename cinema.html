@@ -42,23 +42,7 @@
             opacity: 0.9;
         }
 
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
 
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255,255,255,0.1);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
 
         /* ==================== LOADING ==================== */
         .loading {
@@ -443,14 +427,7 @@
                 font-size: 0.7rem;
             }
 
-            .stats-bar {
-                gap: 1rem;
-            }
 
-            .stat-item {
-                font-size: 0.7rem;
-                padding: 0.3rem 0.8rem;
-            }
 
             .popup-content {
                 padding: 1.5rem;
@@ -477,17 +454,7 @@
     <header class="header">
         <h1>🎬 Cinema Club - Booking Viewer</h1>
         <p>HRA Function 2025 - Bussababan HALL</p>
-        <div class="stats-bar">
-            <div class="stat-item">
-                <span>📍 ทั้งหมด: <span id="totalSeats">170</span> ที่นั่ง</span>
-            </div>
-            <div class="stat-item">
-                <span>✅ จองแล้ว: <span id="bookedCount">0</span> ที่นั่ง</span>
-            </div>
-            <div class="stat-item">
-                <span>🔓 เหลือ: <span id="availableCount">170</span> ที่นั่ง</span>
-            </div>
-        </div>
+
     </header>
 
     <!-- Loading Section -->
@@ -510,14 +477,14 @@
             </div>
             <div class="legend-item">
                 <div class="legend-seat booked"></div>
-                <span>จองแล้ว (คลิกดูข้อมูล)</span>
+                <span>จองแล้ว(คลิกดูข้อมูล)</span>
             </div>
         </div>
 
         <!-- Screen -->
         <div class="screen-container">
             <div class="screen"></div>
-            <div class="screen-label">จอภาพยนตร์</div>
+            <div class="screen-label">CINEMA SCREEN</div>
         </div>
 
         <!-- Seating Map -->
@@ -540,21 +507,15 @@
             
             <div class="popup-body">
                 <div class="info-row">
-                    <span class="label">ชื่อ:</span>
+                    <span class="label">Name:</span>
                     <span class="value" id="popupName">-</span>
                 </div>
+
                 <div class="info-row">
-                    <span class="label">รหัสพนักงาน:</span>
-                    <span class="value" id="popupEmpNo">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">โรงงาน:</span>
+                    <span class="label">Factory:</span>
                     <span class="value" id="popupFactory">-</span>
                 </div>
-                <div class="info-row">
-                    <span class="label">เวลาจอง:</span>
-                    <span class="value" id="popupTime">-</span>
-                </div>
+
             </div>
         </div>
     </div>
@@ -650,7 +611,6 @@
                     allBookings = result.data || [];
                     processBookingData();
                     generateSeatingMap();
-                    updateStatistics();
                     showCinemaSection();
                 } else {
                     showAlert('error', result.message || 'ไม่สามารถโหลดข้อมูลได้');
@@ -658,7 +618,6 @@
                     allBookings = [];
                     processBookingData();
                     generateSeatingMap();
-                    updateStatistics();
                     showCinemaSection();
                 }
             } catch (error) {
@@ -668,7 +627,6 @@
                 allBookings = [];
                 processBookingData();
                 generateSeatingMap();
-                updateStatistics();
                 showCinemaSection();
             }
         }
@@ -683,14 +641,7 @@
             });
         }
 
-        function updateStatistics() {
-            const totalSeats = 170;
-            const bookedCount = allBookings.length;
-            const availableCount = totalSeats - bookedCount;
 
-            document.getElementById('bookedCount').textContent = bookedCount;
-            document.getElementById('availableCount').textContent = availableCount;
-        }
 
         function updateLoadingText(text) {
             const loadingText = document.getElementById('loadingText');
@@ -778,9 +729,7 @@
             // Fill popup data
             document.getElementById('popupSeat').textContent = seatId;
             document.getElementById('popupName').textContent = booking.name || '-';
-            document.getElementById('popupEmpNo').textContent = booking.empNo || '-';
             document.getElementById('popupFactory').textContent = booking.factory || '-';
-            document.getElementById('popupTime').textContent = booking.bookingTime || '-';
 
             // Show popup
             const popup = document.getElementById('bookingPopup');
