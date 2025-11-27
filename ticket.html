@@ -106,7 +106,7 @@
     height: 100vw;  /* ความสูงตั๋ว = ความกว้างหน้าจอ */
     
     /* ปรับแต่งเพิ่มเติม */
-    margin: 0;
+    margin: 10px;
     max-width: none; /* ปลดล็อค Max-width เดิม */
     min-height: unset;
     
@@ -141,25 +141,25 @@
         }
 
         .employee-code {
-            top: 8%;
+            top: 20%;
             left: 22.5%;
-            font-size: clamp(0.9rem, 3vw, 1.4rem);
+            font-size: clamp(0.2rem, 3vw, 1.4rem);
             color: white;
             font-weight: bold;
         }
 
         .employee-name {
-            top: 17%;
+            top: 24%;
             left: 22.5%;
-            font-size: clamp(0.6rem, 2.5vw, 1.1rem);
+            font-size: clamp(0.2rem, 2.5vw, 1.1rem);
             color: grey;
             font-weight: bold;
             text-transform: uppercase;
         }
 
         .row-letter {
-            top: 15%;
-            right: 3%;
+            top: 58%;
+            right: 3.2%;
             font-size: clamp(1rem, 3vw, 1.5rem);
             color: #8B4513;
             font-weight: bold;
@@ -169,8 +169,8 @@
         }
 
         .seat-number {
-            top: 60%;
-            right: 3.0%;
+            top: 25%;
+            right: 3.2%;
             font-size: clamp(1rem, 3vw, 1.5rem);
             color: #8B4513;
             font-weight: bold;
@@ -183,7 +183,7 @@
         .qr-container {
             position: absolute;
             top: 59%;
-            left: 6.3%;
+            left: 6.7%;
             transform: translateY(-50%);
             width: 80px;
             height: 80px;
@@ -195,8 +195,8 @@
 
         .qr-container canvas,
         .qr-container img {
-            width: 150% !important;
-            height: 150% !important;
+            width: 180% !important;
+            height: 180% !important;
             border-radius: 2px;
         }
 
@@ -325,6 +325,7 @@
                 bottom: 15px;
                 right: 15px;
                 gap: 8px;
+                transform: translate(-5%, -67%) rotate(90deg);
             }
 
             .nav-btn {
@@ -335,8 +336,8 @@
 
         /* Rotated view adjustments */
         .ticket-wrapper.rotated ~ .nav-buttons {
-            bottom: 15px;
-            right: 15px;
+            bottom: 40%;
+            right: 80%;
         }
 
         /* ==================== LANDSCAPE MODE ==================== */
@@ -349,7 +350,7 @@
 
             .ticket-wrapper .ticket-container {
                 transform: none;
-                width: 100%; 
+                width: 98%; 
                 max-width: 100%;
                 height: calc(100dvh - 40px);
                 margin: 0 auto; 
@@ -368,6 +369,7 @@
             .nav-buttons {
                 bottom: 25px;
                 right: 25px;
+                transform: translate(-5%, -67%) rotate(90deg);
             }
         }
     </style>
