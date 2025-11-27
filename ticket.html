@@ -72,6 +72,8 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.5s ease;
+            padding: 10px;
+            overflow: auto;
         }
 
         .ticket-wrapper.ready {
@@ -79,55 +81,18 @@
             visibility: visible;
         }
 
-        /* ==================== ROTATED VIEW (Mobile Portrait) ==================== */
-        .ticket-wrapper.rotated {
-            /* ทำให้เป็น scrollable container */
-            overflow-x: auto;
-            overflow-y: hidden;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 10px;
-        }
-
-.ticket-wrapper .ticket-container {
-    /* 1. ดึงออกจาก Flow ปกติ */
-    position: absolute; 
-    
-    /* 2. จัดกึ่งกลางหน้าจอเป๊ะๆ */
-    top: 50%;
-    left: 50%;
-    
-    /* 3. หมุน และ ดึงกลับให้ตรงกลาง (สูตรมาตรฐาน) */
-    transform: translate(-50%, -50%) rotate(90deg);
-    
-    /* 4. สลับค่า Dimension ให้พอดีจอ */
-    /* ปกติเราตั้ง width: 100% แต่นี่ต้องตั้งให้ยาวเท่าความสูงจอ */
-    width: 100dvh;  /* ความยาวตั๋ว = ความสูงหน้าจอ */
-    height: 100vw;  /* ความสูงตั๋ว = ความกว้างหน้าจอ */
-    
-    /* ปรับแต่งเพิ่มเติม */
-    margin: 10px;
-    max-width: none; /* ปลดล็อค Max-width เดิม */
-    min-height: unset;
-    
-    /* ถ้าเนื้อหาข้างในมันล้น ให้จัดการตรงนี้ */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
         /* ==================== TICKET CONTAINER ==================== */
         .ticket-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 400px;
             height: auto;
-            transition: all 0.3s ease;
+            margin: auto;
         }
 
         .ticket-background {
             width: 100%;
-            height: hidden;
+            height: auto;
             display: block;
             border-radius: 8px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
@@ -140,68 +105,71 @@
             text-align: center;
         }
 
+        /* รหัสพนักงาน - ด้านขวาบน (แนวตั้ง) */
         .employee-code {
-            top: 20%;
-            left: 22.5%;
-            font-size: clamp(0.2rem, 3vw, 1.4rem);
-            color: white;
+            top: 6%;
+            right: 7%;
+            font-size: clamp(0.6rem, 2.5vw, 1rem);
+            color: #333;
             font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
         }
 
+        /* ชื่อพนักงาน - ด้านขวาบน ใต้รหัส (แนวตั้ง) */
         .employee-name {
-            top: 24%;
-            left: 22.5%;
-            font-size: clamp(0.2rem, 2.5vw, 1.1rem);
-            color: grey;
+            top: 6%;
+            right: 2%;
+            font-size: clamp(0.45rem, 1.8vw, 0.75rem);
+            color: #666;
             font-weight: bold;
             text-transform: uppercase;
-        }
-
-        .row-letter {
-            top: 58%;
-            right: 3.2%;
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            color: #8B4513;
-            font-weight: bold;
             writing-mode: vertical-rl;
             text-orientation: mixed;
-            transform: rotate(180deg);
         }
 
-        .seat-number {
-            top: 25%;
-            right: 3.2%;
-            font-size: clamp(1rem, 3vw, 1.5rem);
+        /* ROW - ด้านล่างซ้าย */
+        .row-value {
+            bottom: 2.5%;
+            left: 23%;
+            font-size: clamp(0.8rem, 3vw, 1.3rem);
             color: #8B4513;
             font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            transform: rotate(180deg);
         }
 
-        /* QR Code Container */
+        /* SEAT - ด้านล่างขวา */
+        .seat-value {
+            bottom: 2.5%;
+            right: 18%;
+            font-size: clamp(0.8rem, 3vw, 1.3rem);
+            color: #8B4513;
+            font-weight: bold;
+        }
+
+        /* QR Code Container - มุมซ้ายบน */
         .qr-container {
             position: absolute;
-            top: 59%;
-            left: 6.7%;
-            transform: translateY(-50%);
-            width: 80px;
-            height: 80px;
+            top: 3%;
+            left: 5%;
+            width: 18%;
+            aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
+            background: white;
+            border-radius: 4px;
+            padding: 2%;
         }
 
         .qr-container canvas,
         .qr-container img {
-            width: 180% !important;
-            height: 180% !important;
-            border-radius: 2px;
+            width: 100% !important;
+            height: 100% !important;
         }
 
         .qr-loading {
-            font-size: 0.6rem;
+            font-size: 0.5rem;
             color: #666;
             text-align: center;
             line-height: 1.2;
@@ -216,8 +184,6 @@
             font-weight: bold;
             padding: 4px;
             word-break: break-all;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 2px;
         }
 
         @keyframes pulse {
@@ -242,134 +208,77 @@
             white-space: nowrap;
         }
 
-        /* ==================== SCROLL HINT ==================== */
-        .scroll-hint {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: #DAA520;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: fadeInOut 3s ease-in-out forwards;
-        }
-
-        .scroll-hint.hidden {
-            display: none;
-        }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            15% { opacity: 1; }
-            85% { opacity: 1; }
-            100% { opacity: 0; display: none; }
-        }
-
-        /* ==================== NAVIGATION BUTTONS ==================== */
-        .nav-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            gap: 12px;
-            z-index: 200;
-        }
-
+        /* ==================== NAVIGATION BUTTON ==================== */
         .nav-btn {
+            position: fixed;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             background: linear-gradient(135deg, #DAA520, #B8860B);
             color: white;
             border: none;
-            border-radius: 25px;
-            padding: 12px 20px;
-            font-size: 0.85rem;
+            border-radius: 8px;
+            padding: 15px 10px;
+            font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            white-space: nowrap;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            z-index: 200;
         }
 
         .nav-btn:hover {
             background: linear-gradient(135deg, #B8860B, #DAA520);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(218, 165, 32, 0.4);
+            transform: translateY(-50%) scale(1.05);
         }
 
         .nav-btn:active {
-            transform: translateY(0);
+            transform: translateY(-50%) scale(0.98);
         }
 
-        .nav-btn.primary {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
-        }
-
-        .nav-btn.primary:hover {
-            background: linear-gradient(135deg, #34495e, #2c3e50);
-            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
-        }
-
-        /* Mobile responsive buttons */
-        @media (max-width: 480px) {
-            .nav-buttons {
-                bottom: 15px;
-                right: 15px;
-                gap: 8px;
-                transform: translate(-5%, -67%) rotate(90deg);
+        /* ==================== RESPONSIVE ==================== */
+        @media (min-width: 768px) {
+            .ticket-container {
+                max-width: 450px;
             }
-
+            
             .nav-btn {
-                padding: 10px 16px;
-                font-size: 0.75rem;
+                left: 30px;
+                padding: 20px 12px;
+                font-size: 0.85rem;
             }
         }
 
-        /* Rotated view adjustments */
-        .ticket-wrapper.rotated ~ .nav-buttons {
-            bottom: 40%;
-            right: 80%;
-        }
-
-        /* ==================== LANDSCAPE MODE ==================== */
+        /* Landscape mode - ปรับให้พอดีกับความสูงหน้าจอ */
         @media (orientation: landscape) {
             .ticket-wrapper {
-                overflow: hidden;
-                justify-content: center;
-                padding: 20px;
+                padding: 10px;
             }
-
-            .ticket-wrapper .ticket-container {
-                transform: none;
-                width: 98%; 
-                max-width: 100%;
-                height: calc(100dvh - 40px);
-                margin: 0 auto; 
-                overflow: hidden; 
-            }
-
-            .ticket-wrapper .ticket-container .ticket-background {
-                height: 100%;
+            
+            .ticket-container {
+                max-width: none;
+                max-height: calc(100dvh - 20px);
                 width: auto;
             }
-
-            .scroll-hint {
-                display: none;
+            
+            .ticket-background {
+                max-height: calc(100dvh - 20px);
+                width: auto;
             }
-
-            .nav-buttons {
-                bottom: 25px;
-                right: 25px;
-                transform: translate(-5%, -67%) rotate(90deg);
+            
+            .nav-btn {
+                left: 20px;
+                top: auto;
+                bottom: 20px;
+                transform: none;
+                writing-mode: horizontal-tb;
+                padding: 12px 20px;
+            }
+            
+            .nav-btn:hover {
+                transform: scale(1.05);
             }
         }
     </style>
@@ -382,13 +291,8 @@
     </div>
 
     <!-- Success Message -->
-    <div class="success-message" id="successMessage">
+    <div class="success-message" id="successMessage" style="display: none;">
         🎫 ตั๋วของคุณพร้อมแล้ว!
-    </div>
-
-    <!-- Scroll Hint -->
-    <div class="scroll-hint" id="scrollHint">
-        👆 เลื่อนซ้าย-ขวาเพื่อดูตั๋วทั้งหมด
     </div>
 
     <!-- Ticket Wrapper -->
@@ -396,30 +300,28 @@
         <!-- Ticket Container -->
         <div class="ticket-container" id="ticketContainer">
             <!-- Background Image -->
-            <img src="https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/2.png" 
+            <img src="https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/Ticket_new.png" 
                  alt="Cinema Ticket" 
                  class="ticket-background"
                  id="ticketBackground">
 
-            <!-- Text Overlays -->
-            <div class="text-overlay employee-code" id="empCode">-</div>
-            <div class="text-overlay employee-name" id="empName">-</div>
-            <div class="text-overlay row-letter" id="rowLetter">-</div>
-            <div class="text-overlay seat-number" id="seatNumber">-</div>
-            
-            <!-- QR Code -->
+            <!-- QR Code - มุมซ้ายบน -->
             <div class="qr-container" id="qrContainer">
                 <div class="qr-loading">กำลังโหลด<br>QR Code...</div>
             </div>
+
+            <!-- Text Overlays -->
+            <div class="text-overlay employee-code" id="empCode">-</div>
+            <div class="text-overlay employee-name" id="empName">-</div>
+            <div class="text-overlay row-value" id="rowValue">-</div>
+            <div class="text-overlay seat-value" id="seatValue">-</div>
         </div>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div class="nav-buttons">
-        <button class="nav-btn" onclick="goToCinema()">
-            🎬 ผังที่นั่ง
-        </button>
-    </div>
+    <!-- Navigation Button -->
+    <button class="nav-btn" onclick="goToCinema()">
+        🎬 ผังที่นั่ง
+    </button>
 
     <!-- LIFF SDK -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -444,12 +346,11 @@
             lineUserId: ''
         };
 
-        // ==================== NAVIGATION FUNCTIONS ====================
+        // ==================== NAVIGATION ====================
         function goToCinema() {
             console.log('🎬 Navigating to Cinema page...');
             window.open(CINEMA_URL, '_blank');
         }
-
 
         // ==================== JSONP HELPER ====================
         function makeJSONPRequest(url, params) {
@@ -488,49 +389,10 @@
             }
         }
 
-        // ==================== ORIENTATION CHECK ====================
-        function isPortraitMobile() {
-            return window.innerHeight > window.innerWidth && window.innerWidth < 768;
-        }
-
-        function updateOrientation() {
-            const wrapper = document.getElementById('ticketWrapper');
-            const scrollHint = document.getElementById('scrollHint');
-            
-            if (isPortraitMobile()) {
-                wrapper.classList.add('rotated');
-                scrollHint.classList.remove('hidden');
-                
-                // Center scroll position
-                setTimeout(() => {
-                    const scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
-                    wrapper.scrollLeft = scrollLeft;
-                }, 100);
-            } else {
-                wrapper.classList.remove('rotated');
-                scrollHint.classList.add('hidden');
-            }
-        }
-
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎬 Cinema Ticket: DOM loaded, initializing...');
-            
-            // Set orientation before showing
-            updateOrientation();
-            
-            // Hide scroll hint after 4 seconds
-            setTimeout(() => {
-                document.getElementById('scrollHint').classList.add('hidden');
-            }, 4000);
-            
+            console.log('🎬 Cinema Ticket (Vertical): DOM loaded, initializing...');
             initializeLIFF();
-        });
-
-        // Handle orientation/resize changes
-        window.addEventListener('resize', updateOrientation);
-        window.addEventListener('orientationchange', () => {
-            setTimeout(updateOrientation, 300);
         });
 
         async function initializeLIFF() {
@@ -636,17 +498,11 @@
                 await generateQRCode();
                 
                 hideLoading();
-                
-                // Update orientation again before showing
-                updateOrientation();
+                showSuccessMessage();
                 
                 setTimeout(() => {
                     document.getElementById('ticketWrapper').classList.add('ready');
                 }, 100);
-                
-                setTimeout(() => {
-                    document.getElementById('successMessage').style.display = 'none';
-                }, 3000);
                 
             } catch (error) {
                 console.error('Error displaying ticket:', error);
@@ -655,12 +511,16 @@
         }
 
         function updateTicketDisplay() {
+            // รหัสพนักงาน
             document.getElementById('empCode').textContent = ticketData.empNo || '-';
+            
+            // ชื่อพนักงาน
             document.getElementById('empName').textContent = ticketData.name || '-';
             
+            // แยก Row และ Seat จาก seatId
             const seatId = ticketData.seatId;
-            let rowLetter = '';
-            let seatNumber = '';
+            let rowLetter = '-';
+            let seatNumber = '-';
             
             if (seatId) {
                 const match = seatId.match(/^([A-Z]+)(\d+)$/);
@@ -673,15 +533,15 @@
                 }
             }
 
-            document.getElementById('rowLetter').textContent = rowLetter;
-            document.getElementById('seatNumber').textContent = seatNumber;
+            document.getElementById('rowValue').textContent = rowLetter;
+            document.getElementById('seatValue').textContent = seatNumber;
             
             console.log('Updated ticket display:', { 
                 empNo: ticketData.empNo, 
                 name: ticketData.name, 
                 seatId: seatId, 
-                rowLetter: rowLetter, 
-                seatNumber: seatNumber 
+                row: rowLetter, 
+                seat: seatNumber 
             });
         }
 
@@ -697,28 +557,20 @@
                 
                 qrContainer.innerHTML = '';
                 
+                const canvas = document.createElement('canvas');
+                qrContainer.appendChild(canvas);
+                
                 const qr = new QRious({
+                    element: canvas,
                     value: ticketData.empNo || 'TICKET',
-                    size: 80,
-                    background: 'transparent', 
-                    backgroundAlpha: 0,  
+                    size: 200,
+                    background: 'white',
                     foreground: '#000000',
-                    foregroundAlpha: 1,
                     level: 'M',
-                    padding: 2
+                    padding: 0
                 });
                 
-                const canvas = qr.canvas;
-                
-                if (canvas) {
-                    canvas.style.width = '100%';
-                    canvas.style.height = '100%';
-                    canvas.style.borderRadius = '2px';
-                    qrContainer.appendChild(canvas);
-                    console.log('QR Code generated successfully');
-                } else {
-                    throw new Error('Canvas not generated');
-                }
+                console.log('QR Code generated successfully');
                 
             } catch (error) {
                 console.error('QR generation failed:', error);
@@ -735,7 +587,15 @@
             document.getElementById('loadingScreen').classList.add('hidden');
         }
 
-        // ==================== EXTERNAL FUNCTIONS ====================
+        function showSuccessMessage() {
+            const msg = document.getElementById('successMessage');
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        // ==================== DEBUG FUNCTIONS ====================
         window.updateTicket = function(data) {
             ticketData = { ...ticketData, ...data };
             localStorage.setItem('cinemaTicketData', JSON.stringify(ticketData));
@@ -746,8 +606,20 @@
         window.debugTicket = function() {
             console.log('Current ticket data:', ticketData);
             console.log('LINE Profile:', lineProfile);
-            console.log('Is Portrait Mobile:', isPortraitMobile());
             console.log('Window size:', window.innerWidth, 'x', window.innerHeight);
+        };
+
+        // ทดสอบด้วยข้อมูลจำลอง
+        window.testTicket = function() {
+            ticketData = {
+                empNo: 'LC046',
+                name: 'MR. KUNANON SUKJARUEN',
+                seatId: 'V11'
+            };
+            updateTicketDisplay();
+            generateQRCode();
+            hideLoading();
+            document.getElementById('ticketWrapper').classList.add('ready');
         };
     </script>
 </body>
