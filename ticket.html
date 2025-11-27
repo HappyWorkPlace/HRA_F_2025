@@ -89,19 +89,32 @@
             padding: 10px;
         }
 
-        .ticket-wrapper.rotated .ticket-container {
-            /* หมุน 90 องศา */
-            transform: rotate(90deg);
-            transform-origin: center center;
-            
-            /* ใช้ความสูงหน้าจอเป็นความกว้างของตั๋ว */
-            width: calc(100dvh - 20px);
-            min-width: calc(100dvh - 20px);
-            height: auto;
-            
-            /* margin เพื่อให้ scroll ได้ */
-            margin: 0 calc((100dvh - 100vw) / 2 + 50px);
-        }
+.ticket-wrapper .ticket-container {
+    /* 1. ดึงออกจาก Flow ปกติ */
+    position: absolute; 
+    
+    /* 2. จัดกึ่งกลางหน้าจอเป๊ะๆ */
+    top: 50%;
+    left: 50%;
+    
+    /* 3. หมุน และ ดึงกลับให้ตรงกลาง (สูตรมาตรฐาน) */
+    transform: translate(-50%, -50%) rotate(90deg);
+    
+    /* 4. สลับค่า Dimension ให้พอดีจอ */
+    /* ปกติเราตั้ง width: 100% แต่นี่ต้องตั้งให้ยาวเท่าความสูงจอ */
+    width: 100dvh;  /* ความยาวตั๋ว = ความสูงหน้าจอ */
+    height: 100vw;  /* ความสูงตั๋ว = ความกว้างหน้าจอ */
+    
+    /* ปรับแต่งเพิ่มเติม */
+    margin: 0;
+    max-width: none; /* ปลดล็อค Max-width เดิม */
+    min-height: unset;
+    
+    /* ถ้าเนื้อหาข้างในมันล้น ให้จัดการตรงนี้ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
         /* ==================== TICKET CONTAINER ==================== */
         .ticket-container {
@@ -487,10 +500,10 @@
                 scrollHint.classList.remove('hidden');
                 
                 // Center scroll position
-                // setTimeout(() => {
-                //     const scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
-                //     wrapper.scrollLeft = scrollLeft;
-                // }, 100);
+                setTimeout(() => {
+                    const scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+                    wrapper.scrollLeft = scrollLeft;
+                }, 100);
             } else {
                 wrapper.classList.remove('rotated');
                 scrollHint.classList.add('hidden');
