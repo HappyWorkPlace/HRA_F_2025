@@ -107,15 +107,15 @@
         }
 
         /* รหัสพนักงาน - ด้านขวาบน (แนวตั้ง) */
-            .employee-code {
-                top: 22%;
-                right: 7%;
-                font-size: clamp(0.7rem, 2.5vw, 1rem);
-                color: wheat;
-                font-weight: bold;
-                writing-mode: vertical-rl;
-                text-orientation: mixed;
-            }
+        .employee-code {
+            top: 22%;
+            right: 7%;
+            font-size: clamp(0.7rem, 2.5vw, 1rem);
+            color: wheat;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
 
         /* ชื่อพนักงาน - ด้านขวาบน ใต้รหัส (แนวตั้ง) */
         .employee-name {
@@ -212,12 +212,19 @@
             white-space: nowrap;
         }
 
-        /* ==================== NAVIGATION BUTTON ==================== */
-        .nav-btn {
+        /* ==================== NAVIGATION BUTTONS ==================== */
+        .nav-buttons {
             position: fixed;
-            left: 34px;
-            top: 15%;
+            left: 15px;
+            top: 50%;
             transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 200;
+        }
+
+        .nav-btn {
             background: linear-gradient(135deg, #DAA520, #B8860B);
             color: white;
             border: none;
@@ -227,20 +234,59 @@
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
-            transition: all 0.3s 
-        ease;
+            transition: all 0.3s ease;
             writing-mode: vertical-rl;
             text-orientation: mixed;
-            z-index: 200;
         }
 
         .nav-btn:hover {
             background: linear-gradient(135deg, #B8860B, #DAA520);
-            transform: translateY(-50%) scale(1.05);
+            transform: scale(1.05);
         }
 
         .nav-btn:active {
-            transform: translateY(-50%) scale(0.98);
+            transform: scale(0.98);
+        }
+
+        .nav-btn.save-btn {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .nav-btn.save-btn:hover {
+            background: linear-gradient(135deg, #219a52, #27ae60);
+        }
+
+        .nav-btn.save-btn.saving {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            pointer-events: none;
+        }
+
+        /* ==================== SAVE TOAST ==================== */
+        .save-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #27ae60;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .save-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .save-toast.error {
+            background: #e74c3c;
         }
 
         /* ==================== RESPONSIVE ==================== */
@@ -249,8 +295,11 @@
                 max-width: 450px;
             }
             
-            .nav-btn {
+            .nav-buttons {
                 left: 30px;
+            }
+            
+            .nav-btn {
                 padding: 20px 12px;
                 font-size: 0.85rem;
             }
@@ -273,17 +322,17 @@
                 width: auto;
             }
             
-            .nav-btn {
+            .nav-buttons {
                 left: 20px;
                 top: auto;
                 bottom: 20px;
                 transform: none;
-                writing-mode: horizontal-tb;
-                padding: 12px 20px;
+                flex-direction: row;
             }
             
-            .nav-btn:hover {
-                transform: scale(1.05);
+            .nav-btn {
+                writing-mode: horizontal-tb;
+                padding: 12px 20px;
             }
         }
     </style>
@@ -300,6 +349,11 @@
         🎫 ตั๋วของคุณพร้อมแล้ว!
     </div>
 
+    <!-- Save Toast -->
+    <div class="save-toast" id="saveToast">
+        ✅ บันทึกรูปสำเร็จ!
+    </div>
+
     <!-- Ticket Wrapper -->
     <div class="ticket-wrapper" id="ticketWrapper">
         <!-- Ticket Container -->
@@ -308,7 +362,8 @@
             <img src="https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/Ticket_new.png" 
                  alt="Cinema Ticket" 
                  class="ticket-background"
-                 id="ticketBackground">
+                 id="ticketBackground"
+                 crossorigin="anonymous">
 
             <!-- QR Code - มุมซ้ายบน -->
             <div class="qr-container" id="qrContainer">
@@ -323,15 +378,22 @@
         </div>
     </div>
 
-    <!-- Navigation Button -->
-    <button class="nav-btn" onclick="goToCinema()">
-        🎬 ผังที่นั่ง
-    </button>
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="goToCinema()">
+            🎬 ผังที่นั่ง
+        </button>
+        <button class="nav-btn save-btn" id="saveBtn" onclick="saveTicketImage()">
+            💾 บันทึกรูป
+        </button>
+    </div>
 
     <!-- LIFF SDK -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <!-- QRious Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <!-- html2canvas Library -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <script>
         // ==================== CONFIGURATION ====================
@@ -355,6 +417,154 @@
         function goToCinema() {
             console.log('🎬 Navigating to Cinema page...');
             window.open(CINEMA_URL, '_blank');
+        }
+
+        // ==================== SAVE IMAGE FUNCTION ====================
+        async function saveTicketImage() {
+            const saveBtn = document.getElementById('saveBtn');
+            const ticketContainer = document.getElementById('ticketContainer');
+            
+            // ป้องกันการกดซ้ำ
+            if (saveBtn.classList.contains('saving')) return;
+            
+            try {
+                saveBtn.classList.add('saving');
+                saveBtn.innerHTML = '⏳ กำลังบันทึก...';
+                
+                // รอให้ภาพโหลดเสร็จ
+                const bgImage = document.getElementById('ticketBackground');
+                if (!bgImage.complete) {
+                    await new Promise((resolve) => {
+                        bgImage.onload = resolve;
+                        setTimeout(resolve, 2000); // timeout 2 วินาที
+                    });
+                }
+                
+                // ใช้ html2canvas capture ตั๋ว
+                const canvas = await html2canvas(ticketContainer, {
+                    scale: 2, // ความละเอียด 2x
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#1a1a1a',
+                    logging: false,
+                    imageTimeout: 5000
+                });
+                
+                // สร้างชื่อไฟล์
+                const fileName = `ticket_${ticketData.empNo || 'HRA2025'}_${ticketData.seatId || 'seat'}.png`;
+                
+                // ตรวจสอบว่าเป็นมือถือหรือไม่
+                const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                
+                if (isMobile) {
+                    // สำหรับมือถือ - ใช้ share API หรือเปิดภาพในแท็บใหม่
+                    canvas.toBlob(async (blob) => {
+                        if (navigator.share && navigator.canShare) {
+                            // ใช้ Web Share API ถ้ารองรับ
+                            try {
+                                const file = new File([blob], fileName, { type: 'image/png' });
+                                if (navigator.canShare({ files: [file] })) {
+                                    await navigator.share({
+                                        files: [file],
+                                        title: 'Cinema Ticket - HRA Function 2025',
+                                        text: `ตั๋วหนัง ${ticketData.empNo} - ที่นั่ง ${ticketData.seatId}`
+                                    });
+                                    showSaveToast('แชร์สำเร็จ!');
+                                } else {
+                                    // fallback - เปิดภาพในแท็บใหม่
+                                    openImageInNewTab(canvas);
+                                }
+                            } catch (err) {
+                                if (err.name !== 'AbortError') {
+                                    openImageInNewTab(canvas);
+                                }
+                            }
+                        } else {
+                            // fallback - เปิดภาพในแท็บใหม่ให้กดค้างบันทึก
+                            openImageInNewTab(canvas);
+                        }
+                    }, 'image/png');
+                } else {
+                    // สำหรับ Desktop - ดาวน์โหลดโดยตรง
+                    const link = document.createElement('a');
+                    link.download = fileName;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showSaveToast('บันทึกรูปสำเร็จ!');
+                }
+                
+            } catch (error) {
+                console.error('Error saving image:', error);
+                showSaveToast('เกิดข้อผิดพลาด กรุณาลองใหม่', true);
+            } finally {
+                saveBtn.classList.remove('saving');
+                saveBtn.innerHTML = '💾 บันทึกรูป';
+            }
+        }
+
+        function openImageInNewTab(canvas) {
+            // เปิดภาพในแท็บใหม่ให้ผู้ใช้กดค้างบันทึก
+            const dataUrl = canvas.toDataURL('image/png');
+            const newTab = window.open();
+            if (newTab) {
+                newTab.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>บันทึกตั๋ว</title>
+                        <style>
+                            body {
+                                margin: 0;
+                                padding: 20px;
+                                background: #1a1a1a;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                min-height: 100vh;
+                            }
+                            .instruction {
+                                color: #DAA520;
+                                font-family: Arial, sans-serif;
+                                font-size: 16px;
+                                margin-bottom: 20px;
+                                text-align: center;
+                            }
+                            img {
+                                max-width: 100%;
+                                height: auto;
+                                border-radius: 8px;
+                                box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="instruction">📱 กดค้างที่รูปแล้วเลือก "บันทึกรูปภาพ"</div>
+                        <img src="${dataUrl}" alt="Cinema Ticket">
+                    </body>
+                    </html>
+                `);
+                newTab.document.close();
+                showSaveToast('กดค้างที่รูปเพื่อบันทึก');
+            } else {
+                // ถ้าเปิดแท็บไม่ได้ ลองดาวน์โหลดตรง
+                const link = document.createElement('a');
+                link.download = `ticket_${ticketData.empNo || 'HRA2025'}.png`;
+                link.href = dataUrl;
+                link.click();
+                showSaveToast('บันทึกรูปสำเร็จ!');
+            }
+        }
+
+        function showSaveToast(message, isError = false) {
+            const toast = document.getElementById('saveToast');
+            toast.textContent = isError ? '❌ ' + message : '✅ ' + message;
+            toast.classList.toggle('error', isError);
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         // ==================== JSONP HELPER ====================
