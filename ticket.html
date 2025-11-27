@@ -103,25 +103,26 @@
             position: absolute;
             font-weight: bold;
             text-align: center;
+            white-space: nowrap;
         }
 
         /* รหัสพนักงาน - ด้านขวาบน (แนวตั้ง) */
-        .employee-code {
-            top: 6%;
-            right: 7%;
-            font-size: clamp(0.6rem, 2.5vw, 1rem);
-            color: #333;
-            font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-        }
+            .employee-code {
+                top: 22%;
+                right: 7%;
+                font-size: clamp(0.7rem, 2.5vw, 1rem);
+                color: wheat;
+                font-weight: bold;
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+            }
 
         /* ชื่อพนักงาน - ด้านขวาบน ใต้รหัส (แนวตั้ง) */
         .employee-name {
-            top: 6%;
-            right: 2%;
-            font-size: clamp(0.45rem, 1.8vw, 0.75rem);
-            color: #666;
+            top: 22%;
+            right: 13%;
+            font-size: clamp(0.7rem, 1.8vw, 0.75rem);
+            color: wheat;
             font-weight: bold;
             text-transform: uppercase;
             writing-mode: vertical-rl;
@@ -130,18 +131,18 @@
 
         /* ROW - ด้านล่างซ้าย */
         .row-value {
-            bottom: 2.5%;
-            left: 23%;
-            font-size: clamp(0.8rem, 3vw, 1.3rem);
+            bottom: 3.6%;
+            left: 36%;
+            font-size: clamp(1.0rem, 3vw, 1.3rem);
             color: #8B4513;
             font-weight: bold;
         }
 
         /* SEAT - ด้านล่างขวา */
         .seat-value {
-            bottom: 2.5%;
-            right: 18%;
-            font-size: clamp(0.8rem, 3vw, 1.3rem);
+            bottom: 3.6%;
+            right: 15%;
+            font-size: clamp(1.0rem, 3vw, 1.3rem);
             color: #8B4513;
             font-weight: bold;
         }
@@ -167,6 +168,8 @@
             width: 100% !important;
             height: 100% !important;
             display: block;
+            margin-left: 6%;
+            margin-top: 4%;
         }
 
         .qr-loading {
@@ -212,8 +215,8 @@
         /* ==================== NAVIGATION BUTTON ==================== */
         .nav-btn {
             position: fixed;
-            left: 15px;
-            top: 50%;
+            left: 34px;
+            top: 15%;
             transform: translateY(-50%);
             background: linear-gradient(135deg, #DAA520, #B8860B);
             color: white;
@@ -224,7 +227,8 @@
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
-            transition: all 0.3s ease;
+            transition: all 0.3s 
+        ease;
             writing-mode: vertical-rl;
             text-orientation: mixed;
             z-index: 200;
