@@ -114,7 +114,7 @@
 
         .ticket-background {
             width: 100%;
-            height: auto;
+            height: hidden;
             display: block;
             border-radius: 8px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
@@ -487,10 +487,10 @@
                 scrollHint.classList.remove('hidden');
                 
                 // Center scroll position
-                setTimeout(() => {
-                    const scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
-                    wrapper.scrollLeft = scrollLeft;
-                }, 100);
+                // setTimeout(() => {
+                //     const scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+                //     wrapper.scrollLeft = scrollLeft;
+                // }, 100);
             } else {
                 wrapper.classList.remove('rotated');
                 scrollHint.classList.add('hidden');
