@@ -13,10 +13,23 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #1a1a1a;
+            /* background-color: #1a1a1a; <--- ลบบรรทัดนี้ออก หรือเก็บไว้เป็นสีสำรอง */
             color: #ffffff;
             line-height: 1.6;
             min-height: 100vh;
+        
+            /* --- เพิ่มส่วนนี้เข้าไปครับ --- */
+        
+            /* เทคนิคการซ้อนเลเยอร์: สีดำโปร่งแสง 50% ทับบนรูปภาพ */
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/booked.png');
+        
+            /* จัดการการแสดงผลของรูปพื้นหลัง */
+            background-size: cover;      /* ขยายให้เต็มพื้นที่โดยไม่เสียสัดส่วน */
+            background-position: center; /* จัดให้อยู่ตรงกลางเสมอ */
+            background-repeat: no-repeat;/* ไม่ต้องปูกระเบื้องซ้ำ */
+            background-attachment: fixed; /* (ทางเลือก) ทำให้พื้นหลังนิ่งเวลาเลื่อนหน้าจอ ดูหรูขึ้น */
         }
 
         /* ==================== HEADER ==================== */
@@ -563,10 +576,10 @@
             
             <!-- Employee Info (Hidden initially) -->
             <div id="employeeInfo" class="employee-info">
-                <h4>ข้อมูลพนักงาน</h4>
-                <p><strong>ชื่อ:</strong> <span id="empName">-</span></p>
-                <p><strong>แผนก:</strong> <span id="empDept">-</span></p>
-                <p><strong>รหัส:</strong> <span id="empCode">-</span></p>
+                <h4>Guest Info</h4>
+                <p><strong>Name:</strong> <span id="empName">-</span></p>
+                <p><strong>Factory:</strong> <span id="empDept">-</span></p>
+                <p><strong>EmpNo:</strong> <span id="empCode">-</span></p>
                 <button id="confirmReg" class="btn btn-success" style="margin-top: 1rem;">ไปหน้าจองที่นั่ง</button>
             </div>
 
