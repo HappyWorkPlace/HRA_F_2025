@@ -880,7 +880,7 @@
                     currentEmployee = { empNo: empNo, ...result.data };
                     showEmployeeInfo(result.data);
                 } else {
-                    showAlert('error', result.message || 'ไม่พบข้อมูลพนักงาน');
+                    showAlert('error', result.message || 'ไม่พบข้อมูล หรือ ไม่ได้แจ้งร่วมงานไว้');
                 }
             } catch (error) {
                 console.error('Error checking employee:', error);
