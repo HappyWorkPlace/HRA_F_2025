@@ -376,11 +376,10 @@
         }
 
         .seat.selected {
+            background-color: #ff9800;
             transform: scale(1.1);
-            background-size: cover !important;
-            background-position: center !important;
-            opacity: 0.7;
-            background-image: url("https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/booking.png") !important;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+            background-image: none !important;
         }
 
         .seat.regular {
@@ -484,32 +483,6 @@
             font-weight: bold;
             display: inline-block;
             margin: 0.5rem 0;
-        }
-
-        /* ==================== ALERTS ==================== */
-        .alert {
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 8px;
-            border-left: 4px solid;
-        }
-
-        .alert-success {
-            background-color: rgba(39, 174, 96, 0.1);
-            border-left-color: #27ae60;
-            color: #27ae60;
-        }
-
-        .alert-error {
-            background-color: rgba(231, 76, 60, 0.1);
-            border-left-color: #e74c3c;
-            color: #e74c3c;
-        }
-
-        .alert-warning {
-            background-color: rgba(241, 196, 15, 0.1);
-            border-left-color: #f1c40f;
-            color: #f1c40f;
         }
 
         /* Responsive */
@@ -672,6 +645,8 @@
 
     <!-- LIFF SDK -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Main Script -->
     <script>
@@ -747,6 +722,53 @@
                 return { success: false, message: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้' };
             }
         }
+
+        // ==================== SWEETALERT UTILITIES ====================
+        function showAlert(type, message) {
+            let title = '';
+            let confirmButtonColor = '#3085d6';
+            
+            switch(type) {
+                case 'success':
+                    title = 'สำเร็จ';
+                    confirmButtonColor = '#28a745';
+                    break;
+                case 'error':
+                    title = 'เกิดข้อผิดพลาด';
+                    confirmButtonColor = '#dc3545';
+                    break;
+                case 'warning':
+                    title = 'แจ้งเตือน';
+                    confirmButtonColor = '#ffc107';
+                    break;
+                default:
+                    title = 'แจ้งเตือน';
+            }
+            
+            Swal.fire({
+                title: title,
+                text: message,
+                background: '#2a2a2a',
+                color: '#ffffff',
+                confirmButtonColor: confirmButtonColor,
+                confirmButtonText: 'ตกลง'
+            });
+        }
+
+        function showConfirm(message) {
+            return Swal.fire({
+                title: 'ยืนยันการจอง',
+                text: message,
+                background: '#2a2a2a',
+                color: '#ffffff',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             initializeLIFF();
         });
@@ -871,8 +893,6 @@
             
             document.getElementById('employeeInfo').style.display = 'block';
             document.getElementById('confirmReg').addEventListener('click', proceedToBooking);
-            
-            clearAlerts();
         }
 
         async function proceedToBooking() {
@@ -985,17 +1005,23 @@
             const seatId = this.getAttribute('data-seat');
             
             if (this.classList.contains('selected')) {
-                // Deselect
+                // Deselect current seat
                 this.classList.remove('selected');
                 this.classList.add('available');
                 selectedSeats = selectedSeats.filter(seat => seat !== seatId);
             } else {
-                // Select (limit to 1 seat)
+                // If there's already a selected seat, deselect it first
                 if (selectedSeats.length >= 1) {
-                    showAlert('warning', 'สามารถจองได้เพียง 1 ที่นั่งเท่านั้น');
-                    return;
+                    // Find and deselect the previously selected seat
+                    const previouslySelected = document.querySelector('.seat.selected');
+                    if (previouslySelected) {
+                        previouslySelected.classList.remove('selected');
+                        previouslySelected.classList.add('available');
+                    }
+                    selectedSeats = [];
                 }
                 
+                // Select the new seat
                 this.classList.remove('available');
                 this.classList.add('selected');
                 selectedSeats.push(seatId);
@@ -1033,7 +1059,9 @@
         async function handleBookingConfirmation() {
             if (selectedSeats.length === 0) return;
             
-            if (!confirm(`ยืนยันการจองที่นั่ง ${selectedSeats.join(', ')} หรือไม่?`)) {
+            const result = await showConfirm(`ยืนยันการจองที่นั่ง ${selectedSeats.join(', ')} หรือไม่?`);
+            
+            if (!result.isConfirmed) {
                 return;
             }
 
@@ -1113,29 +1141,6 @@
             document.getElementById('bookedDept').textContent = booking.factory || '-';
             document.getElementById('bookedSeat').textContent = booking.seatId || '-';
             document.getElementById('bookedTime').textContent = booking.bookingTime || '-';
-        }
-
-        // ==================== UTILITIES ====================
-        function showAlert(type, message) {
-            const alertMessages = document.getElementById('alertMessages');
-            if (!alertMessages) return;
-
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = message;
-            
-            alertMessages.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.remove();
-            }, 5000);
-        }
-
-        function clearAlerts() {
-            const alertMessages = document.getElementById('alertMessages');
-            if (alertMessages) {
-                alertMessages.innerHTML = '';
-            }
         }
     </script>
 </body>
