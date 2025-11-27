@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎬 Lucky Draw - HRA Function 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: url('https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/BG_popcorn.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 
+                3px 3px 0 #ff6b6b,
+                5px 5px 0 rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #ffd93d;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Animation Container */
+        .animation-container {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .animation-container.active {
+            display: flex;
+        }
+
+        .animation-container img {
+            max-width: 250%;
+            max-height: 250%;
+            border-radius: 20px;
+        }
+
+        /* Lucky Box */
+        .lucky-box {
+            background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,240,245,0.95));
+            border-radius: 25px;
+            padding: 30px 25px;
+            box-shadow: 
+                0 15px 50px rgba(0,0,0,0.3),
+                inset 0 2px 10px rgba(255,255,255,0.5);
+            border: 4px solid #ff6b6b;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lucky-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255,107,107,0.1),
+                transparent
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .prize-number {
+            font-size: 6rem;
+            font-weight: 900;
+            color: #ff6b6b;
+            text-shadow: 4px 4px 0 #ffd93d;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .prize-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #333;
+            margin-top: 15px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .prize-name.winner {
+            color: #ff6b6b;
+            animation: pulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Spin Button */
+        .spin-btn {
+            margin-top: 30px;
+            padding: 18px 50px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Kanit', sans-serif;
+            color: #fff;
+            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 
+                0 10px 30px rgba(255,107,107,0.4),
+                0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 40px rgba(255,107,107,0.5),
+                0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .spin-btn:active {
+            transform: translateY(0);
+        }
+
+        .spin-btn:disabled {
+            background: linear-gradient(145deg, #aaa, #999);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .spin-btn::before {
+            content: '🎰';
+            margin-right: 10px;
+        }
+
+        /* Hidden state */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            top: -20px;
+            z-index: 100;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .celebration.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <h1 class="title">🎬 LUCKY DRAW 🎬</h1>
+        <p class="subtitle">HRA Function 2025</p>
+
+        <!-- Animation Container -->
+        <div class="animation-container" id="animationContainer">
+            <img src="https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/PopcornLucky.gif" alt="Lucky Animation">
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent">
+            <div class="lucky-box" id="luckyBox">
+                <div class="prize-number" id="prizeNumber">?</div>
+                <div class="prize-name" id="prizeName">กดปุ่มเพื่อสุ่มรางวัล</div>
+            </div>
+
+            <button class="spin-btn" id="spinBtn" onclick="startSpin()">สุ่มรางวัล!</button>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        // รายการรางวัล - แก้ไขได้ตามต้องการ
+        const prizes = [
+            { number: 1, name: "iPhone 15 Pro Max" },
+            { number: 2, name: "iPad Pro 12.9" },
+            { number: 3, name: "Apple Watch Ultra" },
+            { number: 4, name: "AirPods Pro 2" },
+            { number: 5, name: "Samsung Galaxy S24" },
+            { number: 6, name: "Nintendo Switch OLED" },
+            { number: 7, name: "JBL Speaker" },
+            { number: 8, name: "Gift Voucher 5,000฿" },
+            { number: 9, name: "Gift Voucher 3,000฿" },
+            { number: 10, name: "Gift Voucher 1,000฿" }
+        ];
+
+        // Start spinning
+        function startSpin() {
+            const btn = document.getElementById('spinBtn');
+            const luckyBox = document.getElementById('luckyBox');
+            const animationContainer = document.getElementById('animationContainer');
+
+            btn.disabled = true;
+
+            // Hide lucky box, show animation
+            luckyBox.classList.add('hidden');
+            btn.classList.add('hidden');
+            animationContainer.classList.add('active');
+
+            // After 2 seconds, show result
+            setTimeout(() => {
+                selectWinner();
+            }, 2000);
+        }
+
+        // Select winner
+        function selectWinner() {
+            const luckyBox = document.getElementById('luckyBox');
+            const animationContainer = document.getElementById('animationContainer');
+            const numberEl = document.getElementById('prizeNumber');
+            const nameEl = document.getElementById('prizeName');
+            const btn = document.getElementById('spinBtn');
+
+            // Random select
+            const randomIndex = Math.floor(Math.random() * prizes.length);
+            const winner = prizes[randomIndex];
+
+            // Hide animation, show result
+            animationContainer.classList.remove('active');
+            luckyBox.classList.remove('hidden');
+
+            // Display winner
+            numberEl.textContent = winner.number;
+            nameEl.textContent = winner.name;
+            nameEl.classList.add('winner');
+
+            // Celebration!
+            createConfetti();
+
+            // Show button again and enable it after celebration
+            setTimeout(() => {
+                btn.classList.remove('hidden');
+                btn.disabled = false;
+                
+                // Reset for next spin
+                nameEl.classList.remove('winner');
+                numberEl.textContent = "?";
+                nameEl.textContent = "กดปุ่มเพื่อสุ่มรางวัล";
+            }, 3000);
+        }
+
+        // Create confetti
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff85a2', '#a855f7'];
+            const celebration = document.getElementById('celebration');
+            celebration.classList.add('active');
+
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    celebration.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 25);
+            }
+
+            setTimeout(() => {
+                celebration.classList.remove('active');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
