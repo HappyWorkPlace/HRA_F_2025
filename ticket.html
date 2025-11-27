@@ -107,15 +107,15 @@
         }
 
         /* รหัสพนักงาน - ด้านขวาบน (แนวตั้ง) */
-        .employee-code {
-            top: 22%;
-            right: 7%;
-            font-size: clamp(1.1rem, 2.5vw, 1rem);
-            color: wheat;
-            font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-        }
+            .employee-code {
+                top: 22%;
+                right: 7%;
+                font-size: clamp(1.1rem, 2.5vw, 1rem);
+                color: wheat;
+                font-weight: bold;
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+            }
 
         /* ชื่อพนักงาน - ด้านขวาบน ใต้รหัส (แนวตั้ง) */
         .employee-name {
@@ -133,7 +133,7 @@
         .row-value {
             bottom: 3.6%;
             left: 36%;
-            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-size: clamp(1.0rem, 3vw, 1.3rem);
             color: #8B4513;
             font-weight: bold;
         }
@@ -142,7 +142,7 @@
         .seat-value {
             bottom: 3.6%;
             right: 15%;
-            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-size: clamp(1.0rem, 3vw, 1.3rem);
             color: #8B4513;
             font-weight: bold;
         }
@@ -212,19 +212,12 @@
             white-space: nowrap;
         }
 
-        /* ==================== NAVIGATION BUTTONS ==================== */
-        .nav-buttons {
-            position: fixed;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 200;
-        }
-
+        /* ==================== NAVIGATION BUTTON ==================== */
         .nav-btn {
+            position: fixed;
+            left: 34px;
+            top: 15%;
+            transform: translateY(-50%);
             background: linear-gradient(135deg, #DAA520, #B8860B);
             color: white;
             border: none;
@@ -234,141 +227,20 @@
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
-            transition: all 0.3s ease;
+            transition: all 0.3s 
+        ease;
             writing-mode: vertical-rl;
             text-orientation: mixed;
+            z-index: 200;
         }
 
         .nav-btn:hover {
             background: linear-gradient(135deg, #B8860B, #DAA520);
-            transform: scale(1.05);
+            transform: translateY(-50%) scale(1.05);
         }
 
         .nav-btn:active {
-            transform: scale(0.98);
-        }
-
-        .nav-btn.save-btn {
-            background: linear-gradient(135deg, #27ae60, #219a52);
-            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
-        }
-
-        .nav-btn.save-btn:hover {
-            background: linear-gradient(135deg, #219a52, #27ae60);
-        }
-
-        .nav-btn.save-btn.saving {
-            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-            pointer-events: none;
-        }
-
-        /* ==================== SAVE TOAST ==================== */
-        .save-toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #27ae60;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 300;
-            opacity: 0;
-            transition: all 0.3s ease;
-            text-align: center;
-            max-width: 90%;
-        }
-
-        .save-toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        .save-toast.error {
-            background: #e74c3c;
-        }
-
-        .save-toast.info {
-            background: #3498db;
-        }
-
-        /* ==================== SAVE MODAL ==================== */
-        .save-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            z-index: 500;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .save-modal.show {
-            display: flex;
-        }
-
-        .save-modal-header {
-            color: #DAA520;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 15px;
-            padding: 15px 20px;
-            background: rgba(218, 165, 32, 0.2);
-            border-radius: 10px;
-            line-height: 1.5;
-        }
-
-        .save-modal-header .highlight {
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .save-modal-image {
-            max-width: 100%;
-            max-height: 55vh;
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        .save-modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .save-modal-btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .save-modal-btn.primary {
-            background: linear-gradient(135deg, #27ae60, #219a52);
-            color: white;
-        }
-
-        .save-modal-btn.secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .save-modal-btn:active {
-            transform: scale(0.95);
+            transform: translateY(-50%) scale(0.98);
         }
 
         /* ==================== RESPONSIVE ==================== */
@@ -377,17 +249,14 @@
                 max-width: 450px;
             }
             
-            .nav-buttons {
-                left: 30px;
-            }
-            
             .nav-btn {
+                left: 30px;
                 padding: 20px 12px;
                 font-size: 0.85rem;
             }
         }
 
-        /* Landscape mode */
+        /* Landscape mode - ปรับให้พอดีกับความสูงหน้าจอ */
         @media (orientation: landscape) {
             .ticket-wrapper {
                 padding: 10px;
@@ -404,17 +273,17 @@
                 width: auto;
             }
             
-            .nav-buttons {
+            .nav-btn {
                 left: 20px;
                 top: auto;
                 bottom: 20px;
                 transform: none;
-                flex-direction: row;
-            }
-            
-            .nav-btn {
                 writing-mode: horizontal-tb;
                 padding: 12px 20px;
+            }
+            
+            .nav-btn:hover {
+                transform: scale(1.05);
             }
         }
     </style>
@@ -431,27 +300,6 @@
         🎫 ตั๋วของคุณพร้อมแล้ว!
     </div>
 
-    <!-- Save Toast -->
-    <div class="save-toast" id="saveToast"></div>
-
-    <!-- Save Modal -->
-    <div class="save-modal" id="saveModal">
-        <div class="save-modal-header">
-            📱 <span class="highlight">กดค้างที่รูปภาพ</span><br>
-            แล้วเลือก "บันทึกรูปภาพ" หรือ "Save Image"<br>
-            เพื่อบันทึกลง Gallery
-        </div>
-        <img class="save-modal-image" id="saveModalImage" src="" alt="Ticket">
-        <div class="save-modal-buttons">
-            <button class="save-modal-btn primary" onclick="tryShareAgain()">
-                📤 แชร์/บันทึก
-            </button>
-            <button class="save-modal-btn secondary" onclick="closeSaveModal()">
-                ✕ ปิด
-            </button>
-        </div>
-    </div>
-
     <!-- Ticket Wrapper -->
     <div class="ticket-wrapper" id="ticketWrapper">
         <!-- Ticket Container -->
@@ -460,8 +308,7 @@
             <img src="https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/Ticket_new.png" 
                  alt="Cinema Ticket" 
                  class="ticket-background"
-                 id="ticketBackground"
-                 crossorigin="anonymous">
+                 id="ticketBackground">
 
             <!-- QR Code - มุมซ้ายบน -->
             <div class="qr-container" id="qrContainer">
@@ -476,22 +323,15 @@
         </div>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div class="nav-buttons">
-        <button class="nav-btn" onclick="goToCinema()">
-            🎬 ผังที่นั่ง
-        </button>
-        <button class="nav-btn save-btn" id="saveBtn" onclick="saveTicketImage()">
-            💾 บันทึกรูป
-        </button>
-    </div>
+    <!-- Navigation Button -->
+    <button class="nav-btn" onclick="goToCinema()">
+        🎬 ผังที่นั่ง
+    </button>
 
     <!-- LIFF SDK -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <!-- QRious Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-    <!-- html2canvas Library -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <script>
         // ==================== CONFIGURATION ====================
@@ -499,13 +339,9 @@
         const LIFF_ID = '2008529302-VgK0MJqm';
         const BOOKING_LIFF = 'https://liff.line.me/2008529302-50MNLyDV';
         const CINEMA_URL = 'https://happyworkplace.github.io/HRA_F_2025/cinema';
-        const BG_IMAGE_URL = 'https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/Ticket_new.png';
 
         // ==================== STATE ====================
         let lineProfile = null;
-        let bgImageBase64 = null;
-        let lastGeneratedBlob = null;
-        let lastGeneratedDataUrl = null;
         let ticketData = {
             empNo: '',
             name: '',
@@ -517,173 +353,8 @@
 
         // ==================== NAVIGATION ====================
         function goToCinema() {
+            console.log('🎬 Navigating to Cinema page...');
             window.open(CINEMA_URL, '_blank');
-        }
-
-        // ==================== PRELOAD BACKGROUND IMAGE ====================
-        async function preloadBackgroundImage() {
-            try {
-                const response = await fetch(BG_IMAGE_URL);
-                const blob = await response.blob();
-                
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        bgImageBase64 = reader.result;
-                        const bgImg = document.getElementById('ticketBackground');
-                        if (bgImg) {
-                            bgImg.src = bgImageBase64;
-                        }
-                        resolve(bgImageBase64);
-                    };
-                    reader.readAsDataURL(blob);
-                });
-            } catch (error) {
-                console.warn('Could not preload background image:', error);
-                return null;
-            }
-        }
-
-        // ==================== SAVE IMAGE FUNCTION ====================
-        async function saveTicketImage() {
-            const saveBtn = document.getElementById('saveBtn');
-            const ticketContainer = document.getElementById('ticketContainer');
-            
-            if (saveBtn.classList.contains('saving')) return;
-            
-            try {
-                saveBtn.classList.add('saving');
-                saveBtn.innerHTML = '⏳ กำลังสร้างรูป...';
-                showSaveToast('กำลังสร้างรูปภาพตั๋ว...', 'info');
-                
-                // รอให้ภาพโหลดเสร็จ
-                const bgImage = document.getElementById('ticketBackground');
-                if (!bgImage.complete) {
-                    await new Promise((resolve) => {
-                        bgImage.onload = resolve;
-                        setTimeout(resolve, 3000);
-                    });
-                }
-                
-                // ใช้ html2canvas capture ตั๋วพร้อมข้อมูลทั้งหมด
-                const canvas = await html2canvas(ticketContainer, {
-                    scale: 3,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: null,
-                    logging: false,
-                    imageTimeout: 10000,
-                    onclone: (clonedDoc) => {
-                        if (bgImageBase64) {
-                            const clonedImg = clonedDoc.getElementById('ticketBackground');
-                            if (clonedImg) {
-                                clonedImg.src = bgImageBase64;
-                            }
-                        }
-                    }
-                });
-                
-                const fileName = `HRA2025_${ticketData.empNo || 'ticket'}_${ticketData.seatId || 'seat'}.png`;
-                
-                // แปลงเป็น blob และ dataUrl
-                lastGeneratedBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
-                lastGeneratedDataUrl = canvas.toDataURL('image/png');
-                
-                // ลอง Web Share API (ดีที่สุดสำหรับมือถือ - save ลง gallery ได้)
-                if (navigator.share && navigator.canShare) {
-                    try {
-                        const file = new File([lastGeneratedBlob], fileName, { type: 'image/png' });
-                        if (navigator.canShare({ files: [file] })) {
-                            await navigator.share({
-                                files: [file],
-                                title: 'Cinema Ticket - HRA 2025'
-                            });
-                            showSaveToast('เลือก "บันทึกรูปภาพ" เพื่อเซฟลง Gallery', 'info');
-                            return;
-                        }
-                    } catch (err) {
-                        if (err.name === 'AbortError') {
-                            showSaveToast('ยกเลิกการบันทึก', 'info');
-                            return;
-                        }
-                        console.log('Share API failed, showing modal...');
-                    }
-                }
-                
-                // ถ้า Share ไม่ได้ เปิด modal ให้กดค้างบันทึก
-                showSaveModal(lastGeneratedDataUrl);
-                
-            } catch (error) {
-                console.error('Error saving image:', error);
-                showSaveToast('เกิดข้อผิดพลาด กรุณาลองใหม่', 'error');
-            } finally {
-                saveBtn.classList.remove('saving');
-                saveBtn.innerHTML = '💾 บันทึกรูป';
-            }
-        }
-
-        async function tryShareAgain() {
-            if (!lastGeneratedBlob) {
-                showSaveToast('กรุณากดปุ่มบันทึกรูปอีกครั้ง', 'error');
-                closeSaveModal();
-                return;
-            }
-            
-            const fileName = `HRA2025_${ticketData.empNo || 'ticket'}_${ticketData.seatId || 'seat'}.png`;
-            
-            // ลอง Share อีกครั้ง
-            if (navigator.share && navigator.canShare) {
-                try {
-                    const file = new File([lastGeneratedBlob], fileName, { type: 'image/png' });
-                    if (navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: 'Cinema Ticket'
-                        });
-                        closeSaveModal();
-                        showSaveToast('เลือก "บันทึกรูปภาพ" ในเมนู', 'info');
-                        return;
-                    }
-                } catch (err) {
-                    if (err.name !== 'AbortError') {
-                        showSaveToast('กดค้างที่รูปเพื่อบันทึก', 'info');
-                    }
-                }
-            } else {
-                showSaveToast('กดค้างที่รูปเพื่อบันทึก', 'info');
-            }
-        }
-
-        function showSaveModal(imageUrl) {
-            const modal = document.getElementById('saveModal');
-            const modalImage = document.getElementById('saveModalImage');
-            
-            modalImage.src = imageUrl;
-            modal.classList.add('show');
-        }
-
-        function closeSaveModal() {
-            const modal = document.getElementById('saveModal');
-            modal.classList.remove('show');
-        }
-
-        function showSaveToast(message, type = 'success') {
-            const toast = document.getElementById('saveToast');
-            
-            let icon = '✅';
-            if (type === 'error') icon = '❌';
-            else if (type === 'info') icon = '💡';
-            
-            toast.textContent = icon + ' ' + message;
-            toast.className = 'save-toast';
-            if (type === 'error') toast.classList.add('error');
-            else if (type === 'info') toast.classList.add('info');
-            
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
         }
 
         // ==================== JSONP HELPER ====================
@@ -725,9 +396,8 @@
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎬 Cinema Ticket: DOM loaded');
+            console.log('🎬 Cinema Ticket (Vertical): DOM loaded, initializing...');
             initializeLIFF();
-            preloadBackgroundImage();
         });
 
         async function initializeLIFF() {
@@ -810,7 +480,7 @@
                     const parsedData = JSON.parse(stored);
                     if (parsedData.empNo && parsedData.seatId) {
                         ticketData = { ...ticketData, ...parsedData };
-                        console.log('Loaded from localStorage:', ticketData);
+                        console.log('Loaded ticket data from localStorage:', ticketData);
                         displayTicket();
                         return;
                     }
@@ -829,8 +499,6 @@
             try {
                 updateLoadingText('กำลังเตรียมตั๋ว...');
                 
-                await preloadBackgroundImage();
-                
                 updateTicketDisplay();
                 await generateQRCode();
                 
@@ -848,9 +516,13 @@
         }
 
         function updateTicketDisplay() {
+            // รหัสพนักงาน
             document.getElementById('empCode').textContent = ticketData.empNo || '-';
+            
+            // ชื่อพนักงาน
             document.getElementById('empName').textContent = ticketData.name || '-';
             
+            // แยก Row และ Seat จาก seatId
             const seatId = ticketData.seatId;
             let rowLetter = '-';
             let seatNumber = '-';
@@ -868,6 +540,14 @@
 
             document.getElementById('rowValue').textContent = rowLetter;
             document.getElementById('seatValue').textContent = seatNumber;
+            
+            console.log('Updated ticket display:', { 
+                empNo: ticketData.empNo, 
+                name: ticketData.name, 
+                seatId: seatId, 
+                row: rowLetter, 
+                seat: seatNumber 
+            });
         }
 
         async function generateQRCode() {
@@ -875,6 +555,7 @@
             
             try {
                 if (typeof QRious === 'undefined') {
+                    console.warn('QRious library not loaded');
                     showQRFallback();
                     return;
                 }
@@ -884,7 +565,7 @@
                 const canvas = document.createElement('canvas');
                 qrContainer.appendChild(canvas);
                 
-                new QRious({
+                const qr = new QRious({
                     element: canvas,
                     value: ticketData.empNo || 'TICKET',
                     size: 200,
@@ -893,6 +574,8 @@
                     level: 'M',
                     padding: 0
                 });
+                
+                console.log('QR Code generated successfully');
                 
             } catch (error) {
                 console.error('QR generation failed:', error);
@@ -917,7 +600,21 @@
             }, 3000);
         }
 
-        // ==================== DEBUG ====================
+        // ==================== DEBUG FUNCTIONS ====================
+        window.updateTicket = function(data) {
+            ticketData = { ...ticketData, ...data };
+            localStorage.setItem('cinemaTicketData', JSON.stringify(ticketData));
+            updateTicketDisplay();
+            generateQRCode();
+        };
+
+        window.debugTicket = function() {
+            console.log('Current ticket data:', ticketData);
+            console.log('LINE Profile:', lineProfile);
+            console.log('Window size:', window.innerWidth, 'x', window.innerHeight);
+        };
+
+        // ทดสอบด้วยข้อมูลจำลอง
         window.testTicket = function() {
             ticketData = {
                 empNo: 'LC046',
