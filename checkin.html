@@ -181,6 +181,51 @@
             50% { opacity: 1; }
         }
 
+        /* ==================== LOADING SPINNER ==================== */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        .loading-spinner.dark {
+            border: 2px solid rgba(0,0,0,.3);
+            border-top-color: #333;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scanner loading overlay */
+        .scanner-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            z-index: 10;
+        }
+
+        .scanner-loading .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border-width: 3px;
+            margin-bottom: 10px;
+        }
+
         /* ==================== EMPLOYEE INFO ==================== */
         .employee-info {
             background: #f8f9fa;
@@ -246,6 +291,10 @@
         <div class="scanner-container hidden" id="scannerContainer">
             <video id="qr-video"></video>
             <div class="scanner-overlay"></div>
+            <div class="scanner-loading hidden" id="scannerLoading">
+                <div class="loading-spinner"></div>
+                <span id="loadingText">กำลังเริ่มกล้อง...</span>
+            </div>
         </div>
 
         <!-- Status Message -->
@@ -271,6 +320,14 @@
                 <span class="info-label">หมายเลขที่นั่ง:</span>
                 <span class="info-value" id="empSeat">-</span>
             </div>
+            <div class="info-row">
+                <span class="info-label">เวลาจอง:</span>
+                <span class="info-value" id="bookingTime">-</span>
+            </div>
+            <div class="info-row" id="checkinTimeRow" style="display: none;">
+                <span class="info-label">เวลาเช็คอิน:</span>
+                <span class="info-value" id="checkinTimeDisplay">-</span>
+            </div>
         </div>
 
         <!-- Buttons -->
@@ -286,7 +343,7 @@
 
     <script>
         // ==================== CONFIGURATION ====================
-        const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzDFe-UmxrioicKjQRQmha9XLmkBZlcpmRS2PstuwiynZmyWXlNOdpXGKYUSr2-UqOE/exec'; // ใส่ URL ของ Apps Script
+        const API_BASE_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // ใส่ URL ของ Apps Script
         
         // ==================== VARIABLES ====================
         let video = null;
@@ -299,12 +356,15 @@
         // ==================== DOM ELEMENTS ====================
         const scannerContainer = document.getElementById('scannerContainer');
         const qrVideo = document.getElementById('qr-video');
+        const scannerLoading = document.getElementById('scannerLoading');
+        const loadingText = document.getElementById('loadingText');
         const statusMessage = document.getElementById('statusMessage');
         const employeeInfo = document.getElementById('employeeInfo');
         const scanBtn = document.getElementById('scanBtn');
         const stopBtn = document.getElementById('stopBtn');
         const checkinBtn = document.getElementById('checkinBtn');
         const newScanBtn = document.getElementById('newScanBtn');
+        const checkinTimeRow = document.getElementById('checkinTimeRow');
 
         // ==================== EVENT LISTENERS ====================
         scanBtn.addEventListener('click', startScanner);
@@ -315,6 +375,16 @@
         // ==================== SCANNER FUNCTIONS ====================
         async function startScanner() {
             try {
+                // Show scanner container and loading
+                scannerContainer.classList.remove('hidden');
+                scannerLoading.classList.remove('hidden');
+                loadingText.textContent = 'กำลังเริ่มกล้อง...';
+                
+                // Hide start button, show stop button
+                scanBtn.classList.add('hidden');
+                stopBtn.classList.remove('hidden');
+                updateStatus('กำลังเปิดกล้อง...', 'scanning');
+
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: { 
                         facingMode: 'environment',
@@ -325,24 +395,38 @@
 
                 video = qrVideo;
                 video.srcObject = stream;
-                video.play();
+                
+                // Wait for video to be ready
+                video.onloadedmetadata = function() {
+                    video.play();
+                    
+                    // Hide loading after video starts
+                    setTimeout(() => {
+                        scannerLoading.classList.add('hidden');
+                        updateStatus('กำลังสแกน QR Code...', 'scanning');
+                    }, 500);
+                };
 
                 canvas = document.createElement('canvas');
                 canvasContext = canvas.getContext('2d');
-
-                // Update UI
-                scannerContainer.classList.remove('hidden');
-                scanBtn.classList.add('hidden');
-                stopBtn.classList.remove('hidden');
-                
-                updateStatus('กำลังสแกน...', 'scanning');
                 
                 isScanning = true;
                 scanningAnimation = requestAnimationFrame(scanQRCode);
 
             } catch (error) {
                 console.error('Error starting camera:', error);
-                updateStatus('ไม่สามารถเข้าถึงกล้องได้', 'error');
+                scannerLoading.classList.add('hidden');
+                scannerContainer.classList.add('hidden');
+                scanBtn.classList.remove('hidden');
+                stopBtn.classList.add('hidden');
+                
+                if (error.name === 'NotAllowedError') {
+                    updateStatus('กรุณาอนุญาตการใช้งานกล้อง', 'error');
+                } else if (error.name === 'NotFoundError') {
+                    updateStatus('ไม่พบกล้องในอุปกรณ์', 'error');
+                } else {
+                    updateStatus('ไม่สามารถเข้าถึงกล้องได้', 'error');
+                }
             }
         }
 
@@ -406,7 +490,7 @@
             
             stopScanner();
             
-            updateStatus('กำลังค้นหาข้อมูลพนักงาน...', 'scanning');
+            updateStatusWithSpinner('กำลังค้นหาข้อมูลพนักงาน...', 'scanning');
             
             try {
                 const response = await fetch(`${API_BASE_URL}?action=getMyBooking&empNo=${empNo}`);
@@ -424,7 +508,7 @@
                 
             } catch (error) {
                 console.error('Error fetching employee data:', error);
-                updateStatus('เกิดข้อผิดพลาดในการค้นหาข้อมูล', 'error');
+                updateStatus('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่', 'error');
                 setTimeout(resetForNewScan, 3000);
             }
         }
@@ -432,7 +516,7 @@
         async function performCheckIn() {
             if (!currentEmployee) return;
             
-            updateStatus('กำลังเช็คอิน...', 'scanning');
+            updateStatusWithSpinner('กำลังเช็คอิน...', 'scanning');
             checkinBtn.classList.add('hidden');
             
             try {
@@ -441,22 +525,38 @@
                 
                 if (result.success) {
                     updateStatus('เช็คอินสำเร็จ! 🎉', 'success');
-                    // Update employee info with check-in time
+                    
+                    // Update employee info with check-in data
                     document.getElementById('empNo').textContent = result.data.empNo;
                     document.getElementById('empName').textContent = result.data.name;
                     document.getElementById('empFactory').textContent = result.data.factory;
                     document.getElementById('empSeat').textContent = result.data.seatId;
                     
+                    // Show check-in time
+                    if (result.data.checkinTime) {
+                        const checkinTime = formatThaiDateTime(result.data.checkinTime);
+                        document.getElementById('checkinTimeDisplay').textContent = checkinTime;
+                        checkinTimeRow.style.display = 'flex';
+                    }
+                    
                     newScanBtn.classList.remove('hidden');
+                    
+                    // Auto reset after 8 seconds
+                    setTimeout(() => {
+                        if (newScanBtn.classList.contains('hidden') === false) {
+                            resetForNewScan();
+                        }
+                    }, 8000);
+                    
                 } else {
                     updateStatus(`เช็คอินล้มเหลว: ${result.message}`, 'error');
-                    setTimeout(resetForNewScan, 3000);
+                    setTimeout(resetForNewScan, 4000);
                 }
                 
             } catch (error) {
                 console.error('Error during check-in:', error);
                 updateStatus('เกิดข้อผิดพลาดในการเช็คอิน', 'error');
-                setTimeout(resetForNewScan, 3000);
+                setTimeout(resetForNewScan, 4000);
             }
         }
 
@@ -465,6 +565,7 @@
             employeeInfo.classList.add('hidden');
             checkinBtn.classList.add('hidden');
             newScanBtn.classList.add('hidden');
+            checkinTimeRow.style.display = 'none';
             scanBtn.classList.remove('hidden');
             updateStatus('กดปุ่มด้านล่างเพื่อเริ่มสแกน QR Code', 'waiting');
         }
@@ -475,13 +576,176 @@
             document.getElementById('empFactory').textContent = employee.factory || '-';
             document.getElementById('empSeat').textContent = employee.seatId || '-';
             
+            // Format and show booking time
+            if (employee.bookingTime) {
+                const bookingTime = formatThaiDateTime(employee.bookingTime);
+                document.getElementById('bookingTime').textContent = bookingTime;
+            }
+            
             employeeInfo.classList.remove('hidden');
         }
 
         function updateStatus(message, type) {
-            statusMessage.textContent = message;
+            statusMessage.innerHTML = message; // Use innerHTML to allow HTML content
             statusMessage.className = `status-message status-${type}`;
         }
+
+        function updateStatusWithSpinner(message, type) {
+            statusMessage.innerHTML = `<span class="loading-spinner dark"></span>${message}`;
+            statusMessage.className = `status-message status-${type}`;
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function formatThaiDateTime(dateTimeString) {
+            try {
+                // Handle different date formats
+                let date;
+                
+                if (dateTimeString.includes('/')) {
+                    // Format: "27/11/2568 23:12:55" (Thai Buddhist calendar)
+                    const parts = dateTimeString.split(' ');
+                    const dateParts = parts[0].split('/');
+                    const timeParts = parts[1];
+                    
+                    // Convert Buddhist year to Gregorian year
+                    const year = parseInt(dateParts[2]) - 543;
+                    const month = parseInt(dateParts[1]) - 1; // Month is 0-indexed
+                    const day = parseInt(dateParts[0]);
+                    
+                    const timeStr = timeParts;
+                    date = new Date(`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${timeStr}+07:00`);
+                } else {
+                    // Assume it's already in a standard format
+                    date = new Date(dateTimeString);
+                    
+                    // If the date seems to be in UTC, adjust to Thai time
+                    const now = new Date();
+                    const timezoneOffset = now.getTimezoneOffset();
+                    if (Math.abs(timezoneOffset + 420) < 60) { // Check if we need to adjust for Thai timezone
+                        date = new Date(date.getTime() + (7 * 60 * 60 * 1000)); // Add 7 hours for Thai time
+                    }
+                }
+
+                // Format for display
+                return date.toLocaleString('th-TH', {
+                    timeZone: 'Asia/Bangkok',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } catch (error) {
+                console.error('Error formatting date:', error);
+                return dateTimeString; // Return original string if formatting fails
+            }
+        }
+
+        function getCurrentThaiTime() {
+            const now = new Date();
+            return now.toLocaleString('th-TH', {
+                timeZone: 'Asia/Bangkok',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        // ==================== ADDITIONAL IMPROVEMENTS ====================
+        
+        // Add vibration feedback for mobile devices
+        function vibrateFeedback() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate([100]); // Short vibration
+            }
+        }
+
+        // Auto-clear error messages after a delay
+        function autoHideStatus(delay = 3000) {
+            setTimeout(() => {
+                const currentStatus = statusMessage.className;
+                if (currentStatus.includes('status-error') && !currentEmployee) {
+                    updateStatus('กดปุ่มด้านล่างเพื่อเริ่มสแกน QR Code', 'waiting');
+                }
+            }, delay);
+        }
+
+        // Enhance the original functions with better UX
+        const originalHandleQRDetected = handleQRDetected;
+        handleQRDetected = async function(qrData) {
+            vibrateFeedback(); // Provide haptic feedback
+            return originalHandleQRDetected(qrData);
+        };
+
+        const originalPerformCheckIn = performCheckIn;
+        performCheckIn = async function() {
+            vibrateFeedback(); // Provide haptic feedback on successful check-in
+            return originalPerformCheckIn();
+        };
+
+        // Add keyboard shortcuts for accessibility
+        document.addEventListener('keydown', function(event) {
+            // Press Space to start/stop scanner
+            if (event.code === 'Space' && !isScanning && !scanBtn.classList.contains('hidden')) {
+                event.preventDefault();
+                startScanner();
+            }
+            // Press Enter to check in
+            else if (event.code === 'Enter' && !checkinBtn.classList.contains('hidden')) {
+                event.preventDefault();
+                performCheckIn();
+            }
+            // Press Escape to reset
+            else if (event.code === 'Escape') {
+                event.preventDefault();
+                if (isScanning) {
+                    stopScanner();
+                } else if (currentEmployee) {
+                    resetForNewScan();
+                }
+            }
+        });
+
+        // Page visibility handling - pause scanner when page is hidden
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && isScanning) {
+                console.log('Page hidden, pausing scanner');
+                stopScanner();
+            }
+        });
+
+        // Add network status monitoring
+        window.addEventListener('online', function() {
+            console.log('Network connection restored');
+            if (statusMessage.textContent.includes('เชื่อมต่อ')) {
+                updateStatus('เชื่อมต่ออินเทอร์เน็ตแล้ว กรุณาลองใหม่', 'found');
+                setTimeout(() => {
+                    if (!currentEmployee) {
+                        updateStatus('กดปุ่มด้านล่างเพื่อเริ่มสแกน QR Code', 'waiting');
+                    }
+                }, 2000);
+            }
+        });
+
+        window.addEventListener('offline', function() {
+            console.log('Network connection lost');
+            updateStatus('ไม่มีการเชื่อมต่ออินเทอร์เน็ต กรุณาตรวจสอบ', 'error');
+        });
+
+        // Console information for debugging
+        console.log(`
+🎬 HRA Function 2025 Check-In System
+📱 Version: 2.0
+⏰ Loaded at: ${getCurrentThaiTime()}
+🔧 Debug commands:
+   - Press Space: Start Scanner
+   - Press Enter: Check In
+   - Press Escape: Reset/Stop
+        `);
 
     </script>
 
