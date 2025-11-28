@@ -250,6 +250,26 @@
             background: linear-gradient(145deg, rgba(255,235,238,0.95), rgba(255,205,210,0.95));
         }
 
+        .refresh-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Kanit', sans-serif;
+            color: #fff;
+            background: linear-gradient(145deg, #4285f4, #3367d6);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(66,133,244,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(66,133,244,0.5);
+        }
+
         .status-icon {
             font-size: 3rem;
             margin-bottom: 15px;
@@ -406,28 +426,50 @@
 
         // Check user status
         async function checkUserStatus() {
-            try {
-                const response = await fetch(`${API_URL}?action=checkUserStatus&lineUserId=${userProfile.userId}`);
-                const result = await response.json();
-                
-                console.log('User status:', result);
-                userStatus = result;
+            let retries = 3;
+            let success = false;
+            let result = null;
 
-                hideLoading();
+            while (retries > 0 && !success) {
+                try {
+                    const response = await fetch(`${API_URL}?action=checkUserStatus&lineUserId=${userProfile.userId}`, {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'no-cache'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    result = await response.json();
+                    success = true;
+                    console.log('User status:', result);
 
-                if (result.success && result.status === 'eligible') {
-                    // User is eligible for lucky draw
-                    showUserInfo(result.data);
-                    showLuckyDraw();
-                } else {
-                    // Show appropriate status message
-                    showStatusForUser(result);
+                } catch (error) {
+                    console.error(`Status check attempt ${4-retries} failed:`, error);
+                    retries--;
+                    
+                    if (retries > 0) {
+                        document.querySelector('.loading-text').textContent = `กำลังลองใหม่... (${3-retries+1}/3)`;
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
                 }
+            }
 
-            } catch (error) {
-                console.error('Error checking user status:', error);
-                hideLoading();
-                showStatusMessage('error', '❌', 'เกิดข้อผิดพลาด', 'ไม่สามารถตรวจสอบข้อมูลได้');
+            userStatus = result;
+            hideLoading();
+
+            if (success && result && result.success && result.status === 'eligible') {
+                // User is eligible for lucky draw
+                showUserInfo(result.data);
+                showLuckyDraw();
+            } else if (success && result) {
+                // Show appropriate status message
+                showStatusForUser(result);
+            } else {
+                // Network error
+                showStatusMessage('error', '🌐', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต และรีเฟรชหน้าใหม่');
             }
         }
 
@@ -482,7 +524,12 @@
             statusMessage.className = `status-message ${type}`;
             statusIcon.textContent = icon;
             statusTitle.textContent = title;
-            statusText.textContent = message;
+            statusText.innerHTML = message;
+            
+            // Add refresh button for network errors
+            if (type === 'error' && (message.includes('เชื่อมต่อ') || message.includes('เครือข่าย'))) {
+                statusText.innerHTML += '<br><button class="refresh-btn" onclick="location.reload()">🔄 รีเฟรชหน้า</button>';
+            }
 
             statusMessage.classList.remove('hidden');
         }
@@ -520,33 +567,60 @@
             // เปลี่ยนจากภาพนิ่งเป็น GIF animation
             popcornImage.src = 'https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/PopcornLucky.gif';
             
+            // Fallback if GIF doesn't load
+            popcornImage.onerror = function() {
+                console.log('GIF failed to load, keeping static image');
+                this.src = 'https://raw.githubusercontent.com/HappyWorkPlace/HRA_F_2025/main/popcorn_pic.png';
+            };
+            
             resultBox.classList.remove('active');
 
-            // Call API to draw prize
-            try {
-                const response = await fetch(`${API_URL}?action=drawPrize&lineUserId=${userProfile.userId}`);
-                const result = await response.json();
-                
-                console.log('Draw result:', result);
+            // Call API to draw prize with retry mechanism
+            let retries = 3;
+            let success = false;
+            let result = null;
 
-                // Wait for animation
-                setTimeout(() => {
-                    if (result.success) {
-                        selectWinner(result.data);
-                    } else {
-                        // Show error
-                        showStatusMessage('error', '❌', 'ไม่สามารถสุ่มรางวัลได้', result.message);
-                        resetDrawButton();
+            while (retries > 0 && !success) {
+                try {
+                    const response = await fetch(`${API_URL}?action=drawPrize&lineUserId=${userProfile.userId}`, {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'no-cache'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                }, 2000);
+                    
+                    result = await response.json();
+                    success = true;
+                    console.log('Draw result:', result);
 
-            } catch (error) {
-                console.error('Error drawing prize:', error);
-                setTimeout(() => {
-                    showStatusMessage('error', '❌', 'เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
-                    resetDrawButton();
-                }, 2000);
+                } catch (error) {
+                    console.error(`Attempt ${4-retries} failed:`, error);
+                    retries--;
+                    
+                    if (retries > 0) {
+                        btn.textContent = `กำลังลองใหม่... (${3-retries+1}/3)`;
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+                    }
+                }
             }
+
+            // Wait for animation
+            setTimeout(() => {
+                if (success && result && result.success) {
+                    selectWinner(result.data);
+                } else if (success && result) {
+                    // Show error from API
+                    showStatusMessage('error', '❌', 'ไม่สามารถสุ่มรางวัลได้', result.message);
+                    resetDrawButton();
+                } else {
+                    // Network error
+                    showStatusMessage('error', '🌐', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต และลองใหม่อีกครั้ง');
+                    resetDrawButton();
+                }
+            }, 2000);
         }
 
         // Select winner
